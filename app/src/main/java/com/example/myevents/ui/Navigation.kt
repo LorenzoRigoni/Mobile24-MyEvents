@@ -11,7 +11,11 @@ import androidx.navigation.navArgument
 import com.example.myevents.ui.screens.AddEventScreen
 import com.example.myevents.ui.screens.EventDetailsScreen
 import com.example.myevents.ui.screens.HomeScreen
+import com.example.myevents.ui.screens.ManageEventsScreen
+import com.example.myevents.ui.screens.NotificationsScreen
+import com.example.myevents.ui.screens.ProfileScreen
 import com.example.myevents.ui.screens.SettingsScreen
+import com.example.myevents.ui.screens.WelcomeScreen
 
 sealed class MyEventsRoute(
     val route: String,
@@ -28,9 +32,13 @@ sealed class MyEventsRoute(
     }
     data object AddEvent : MyEventsRoute("events/add", "Add Event")
     data object Settings : MyEventsRoute("settings", "Settings")
+    data object ManageEvents : MyEventsRoute("manage", "Manage Events")
+    data object Notifications : MyEventsRoute("notifications", "Notifications")
+    data object Profile : MyEventsRoute("profile", "Profile")
+    data object Welcome : MyEventsRoute("welcome", "Welcome")
 
     companion object {
-        val routes = setOf(Home, EventDetails, AddEvent, Settings)
+        val routes = setOf(Home, EventDetails, AddEvent, Settings, ManageEvents, Notifications, Profile, Welcome)
     }
 }
 
@@ -51,7 +59,7 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.EventDetails) {
             composable(route, arguments) { backStackEntry ->
-                EventDetailsScreen(backStackEntry.arguments?.getString("travelId") ?: "")
+                EventDetailsScreen(backStackEntry.arguments?.getString("eventId") ?: "")
             }
         }
         with(MyEventsRoute.AddEvent) {
@@ -62,6 +70,26 @@ fun MyEventsNavGraph(
         with(MyEventsRoute.Settings) {
             composable(route) {
                 SettingsScreen()
+            }
+        }
+        with(MyEventsRoute.ManageEvents) {
+            composable(route) {
+                ManageEventsScreen()
+            }
+        }
+        with(MyEventsRoute.Notifications) {
+            composable(route) {
+                NotificationsScreen()
+            }
+        }
+        with(MyEventsRoute.Profile) {
+            composable(route) {
+                ProfileScreen()
+            }
+        }
+        with(MyEventsRoute.Welcome) {
+            composable(route) {
+                WelcomeScreen()
             }
         }
     }

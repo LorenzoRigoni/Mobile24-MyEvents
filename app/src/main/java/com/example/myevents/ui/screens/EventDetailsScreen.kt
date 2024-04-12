@@ -28,14 +28,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun EventDetailsScreen(travelId: String) {
+fun EventDetailsScreen(eventId: String) {
     val ctx = LocalContext.current
 
     fun shareDetails() {
         val sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, travelId)
+            putExtra(Intent.EXTRA_TEXT, eventId)
         }
         val shareIntent = Intent.createChooser(sendIntent, "Share event")
         if (shareIntent.resolveActivity(ctx.packageManager) != null) {
@@ -71,7 +71,7 @@ fun EventDetailsScreen(travelId: String) {
                     .padding(36.dp)
             )
             Text(
-                travelId,
+                eventId,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 style = MaterialTheme.typography.titleLarge
             )

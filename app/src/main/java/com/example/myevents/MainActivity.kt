@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                         derivedStateOf {
                             MyEventsRoute.routes.find {
                                 it.route == backStackEntry?.destination?.route
-                            } ?: MyEventsRoute.Home
+                            } ?: MyEventsRoute.Welcome
                         }
                     }
 
