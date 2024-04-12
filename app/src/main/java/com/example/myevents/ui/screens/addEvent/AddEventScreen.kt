@@ -1,4 +1,4 @@
-package com.example.myevents.ui.screens
+package com.example.myevents.ui.screens.addEvent
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,7 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
 @Composable
-fun AddEventScreen(navController: NavHostController) {
+fun AddEventScreen(
+    state: AddEventState,
+    actions: AddEventActions,
+    navController: NavHostController
+) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -54,8 +58,8 @@ fun AddEventScreen(navController: NavHostController) {
                 .fillMaxSize()
         ) {
             OutlinedTextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
+                value = state.destination,
+                onValueChange = actions::setDestination,
                 label = { Text("Destination") },
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = {
@@ -65,14 +69,14 @@ fun AddEventScreen(navController: NavHostController) {
                 }
             )
             OutlinedTextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
+                value = state.date,
+                onValueChange = actions::setDate,
                 label = { Text("Date") },
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = "",
-                onValueChange = { /*TODO*/ },
+                value = state.description,
+                onValueChange = actions::setDescription,
                 label = { Text("Description") },
                 modifier = Modifier.fillMaxWidth()
             )

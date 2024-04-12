@@ -1,4 +1,4 @@
-package com.example.myevents.ui.screens
+package com.example.myevents.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,31 +10,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    state: SettingsState,
+    onUsernameChanged: (String) -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(12.dp).fillMaxSize()
     ) {
-        var username by rememberSaveable { mutableStateOf("username") }
-
         OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
+            value = state.username,
+            onValueChange = onUsernameChanged,
             label = { Text("Username") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(36.dp))
         Text(
-            text = username,
+            text = state.username,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             style = MaterialTheme.typography.bodyLarge
         )

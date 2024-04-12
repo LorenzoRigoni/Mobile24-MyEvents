@@ -1,4 +1,4 @@
-package com.example.myevents.ui.screens
+package com.example.myevents.ui.screens.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -51,7 +51,7 @@ fun HomeScreen(navController: NavHostController) {
         },
     ) { contentPadding ->
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+            columns = GridCells.Fixed(1),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 80.dp),

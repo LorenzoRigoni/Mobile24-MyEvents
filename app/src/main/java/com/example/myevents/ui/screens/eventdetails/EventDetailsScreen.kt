@@ -1,4 +1,4 @@
-package com.example.myevents.ui.screens
+package com.example.myevents.ui.screens.eventdetails
 
 import android.content.Intent
 import androidx.compose.foundation.Image
