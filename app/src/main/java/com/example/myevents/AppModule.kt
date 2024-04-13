@@ -3,6 +3,7 @@ package com.example.myevents
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.myevents.data.repositories.SettingsRepository
+import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.screens.settings.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -14,7 +15,7 @@ val appModule = module {
 
     single { SettingsRepository(get()) }
 
-    viewModel { AddTravelViewModel() }
+    viewModel { AddEventViewModel() }
 
     viewModel { SettingsViewModel(get()) }
 }
