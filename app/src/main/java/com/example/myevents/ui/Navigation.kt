@@ -52,6 +52,9 @@ fun MyEventsNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val eventsVm = koinViewModel<EventsViewModel>()
+    val eventsState by eventsVm.state.collectAsStateWithLifecycle()
+
     NavHost(
         navController = navController,
         startDestination = MyEventsRoute.Welcome.route,
@@ -69,14 +72,22 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.EventDetails) {
             composable(route, arguments) { backStackEntry ->
-                EventDetailsScreen(backStackEntry.arguments?.getString("eventId") ?: "")
+                val event = requireNotNull(eventsState.events.find {
+                    it.eventID == backStackEntry.arguments?.getString("eventId")?.toInt()
+                })
+                EventDetailsScreen(event)
             }
         }
         with(MyEventsRoute.AddEvent) {
             composable(route) {
                 val addEventVm = koinViewModel<AddEventViewModel>()
                 val state by addEventVm.state.collectAsStateWithLifecycle()
-                AddEventScreen(state, addEventVm.actions, navController)
+                AddEventScreen(
+                    state = state,
+                    actions = addEventVm.actions,
+                    onSubmit = { eventsVm.addEvent(state.toEvent()) },
+                    navController = navController
+                )
             }
         }
         with(MyEventsRoute.Settings) {

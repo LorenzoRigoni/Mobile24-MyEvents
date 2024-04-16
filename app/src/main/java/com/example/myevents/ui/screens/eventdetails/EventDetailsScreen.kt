@@ -26,16 +26,17 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.myevents.data.database.Event
 
 @Composable
-fun EventDetailsScreen(eventId: String) {
+fun EventDetailsScreen(event: Event) {
     val ctx = LocalContext.current
 
     fun shareDetails() {
         val sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, eventId)
+            putExtra(Intent.EXTRA_TEXT, event.eventID)
         }
         val shareIntent = Intent.createChooser(sendIntent, "Share event")
         if (shareIntent.resolveActivity(ctx.packageManager) != null) {
@@ -71,7 +72,7 @@ fun EventDetailsScreen(eventId: String) {
                     .padding(36.dp)
             )
             Text(
-                eventId,
+                event.eventID.toString(),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 style = MaterialTheme.typography.titleLarge
             )

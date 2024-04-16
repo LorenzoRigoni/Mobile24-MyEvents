@@ -18,10 +18,16 @@ import com.example.myevents.ui.MyEventsNavGraph
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.composables.AppBar
 import com.example.myevents.ui.theme.MyEventsTheme
+import com.example.myevents.utils.LocationService
+import org.koin.android.ext.android.get
 
 class MainActivity : ComponentActivity() {
+    private lateinit var locationService: LocationService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        locationService = get<LocationService>()
+
         setContent {
             MyEventsTheme {
                 Surface(

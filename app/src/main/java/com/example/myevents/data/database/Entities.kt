@@ -15,7 +15,8 @@ data class User(
 
 @Entity
 data class Event(
-    @PrimaryKey val eventID: Int,
+    @PrimaryKey(autoGenerate = true)
+    val eventID: Int = 0,
     @ColumnInfo val username: String,
     @ColumnInfo val eventType: String,
     @ColumnInfo val title: String,
