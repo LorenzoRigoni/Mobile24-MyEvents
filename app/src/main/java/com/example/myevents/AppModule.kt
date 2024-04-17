@@ -7,9 +7,12 @@ import com.example.myevents.data.database.MyEventsDatabase
 import com.example.myevents.data.remote.OSMDataSource
 import com.example.myevents.data.repositories.MyEventsRepository
 import com.example.myevents.data.repositories.SettingsRepository
+import com.example.myevents.data.repositories.UserRepository
 import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.screens.settings.SettingsViewModel
+import com.example.myevents.ui.screens.user.LoginViewModel
+import com.example.myevents.ui.screens.welcome.WelcomeViewModel
 import com.example.myevents.utils.LocationService
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -24,6 +27,8 @@ val appModule = module {
     single { get<Context>().dataStore }
 
     single { SettingsRepository(get()) }
+
+    single { UserRepository(get()) }
 
     single { OSMDataSource(get()) }
 
@@ -59,4 +64,8 @@ val appModule = module {
     viewModel { AddEventViewModel() }
 
     viewModel { SettingsViewModel(get()) }
+
+    viewModel { WelcomeViewModel(get()) }
+
+    viewModel { LoginViewModel(get()) }
 }

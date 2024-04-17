@@ -69,13 +69,21 @@ fun RegisterScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         FloatingActionButton(
-            onClick = { navController.navigate(MyEventsRoute.Welcome.route) },
+            onClick = {
+                navController.navigate(MyEventsRoute.Welcome.route) {
+                    popUpTo(MyEventsRoute.Register.route) { inclusive = true }
+                }
+            },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(text = "Register")
         }
         FloatingActionButton(
-            onClick = { navController.navigate(MyEventsRoute.Login.route) },
+            onClick = {
+                navController.navigate(MyEventsRoute.Login.route) {
+                    popUpTo(MyEventsRoute.Register.route) { inclusive = true }
+                }
+            },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(text = "You already have an account? Login here!")

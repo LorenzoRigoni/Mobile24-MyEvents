@@ -15,17 +15,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.myevents.ui.MyEventsRoute
+import com.example.myevents.ui.screens.settings.SettingsState
 
 @Composable
-fun WelcomeScreen(navController: NavHostController) {
+fun WelcomeScreen(
+    state: WelcomeState,
+    navController: NavHostController,
+    logout: () -> Unit
+) {
     Scaffold { contentPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            if (true) {
-                Text(text = "Ciao user!")
+            if (state.user.isNotEmpty()) {
+                Text(text = "Ciao ${state.user}!")
                 Spacer(modifier = Modifier.height(16.dp))
                 FloatingActionButton(
                     onClick = { navController.navigate(MyEventsRoute.Home.route) },
@@ -36,11 +41,27 @@ fun WelcomeScreen(navController: NavHostController) {
                         modifier = Modifier.padding(16.dp)
                     )
                 }
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate(MyEventsRoute.Welcome.route)
+                        logout()
+                    },
+                    modifier = Modifier.padding(contentPadding),
+                ) {
+                    Text(
+                        text = "Logout",
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             } else {
                 Text(text = "Benvenuto! Ti chiediamo di accedere per continuare.")
                 Spacer(modifier = Modifier.height(16.dp))
                 FloatingActionButton(
-                    onClick = { navController.navigate(MyEventsRoute.Login.route) },
+                    onClick = {
+                        navController.navigate(MyEventsRoute.Login.route) {
+                            popUpTo(MyEventsRoute.Welcome.route) { inclusive = true }
+                        }
+                    },
                     modifier = Modifier.padding(contentPadding),
                 ) {
                     Text(

@@ -23,9 +23,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.myevents.ui.MyEventsRoute
+import com.example.myevents.ui.screens.welcome.WelcomeState
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(
+    navController: NavHostController,
+    onLoginAction: (String) -> Unit
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -57,13 +61,24 @@ fun LoginScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         FloatingActionButton(
-            onClick = { navController.navigate(MyEventsRoute.Welcome.route) },
+            onClick = {
+                if (username.isNotEmpty() && password.isNotEmpty()) {
+                    onLoginAction(username)
+                    navController.navigate(MyEventsRoute.Welcome.route) {
+                        popUpTo(MyEventsRoute.Login.route) { inclusive = true }
+                    }
+                }
+            },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(text = "Login")
         }
         FloatingActionButton(
-            onClick = { navController.navigate(MyEventsRoute.Register.route) },
+            onClick = {
+                navController.navigate(MyEventsRoute.Register.route) {
+                    popUpTo(MyEventsRoute.Login.route) { inclusive = true }
+                }
+            },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(text = "You don't have an account? Register here!")
