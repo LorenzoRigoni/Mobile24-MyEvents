@@ -19,6 +19,8 @@ import com.example.myevents.ui.screens.notifications.NotificationsScreen
 import com.example.myevents.ui.screens.profile.ProfileScreen
 import com.example.myevents.ui.screens.settings.SettingsScreen
 import com.example.myevents.ui.screens.settings.SettingsViewModel
+import com.example.myevents.ui.screens.user.LoginScreen
+import com.example.myevents.ui.screens.user.RegisterScreen
 import com.example.myevents.ui.screens.welcome.WelcomeScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -41,9 +43,21 @@ sealed class MyEventsRoute(
     data object Notifications : MyEventsRoute("notifications", "Notifications")
     data object Profile : MyEventsRoute("profile", "Profile")
     data object Welcome : MyEventsRoute("welcome", "Welcome")
+    data object Login : MyEventsRoute("login", "Login")
+    data object Register : MyEventsRoute("register", "Register")
 
     companion object {
-        val routes = setOf(Home, EventDetails, AddEvent, Settings, ManageEvents, Notifications, Profile, Welcome)
+        val routes = setOf(
+            Home,
+            EventDetails,
+            AddEvent, Settings,
+            ManageEvents,
+            Notifications,
+            Profile,
+            Welcome,
+            Login,
+            Register
+        )
     }
 }
 
@@ -109,6 +123,16 @@ fun MyEventsNavGraph(
         with(MyEventsRoute.Profile) {
             composable(route) {
                 ProfileScreen(navController)
+            }
+        }
+        with(MyEventsRoute.Login) {
+            composable(route) {
+                LoginScreen(navController = navController)
+            }
+        }
+        with(MyEventsRoute.Register) {
+            composable(route) {
+                RegisterScreen(navController = navController)
             }
         }
     }

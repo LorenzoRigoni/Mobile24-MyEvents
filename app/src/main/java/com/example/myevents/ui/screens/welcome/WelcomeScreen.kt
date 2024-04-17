@@ -24,16 +24,31 @@ fun WelcomeScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = "Ciao user!")
-            Spacer(modifier = Modifier.height(16.dp))
-            FloatingActionButton(
-                onClick = { navController.navigate(MyEventsRoute.Home.route) },
-                modifier = Modifier.padding(contentPadding),
-            ) {
-                Text(
-                    text = "Sfoglia i miei eventi",
-                    modifier = Modifier.padding(16.dp)
-                )
+            val isUserLogged = true;
+            if (isUserLogged) {
+                Text(text = "Ciao user!")
+                Spacer(modifier = Modifier.height(16.dp))
+                FloatingActionButton(
+                    onClick = { navController.navigate(MyEventsRoute.Home.route) },
+                    modifier = Modifier.padding(contentPadding),
+                ) {
+                    Text(
+                        text = "Sfoglia i miei eventi",
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            } else {
+                Text(text = "Benvenuto! Ti chiediamo di accedere per continuare.")
+                Spacer(modifier = Modifier.height(16.dp))
+                FloatingActionButton(
+                    onClick = { navController.navigate(MyEventsRoute.Login.route) },
+                    modifier = Modifier.padding(contentPadding),
+                ) {
+                    Text(
+                        text = "Accedi",
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
         }
     }
