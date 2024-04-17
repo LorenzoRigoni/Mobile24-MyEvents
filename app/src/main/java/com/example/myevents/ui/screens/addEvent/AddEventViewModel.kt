@@ -25,8 +25,8 @@ data class AddEventState(
         place = destination,
         title =  description,
         username = date,
-        dateTime = Date(),
-        eventType = "Event"
+        eventType = "Event",
+        isFavourite = false
     )
 }
 

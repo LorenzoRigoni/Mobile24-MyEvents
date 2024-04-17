@@ -20,7 +20,6 @@ data class Event(
     @ColumnInfo val username: String,
     @ColumnInfo val eventType: String,
     @ColumnInfo val title: String,
-    @ColumnInfo val dateTime: Date,
     @ColumnInfo val place: String,
     @ColumnInfo val isFavourite: Boolean
 )

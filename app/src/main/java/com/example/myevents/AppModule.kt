@@ -7,6 +7,7 @@ import com.example.myevents.data.database.MyEventsDatabase
 import com.example.myevents.data.remote.OSMDataSource
 import com.example.myevents.data.repositories.MyEventsRepository
 import com.example.myevents.data.repositories.SettingsRepository
+import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.screens.settings.SettingsViewModel
 import com.example.myevents.utils.LocationService
@@ -53,6 +54,7 @@ val appModule = module {
             get<MyEventsDatabase>().notificationDAO()
         )
     }
+    viewModel { EventsViewModel(get()) }
 
     viewModel { AddEventViewModel() }
 

@@ -24,8 +24,7 @@ fun WelcomeScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            val isUserLogged = true;
-            if (isUserLogged) {
+            if (true) {
                 Text(text = "Ciao user!")
                 Spacer(modifier = Modifier.height(16.dp))
                 FloatingActionButton(
