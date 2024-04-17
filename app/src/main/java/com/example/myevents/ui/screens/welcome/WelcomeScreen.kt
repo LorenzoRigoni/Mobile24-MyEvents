@@ -43,8 +43,8 @@ fun WelcomeScreen(
                 }
                 FloatingActionButton(
                     onClick = {
-                        navController.navigate(MyEventsRoute.Welcome.route)
                         logout()
+                        navController.navigate(MyEventsRoute.Welcome.route)
                     },
                     modifier = Modifier.padding(contentPadding),
                 ) {
