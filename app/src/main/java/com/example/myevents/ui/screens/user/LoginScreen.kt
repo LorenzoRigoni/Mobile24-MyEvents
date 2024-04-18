@@ -71,9 +71,7 @@ fun LoginScreen(
             Text(text = "Login")
         }
         FloatingActionButton(
-            onClick = {
-                navController.navigate(MyEventsRoute.Register.route)
-            },
+            onClick = { navController.navigate(MyEventsRoute.Register.route) },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(text = "You don't have an account? Register here!")

@@ -57,9 +57,7 @@ fun WelcomeScreen(
                 Text(text = "Benvenuto! Ti chiediamo di accedere per continuare.")
                 Spacer(modifier = Modifier.height(16.dp))
                 FloatingActionButton(
-                    onClick = {
-                        navController.navigate(MyEventsRoute.Login.route)
-                    },
+                    onClick = { navController.navigate(MyEventsRoute.Login.route) },
                     modifier = Modifier.padding(contentPadding),
                 ) {
                     Text(

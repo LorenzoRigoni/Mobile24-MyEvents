@@ -23,10 +23,8 @@ class UserViewModel (
     }
 
     fun logout() {
-        viewModelScope.launch {
-            repository.setLoggedUser("")
-            state = UserState("")
-        }
+        viewModelScope.launch { repository.setLoggedUser("") }
+        state = UserState("")
     }
 
     init {

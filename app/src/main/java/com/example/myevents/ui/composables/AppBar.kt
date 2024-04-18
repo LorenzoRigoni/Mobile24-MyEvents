@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Notifications
@@ -163,6 +164,6 @@ private fun AddDeleteButton (navController: NavHostController) {
     IconButton(onClick = {
         navController.navigate(MyEventsRoute.ManageEvents.route)
     }) {
-        Icon(Icons.Outlined.Check, "Delete")
+        Icon(Icons.Outlined.Delete, "Delete")
     }
 }
