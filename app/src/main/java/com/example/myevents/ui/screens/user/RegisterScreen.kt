@@ -75,9 +75,7 @@ fun RegisterScreen(
             onClick = {
                 if (username.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
                     onRegisterAction(username)
-                    navController.navigate(MyEventsRoute.Welcome.route) {
-                        popUpTo(MyEventsRoute.Register.route) { inclusive = true }
-                    }
+                    navController.navigate(MyEventsRoute.Welcome.route)
                 }
             },
             modifier = Modifier.align(Alignment.End)
@@ -86,9 +84,7 @@ fun RegisterScreen(
         }
         FloatingActionButton(
             onClick = {
-                navController.navigate(MyEventsRoute.Login.route) {
-                    popUpTo(MyEventsRoute.Register.route) { inclusive = true }
-                }
+                navController.navigate(MyEventsRoute.Login.route)
             },
             modifier = Modifier.align(Alignment.End)
         ) {

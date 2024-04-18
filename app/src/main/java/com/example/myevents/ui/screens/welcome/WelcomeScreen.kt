@@ -44,9 +44,7 @@ fun WelcomeScreen(
                 FloatingActionButton(
                     onClick = {
                         logout()
-                        navController.navigate(MyEventsRoute.Welcome.route) {
-                            popUpTo(MyEventsRoute.Welcome.route) { inclusive = true }
-                        }
+                        navController.navigate(MyEventsRoute.Welcome.route)
                     },
                     modifier = Modifier.padding(contentPadding),
                 ) {
@@ -60,9 +58,7 @@ fun WelcomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 FloatingActionButton(
                     onClick = {
-                        navController.navigate(MyEventsRoute.Login.route) {
-                            popUpTo(MyEventsRoute.Welcome.route) { inclusive = true }
-                        }
+                        navController.navigate(MyEventsRoute.Login.route)
                     },
                     modifier = Modifier.padding(contentPadding),
                 ) {

@@ -1,14 +1,18 @@
 package com.example.myevents.ui.composables
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,6 +20,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.myevents.ui.MyEventsRoute
@@ -26,6 +34,10 @@ fun AppBar(
     navController: NavHostController,
     currentRoute: MyEventsRoute
 ) {
+    var showMenu by remember { mutableStateOf(false) }
+    val onMenuClicked: () -> Unit = { showMenu = !showMenu }
+    val onMenuDismissed: () -> Unit = { showMenu = false }
+
     CenterAlignedTopAppBar(
         title = {
             Text(
@@ -34,35 +46,33 @@ fun AppBar(
             )
         },
         navigationIcon = {
-            if (navController.previousBackStackEntry != null &&
-                currentRoute != MyEventsRoute.AddEvent) {
-                IconButton(onClick = { navController.navigateUp() }) {
+            if (currentRoute != MyEventsRoute.Welcome &&
+                currentRoute != MyEventsRoute.Login &&
+                currentRoute != MyEventsRoute.Register) {
+                IconButton(onClick = { navController.navigate(MyEventsRoute.Home.route) }) {
                     Icon(
-                        imageVector = Icons.Outlined.ArrowBack,
-                        contentDescription = "Back button"
+                        if (currentRoute != MyEventsRoute.AddEvent) Icons.Outlined.Home else Icons.Outlined.Close,
+                        "Back button"
                     )
                 }
-            }
-            if (currentRoute == MyEventsRoute.AddEvent) {
-                AddCancelButton(navController)
             }
         },
         actions = {
             when (currentRoute) {
                 MyEventsRoute.Welcome -> {
-                    AddSettingsButton(navController)
+                    AddLogoutButton(navController)
                 }
                 MyEventsRoute.Home -> {
                     AddSearchButton()
                     AddNotificationsButton(navController)
-                    AddProfileButton(navController)
-                    AddSettingsButton(navController)
+                    AddDropDownMenu(
+                        navController,
+                        showMenu,
+                        onMenuClicked,
+                        onMenuDismissed
+                    )
                 }
                 MyEventsRoute.AddEvent -> {
-                    //Add confirm and cancel button
-                    //something like V and X (check and cancel)
-                    //Like -> |X       Add event       V|
-                    //when u press X it goes back to home, when u press V it adds the event
                     AddConfirmButton(navController)
                 }
                 MyEventsRoute.EventDetails -> {
@@ -72,7 +82,12 @@ fun AppBar(
                     AddDeleteButton(navController)
                 }
                 MyEventsRoute.Notifications -> {
-                    AddSettingsButton(navController)
+                    AddDropDownMenu(
+                        navController,
+                        showMenu,
+                        onMenuClicked,
+                        onMenuDismissed
+                    )
                 }
                 MyEventsRoute.Profile -> {
                     AddConfirmButton(navController)
@@ -89,9 +104,32 @@ fun AppBar(
 }
 
 @Composable
-private fun AddSettingsButton (navController: NavHostController) {
-    IconButton(onClick = { navController.navigate(MyEventsRoute.Settings.route) }) {
-        Icon(Icons.Outlined.Settings, "Settings")
+private fun AddDropDownMenu (
+    navController: NavHostController,
+    showMenu: Boolean,
+    onMenuClicked: () -> Unit,
+    onMenuDismissed: () -> Unit
+) {
+    IconButton(onClick = onMenuClicked) {
+        Icon(
+            imageVector = Icons.Default.MoreVert,
+            contentDescription = "Menu"
+        )
+    }
+    DropdownMenu(
+        expanded = showMenu,
+        onDismissRequest = onMenuDismissed
+    ) {
+        DropdownMenuItem(
+            text = { Text("Settings") },
+            trailingIcon = { Icon(Icons.Outlined.Settings, "Settings") },
+            onClick = { navController.navigate(MyEventsRoute.Settings.route) }
+        )
+        DropdownMenuItem(
+            text = { Text("Profile") },
+            trailingIcon = { Icon(Icons.Outlined.Person, "Profile") },
+            onClick = { navController.navigate(MyEventsRoute.Profile.route) }
+        )
     }
 }
 @Composable
@@ -101,39 +139,29 @@ private fun AddSearchButton () {
     }
 }
 @Composable
+private fun AddLogoutButton (navController: NavHostController) {
+    IconButton(onClick = { navController.navigate(MyEventsRoute.Welcome.route) }) {
+        Icon(Icons.Outlined.Logout, "Logout")
+    }
+}
+@Composable
 private fun AddNotificationsButton (navController: NavHostController) {
     IconButton(onClick = { navController.navigate(MyEventsRoute.Notifications.route) }) {
         Icon(Icons.Outlined.Notifications, "Notifications")
     }
 }
 @Composable
-private fun AddProfileButton (navController: NavHostController) {
-    IconButton(onClick = { navController.navigate(MyEventsRoute.Profile.route) }) {
-        Icon(Icons.Outlined.Person, "Profile")
-    }
-}
-@Composable
 private fun AddConfirmButton (navController: NavHostController) {
     IconButton(onClick = {
-        //ADD HERE LOGIC FOR SAVING INTO DB
         navController.navigate(MyEventsRoute.Home.route)
     }) {
         Icon(Icons.Outlined.Check, "Cancel")
     }
 }
 @Composable
-private fun AddCancelButton (navController: NavHostController) {
-    IconButton(onClick = { navController.navigate(MyEventsRoute.Home.route) }) {
-        Icon(Icons.Outlined.Close, "Confirm")
-    }
-}
-@Composable
 private fun AddDeleteButton (navController: NavHostController) {
     IconButton(onClick = {
-        //Delete selected events
-        navController.navigate(MyEventsRoute.ManageEvents.route) {
-            popUpTo(MyEventsRoute.ManageEvents.route) { inclusive = true }
-        }
+        navController.navigate(MyEventsRoute.ManageEvents.route)
     }) {
         Icon(Icons.Outlined.Check, "Delete")
     }

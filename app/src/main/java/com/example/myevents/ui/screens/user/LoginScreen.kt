@@ -63,9 +63,7 @@ fun LoginScreen(
             onClick = {
                 if (username.isNotEmpty() && password.isNotEmpty()) {
                     onLoginAction(username)
-                    navController.navigate(MyEventsRoute.Welcome.route) {
-                        popUpTo(MyEventsRoute.Login.route) { inclusive = true }
-                    }
+                    navController.navigate(MyEventsRoute.Welcome.route)
                 }
             },
             modifier = Modifier.align(Alignment.End)
@@ -74,9 +72,7 @@ fun LoginScreen(
         }
         FloatingActionButton(
             onClick = {
-                navController.navigate(MyEventsRoute.Register.route) {
-                    popUpTo(MyEventsRoute.Login.route) { inclusive = true }
-                }
+                navController.navigate(MyEventsRoute.Register.route)
             },
             modifier = Modifier.align(Alignment.End)
         ) {
