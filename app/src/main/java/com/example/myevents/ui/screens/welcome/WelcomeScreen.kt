@@ -44,7 +44,9 @@ fun WelcomeScreen(
                 FloatingActionButton(
                     onClick = {
                         logout()
-                        navController.navigate(MyEventsRoute.Welcome.route)
+                        navController.navigate(MyEventsRoute.Welcome.route) {
+                            popUpTo(MyEventsRoute.Welcome.route) { inclusive = true }
+                        }
                     },
                     modifier = Modifier.padding(contentPadding),
                 ) {

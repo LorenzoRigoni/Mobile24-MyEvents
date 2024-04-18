@@ -11,8 +11,7 @@ import com.example.myevents.data.repositories.UserRepository
 import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.screens.settings.SettingsViewModel
-import com.example.myevents.ui.screens.user.LoginViewModel
-import com.example.myevents.ui.WelcomeViewModel
+import com.example.myevents.ui.UserViewModel
 import com.example.myevents.utils.LocationService
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -65,7 +64,5 @@ val appModule = module {
 
     viewModel { SettingsViewModel(get()) }
 
-    viewModel { WelcomeViewModel(get()) }
-
-    viewModel { LoginViewModel(get()) }
+    viewModel { UserViewModel(get()) }
 }
