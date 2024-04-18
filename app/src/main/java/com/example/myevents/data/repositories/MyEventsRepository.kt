@@ -13,7 +13,9 @@ class MyEventsRepository(
     private val eventDAO: EventDAO,
     private val notificationDAO: NotificationDAO
 ) {
-    val users: Flow<List<User>> = userDAO.getAll()
+    fun getUserForLogin(username: String, password: String) : User? {
+        return userDAO.getUserForLogin(username, password)
+    }
     suspend fun upsertUser(user: User) = userDAO.upsert(user)
     suspend fun deleteUser(user: User) = userDAO.delete(user)
 

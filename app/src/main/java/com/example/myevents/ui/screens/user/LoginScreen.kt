@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -27,7 +28,8 @@ import com.example.myevents.ui.MyEventsRoute
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    onLoginAction: (String) -> Unit
+    onLoginAction: (String) -> Unit,
+    onLoginCheck: (String, String) -> Boolean
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -62,8 +64,12 @@ fun LoginScreen(
         FloatingActionButton(
             onClick = {
                 if (username.isNotEmpty() && password.isNotEmpty()) {
-                    onLoginAction(username)
-                    navController.navigate(MyEventsRoute.Welcome.route)
+                    if (onLoginCheck(username, password)) {
+                        onLoginAction(username)
+                        navController.navigate(MyEventsRoute.Welcome.route)
+                    } else {
+                        /*TODO: alert for error in login*/
+                    }
                 }
             },
             modifier = Modifier.align(Alignment.End)
