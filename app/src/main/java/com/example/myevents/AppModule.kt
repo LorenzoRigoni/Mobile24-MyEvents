@@ -12,7 +12,7 @@ import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.screens.settings.SettingsViewModel
 import com.example.myevents.ui.screens.user.LoginViewModel
-import com.example.myevents.ui.screens.welcome.WelcomeViewModel
+import com.example.myevents.ui.WelcomeViewModel
 import com.example.myevents.utils.LocationService
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation

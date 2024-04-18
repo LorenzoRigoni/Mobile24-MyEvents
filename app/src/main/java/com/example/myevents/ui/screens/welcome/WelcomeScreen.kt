@@ -15,11 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.myevents.ui.MyEventsRoute
-import com.example.myevents.ui.screens.settings.SettingsState
+import com.example.myevents.ui.UserState
 
 @Composable
 fun WelcomeScreen(
-    state: WelcomeState,
+    state: UserState,
     navController: NavHostController,
     logout: () -> Unit
 ) {

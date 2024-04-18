@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.myevents.ui.MyEventsRoute
-import com.example.myevents.ui.screens.welcome.WelcomeState
 
 @Composable
 fun LoginScreen(

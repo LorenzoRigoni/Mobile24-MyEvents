@@ -1,4 +1,4 @@
-package com.example.myevents.ui.screens.welcome
+package com.example.myevents.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,23 +9,29 @@ import com.example.myevents.data.repositories.UserRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-data class WelcomeState(val user: String)
+data class UserState(val user: String)
 
-class WelcomeViewModel (
+class UserViewModel (
     private val repository: UserRepository
 ) : ViewModel() {
-    var state by mutableStateOf(WelcomeState(""))
+    var state by mutableStateOf(UserState(""))
         private set
+
+    fun setLoggedUser(value: String) {
+        viewModelScope.launch { repository.setLoggedUser(value) }
+        state = UserState(value)
+    }
 
     fun logout() {
         viewModelScope.launch {
             repository.setLoggedUser("")
+            state = UserState("")
         }
     }
 
     init {
         viewModelScope.launch {
-            state = WelcomeState(repository.user.first())
+            state = UserState(repository.user.first())
         }
     }
 }

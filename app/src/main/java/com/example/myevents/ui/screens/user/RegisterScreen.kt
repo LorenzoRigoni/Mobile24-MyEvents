@@ -1,6 +1,5 @@
 package com.example.myevents.ui.screens.user
 
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,7 +25,10 @@ import androidx.navigation.NavHostController
 import com.example.myevents.ui.MyEventsRoute
 
 @Composable
-fun RegisterScreen(navController: NavHostController) {
+fun RegisterScreen(
+    navController: NavHostController,
+    onRegisterAction: (String) -> Unit
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -70,8 +73,11 @@ fun RegisterScreen(navController: NavHostController) {
 
         FloatingActionButton(
             onClick = {
-                navController.navigate(MyEventsRoute.Welcome.route) {
-                    popUpTo(MyEventsRoute.Register.route) { inclusive = true }
+                if (username.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
+                    onRegisterAction(username)
+                    navController.navigate(MyEventsRoute.Welcome.route) {
+                        popUpTo(MyEventsRoute.Register.route) { inclusive = true }
+                    }
                 }
             },
             modifier = Modifier.align(Alignment.End)

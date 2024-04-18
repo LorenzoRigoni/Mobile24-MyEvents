@@ -20,10 +20,8 @@ import com.example.myevents.ui.screens.profile.ProfileScreen
 import com.example.myevents.ui.screens.settings.SettingsScreen
 import com.example.myevents.ui.screens.settings.SettingsViewModel
 import com.example.myevents.ui.screens.user.LoginScreen
-import com.example.myevents.ui.screens.user.LoginViewModel
 import com.example.myevents.ui.screens.user.RegisterScreen
 import com.example.myevents.ui.screens.welcome.WelcomeScreen
-import com.example.myevents.ui.screens.welcome.WelcomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
 sealed class MyEventsRoute(
@@ -71,6 +69,8 @@ fun MyEventsNavGraph(
     val eventsVm = koinViewModel<EventsViewModel>()
     val eventsState by eventsVm.state.collectAsStateWithLifecycle()
 
+    val userVm = koinViewModel<UserViewModel>()
+
     NavHost(
         navController = navController,
         startDestination = MyEventsRoute.Welcome.route,
@@ -78,8 +78,7 @@ fun MyEventsNavGraph(
     ) {
         with(MyEventsRoute.Welcome) {
             composable(route) {
-                val welcomeVm = koinViewModel<WelcomeViewModel>()
-                WelcomeScreen(welcomeVm.state, navController, welcomeVm::logout)
+                WelcomeScreen(userVm.state, navController, userVm::logout)
             }
         }
         with(MyEventsRoute.Home) {
@@ -130,13 +129,12 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.Login) {
             composable(route) {
-                val loginVm = koinViewModel<LoginViewModel>()
-                LoginScreen(navController, loginVm::setLoggedUser)
+                LoginScreen(navController, userVm::setLoggedUser)
             }
         }
         with(MyEventsRoute.Register) {
             composable(route) {
-                RegisterScreen(navController = navController)
+                RegisterScreen(navController, userVm::setLoggedUser)
             }
         }
     }
