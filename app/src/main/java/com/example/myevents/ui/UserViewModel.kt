@@ -17,6 +17,12 @@ class UserViewModel (
     var state by mutableStateOf(UserState(""))
         private set
 
+    init {
+        viewModelScope.launch {
+            state = UserState(repository.user.first())
+        }
+    }
+
     fun setLoggedUser(value: String) {
         viewModelScope.launch { repository.setLoggedUser(value) }
         state = UserState(value)
@@ -27,9 +33,7 @@ class UserViewModel (
         state = UserState("")
     }
 
-    init {
-        viewModelScope.launch {
-            state = UserState(repository.user.first())
-        }
+    fun checkLogin(username: String, password: String) : Boolean {
+        return repository.getUserForLogin(username, password) != null
     }
 }

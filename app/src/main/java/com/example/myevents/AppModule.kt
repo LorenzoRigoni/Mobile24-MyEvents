@@ -27,8 +27,6 @@ val appModule = module {
 
     single { SettingsRepository(get()) }
 
-    single { UserRepository(get()) }
-
     single { OSMDataSource(get()) }
 
     single { LocationService(get()) }
@@ -52,8 +50,14 @@ val appModule = module {
     }
 
     single {
+        UserRepository(
+            get(),
+            get<MyEventsDatabase>().userDAO()
+        )
+    }
+
+    single {
         MyEventsRepository(
-            get<MyEventsDatabase>().userDAO(),
             get<MyEventsDatabase>().eventDAO(),
             get<MyEventsDatabase>().notificationDAO()
         )

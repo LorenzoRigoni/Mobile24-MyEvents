@@ -9,16 +9,9 @@ import com.example.myevents.data.database.UserDAO
 import kotlinx.coroutines.flow.Flow
 
 class MyEventsRepository(
-    private val userDAO: UserDAO,
     private val eventDAO: EventDAO,
     private val notificationDAO: NotificationDAO
 ) {
-    fun getUserForLogin(username: String, password: String) : User? {
-        return userDAO.getUserForLogin(username, password)
-    }
-    suspend fun upsertUser(user: User) = userDAO.upsert(user)
-    suspend fun deleteUser(user: User) = userDAO.delete(user)
-
     val events: Flow<List<Event>> = eventDAO.getAll()
     suspend fun upsertEvent(event: Event) = eventDAO.upsert(event)
     suspend fun deleteEvent(event: Event) = eventDAO.delete(event)

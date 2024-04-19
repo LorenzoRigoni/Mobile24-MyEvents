@@ -129,7 +129,7 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.Login) {
             composable(route) {
-                LoginScreen(navController, userVm::setLoggedUser, eventsVm::checkLogin)
+                LoginScreen(navController, userVm::setLoggedUser, userVm::checkLogin)
             }
         }
         with(MyEventsRoute.Register) {

@@ -27,8 +27,4 @@ class EventsViewModel(
     fun deleteEvent(event: Event) = viewModelScope.launch {
         repository.deleteEvent(event)
     }
-
-    fun checkLogin(username: String, password: String) : Boolean {
-        return repository.getUserForLogin(username, password) != null
-    }
 }
