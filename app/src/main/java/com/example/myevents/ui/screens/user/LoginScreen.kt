@@ -76,6 +76,9 @@ fun LoginScreen(
         ) {
             Text(text = "Login")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         FloatingActionButton(
             onClick = { navController.navigate(MyEventsRoute.Register.route) },
             modifier = Modifier.align(Alignment.End)

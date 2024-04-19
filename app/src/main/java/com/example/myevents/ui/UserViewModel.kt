@@ -7,10 +7,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.database.User
 import com.example.myevents.data.repositories.UserRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class UserState(val user: String)
+
+interface UserActions {
+    fun addUser(user: User): Job
+    fun removeUser(user: User): Job
+}
 
 class UserViewModel (
     private val repository: UserRepository
@@ -43,5 +49,20 @@ class UserViewModel (
     fun checkLogin(username: String, password: String) : Boolean {
         user = repository.getUserForLogin(username, password)
         return user != null
+    }
+
+    fun isUsernameAlreadyTaken(username: String) : Boolean {
+        user = repository.getUserBySharedPreferencesSave(username)
+        return user != null
+    }
+
+    val actions = object : UserActions {
+        override fun addUser(user: User) = viewModelScope.launch {
+            repository.upsertUser(user)
+        }
+
+        override fun removeUser(user: User) = viewModelScope.launch {
+            repository.deleteUser(user)
+        }
     }
 }

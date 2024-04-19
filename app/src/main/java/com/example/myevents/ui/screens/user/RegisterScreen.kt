@@ -22,14 +22,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.myevents.data.database.User
 import com.example.myevents.ui.MyEventsRoute
+import com.example.myevents.ui.UserActions
+import com.example.myevents.ui.UserState
 
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    onRegisterAction: (String) -> Unit
+    onRegisterAction: (String) -> Unit,
+    onRegisterCheck: (String) -> Boolean,
+    actions: UserActions
 ) {
     var username by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var surname by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
@@ -44,6 +51,24 @@ fun RegisterScreen(
             value = username,
             onValueChange = { username = it },
             label = { Text("Username") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = surname,
+            onValueChange = { surname = it },
+            label = { Text("Surname") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -71,11 +96,21 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        /*TODO: CHECKBOX FOR REMIND ME*/
+
         FloatingActionButton(
             onClick = {
                 if (username.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
-                    onRegisterAction(username)
-                    navController.navigate(MyEventsRoute.Welcome.route)
+                    if (!onRegisterCheck(username)) {
+                        actions.addUser(User(username = username, name = name, surname = surname, password = password))
+                        /*TODO: check if user selected "remember me" checkbox*/
+                        onRegisterAction(username)
+                        navController.navigate(MyEventsRoute.Welcome.route)
+                    } else {
+                        /*TODO: alert for username witch is already taken*/
+                    }
+                } else {
+                    /*TODO: alert for different passwords or empty fields*/
                 }
             },
             modifier = Modifier.align(Alignment.End)

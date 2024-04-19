@@ -26,7 +26,8 @@ data class Event(
 
 @Entity
 data class Notification(
-    @PrimaryKey val notificationID: Int,
+    @PrimaryKey(autoGenerate = true)
+    val notificationID: Int,
     @ColumnInfo val username: String,
     @ColumnInfo val notificationText: String,
 )
