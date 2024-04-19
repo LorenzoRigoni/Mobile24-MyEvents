@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.Flow
 interface UserDAO {
     @Query("SELECT * FROM user WHERE username = :username AND password = :password")
     fun getUserForLogin(username: String, password: String): User?
+    @Query("SELECT * FROM user WHERE username = :username")
+    fun getUserBySharedPreferencesSave(username: String): User?
     @Upsert
     suspend fun upsert(user: User)
     @Delete
