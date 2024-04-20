@@ -35,8 +35,10 @@ class UserViewModel (
         }
     }
 
-    fun setLoggedUser(value: String) {
-        viewModelScope.launch { repository.setLoggedUser(value) }
+    fun setLoggedUser(value: String, rememberMe: Boolean) {
+        if (rememberMe) {
+            viewModelScope.launch { repository.setLoggedUser(value) }
+        }
         state = UserState(value)
     }
 

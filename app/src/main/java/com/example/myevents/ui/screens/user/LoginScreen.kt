@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -28,11 +29,12 @@ import com.example.myevents.ui.MyEventsRoute
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    onLoginAction: (String) -> Unit,
+    onLoginAction: (String, Boolean) -> Unit,
     onLoginCheck: (String, String) -> Boolean
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var isChecked by remember { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,11 +63,19 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Checkbox(
+            checked = isChecked,
+            onCheckedChange = { isChecked = it }
+        )
+        Text(text = "Remember me", modifier = Modifier.padding(16.dp))
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         FloatingActionButton(
             onClick = {
                 if (username.isNotEmpty() && password.isNotEmpty()) {
                     if (onLoginCheck(username, password)) {
-                        onLoginAction(username)
+                        onLoginAction(username, isChecked)
                         navController.navigate(MyEventsRoute.Welcome.route)
                     } else {
                         /*TODO: alert for error in login*/

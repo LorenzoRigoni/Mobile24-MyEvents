@@ -1,5 +1,7 @@
 package com.example.myevents.ui.screens.user
 
+import android.app.Activity
+import android.app.AlertDialog
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,9 +10,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Error
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import com.example.myevents.data.database.User
 import com.example.myevents.ui.MyEventsRoute
@@ -30,7 +40,7 @@ import com.example.myevents.ui.UserState
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    onRegisterAction: (String) -> Unit,
+    onRegisterAction: (String, Boolean) -> Unit,
     onRegisterCheck: (String) -> Boolean,
     actions: UserActions
 ) {
@@ -39,6 +49,7 @@ fun RegisterScreen(
     var surname by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    var isChecked by remember { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,27 +107,36 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        /*TODO: CHECKBOX FOR REMIND ME*/
+        Checkbox(
+            checked = isChecked,
+            onCheckedChange = { isChecked = it }
+        )
+        Text(text = "Remember me", modifier = Modifier.padding(16.dp))
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         FloatingActionButton(
             onClick = {
                 if (username.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
                     if (!onRegisterCheck(username)) {
                         actions.addUser(User(username = username, name = name, surname = surname, password = password))
-                        /*TODO: check if user selected "remember me" checkbox*/
-                        onRegisterAction(username)
+                        onRegisterAction(username, isChecked)
                         navController.navigate(MyEventsRoute.Welcome.route)
                     } else {
                         /*TODO: alert for username witch is already taken*/
                     }
                 } else {
-                    /*TODO: alert for different passwords or empty fields*/
+                    /*TODO: alert for empty fields or different passwords*/
+                    //For alerts, see https://developer.android.com/develop/ui/compose/components/dialog?hl=it
                 }
             },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(text = "Register")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         FloatingActionButton(
             onClick = {
                 navController.navigate(MyEventsRoute.Login.route)
