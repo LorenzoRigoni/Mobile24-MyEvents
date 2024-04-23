@@ -30,7 +30,7 @@ class UserViewModel (
         viewModelScope.launch {
             state = UserState(repository.user.first())
             if (state.user.isNotEmpty()) {
-                user = repository.getUserBySharedPreferencesSave(state.user)
+                user = repository.getUserByUsername(state.user)
             }
         }
     }
@@ -54,7 +54,7 @@ class UserViewModel (
     }
 
     fun isUsernameAlreadyTaken(username: String) : Boolean {
-        user = repository.getUserBySharedPreferencesSave(username)
+        user = repository.getUserByUsername(username)
         return user != null
     }
 

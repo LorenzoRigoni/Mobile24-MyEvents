@@ -28,8 +28,8 @@ class UserRepository(
         return userDAO.getUserForLogin(username, password)
     }
 
-    fun getUserBySharedPreferencesSave(username: String) : User? {
-        return userDAO.getUserBySharedPreferencesSave(username)
+    fun getUserByUsername(username: String) : User? {
+        return userDAO.getUserByUsername(username)
     }
 
     suspend fun upsertUser(user: User) = userDAO.upsert(user)
