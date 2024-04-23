@@ -21,10 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.myevents.R
 import com.example.myevents.ui.MyEventsRoute
 
 @Composable
@@ -36,6 +38,7 @@ fun LoginScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isChecked by remember { mutableStateOf(false) }
+    val wrongUsername = stringResource(R.string.wrong_us)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -68,7 +71,7 @@ fun LoginScreen(
             checked = isChecked,
             onCheckedChange = { isChecked = it }
         )
-        Text(text = "Remember me", modifier = Modifier.padding(16.dp))
+        Text(text = stringResource(R.string.remember), modifier = Modifier.padding(16.dp))
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -81,7 +84,7 @@ fun LoginScreen(
                     } else {
                         Toast.makeText(
                             navController.context,
-                            "Error in the authentication: wrong username or password",
+                            wrongUsername,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -89,7 +92,7 @@ fun LoginScreen(
             },
             modifier = Modifier.align(Alignment.End)
         ) {
-            Text(text = "Login")
+            Text(text = stringResource(R.string.log))
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -98,7 +101,7 @@ fun LoginScreen(
             onClick = { navController.navigate(MyEventsRoute.Register.route) },
             modifier = Modifier.align(Alignment.End)
         ) {
-            Text(text = "You don't have an account? Register here!")
+            Text(text = stringResource(R.string.no_account))
         }
     }
 }

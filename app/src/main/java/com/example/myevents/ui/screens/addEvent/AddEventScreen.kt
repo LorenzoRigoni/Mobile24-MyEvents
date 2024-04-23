@@ -40,10 +40,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.camera.utils.PermissionStatus
 import com.example.camera.utils.rememberPermission
+import com.example.myevents.R
 import com.example.myevents.data.remote.OSMDataSource
 import com.example.myevents.ui.composables.ImageWithPlaceholder
 import com.example.myevents.ui.composables.Size
@@ -60,6 +62,10 @@ fun AddEventScreen(
 ) {
     val ctx = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
+    val permDenied = stringResource(R.string.per_denied)
+    val locPermReq = stringResource(R.string.loc_perm_req)
+    val gosettings = stringResource(R.string.go_set)
+    val noInternet = stringResource(R.string.no_internet)
 
     // Camera
 
@@ -71,7 +77,7 @@ fun AddEventScreen(
         if (status.isGranted) {
             cameraLauncher.captureImage()
         } else {
-            Toast.makeText(ctx, "Permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(ctx, permDenied, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -160,7 +166,7 @@ fun AddEventScreen(
                     navController.navigateUp()
                 }
             ) {
-                Icon(Icons.Outlined.Check, "Add Event")
+                Icon(Icons.Outlined.Check, stringResource(R.string.add_event))
             }
         },
     ) { contentPadding ->
@@ -175,7 +181,7 @@ fun AddEventScreen(
             OutlinedTextField(
                 value = state.destination,
                 onValueChange = actions::setDestination,
-                label = { Text("Destination") },
+                label = { Text(stringResource(R.string.dest)) },
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = {
                     IconButton(onClick = ::requestLocation) {
@@ -186,13 +192,13 @@ fun AddEventScreen(
             OutlinedTextField(
                 value = state.date,
                 onValueChange = actions::setDate,
-                label = { Text("Date") },
+                label = { Text(stringResource(R.string.date)) },
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
                 value = state.description,
                 onValueChange = actions::setDescription,
-                label = { Text("Description") },
+                label = { Text(stringResource(R.string.desc)) },
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.size(24.dp))
@@ -206,7 +212,7 @@ fun AddEventScreen(
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text("Take a picture")
+                Text(stringResource(R.string.take_pic))
             }
             Spacer(Modifier.size(8.dp))
             ImageWithPlaceholder(state.imageUri, Size.Lg)
@@ -215,19 +221,19 @@ fun AddEventScreen(
 
     if (state.showLocationDisabledAlert) {
         AlertDialog(
-            title = { Text("Location disabled") },
-            text = { Text("Location must be enabled to get your current location in the app.") },
+            title = { Text(stringResource(R.string.loc_disabled)) },
+            text = { Text(stringResource(R.string.loc_alert)) },
             confirmButton = {
                 TextButton(onClick = {
                     locationService.openLocationSettings()
                     actions.setShowLocationDisabledAlert(false)
                 }) {
-                    Text("Enable")
+                    Text(stringResource(R.string.enable))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { actions.setShowLocationDisabledAlert(false) }) {
-                    Text("Dismiss")
+                    Text(stringResource(R.string.dismiss))
                 }
             },
             onDismissRequest = { actions.setShowLocationDisabledAlert(false) }
@@ -236,19 +242,19 @@ fun AddEventScreen(
 
     if (state.showLocationPermissionDeniedAlert) {
         AlertDialog(
-            title = { Text("Location permission denied") },
-            text = { Text("Location permission is required to get your current location in the app.") },
+            title = { Text(stringResource(R.string.loc_perm_disabled)) },
+            text = { Text(stringResource(R.string.loc_perm_alert)) },
             confirmButton = {
                 TextButton(onClick = {
                     locationPermission.launchPermissionRequest()
                     actions.setShowLocationPermissionDeniedAlert(false)
                 }) {
-                    Text("Grant")
+                    Text(stringResource(R.string.grant))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { actions.setShowLocationPermissionDeniedAlert(false) }) {
-                    Text("Dismiss")
+                    Text(stringResource(R.string.dismiss))
                 }
             },
             onDismissRequest = { actions.setShowLocationPermissionDeniedAlert(false) }
@@ -258,8 +264,8 @@ fun AddEventScreen(
     if (state.showLocationPermissionPermanentlyDeniedSnackbar) {
         LaunchedEffect(snackbarHostState) {
             val res = snackbarHostState.showSnackbar(
-                "Location permission is required.",
-                "Go to Settings",
+                locPermReq,
+                gosettings,
                 duration = SnackbarDuration.Long
             )
             if (res == SnackbarResult.ActionPerformed) {
@@ -277,8 +283,8 @@ fun AddEventScreen(
     if (state.showNoInternetConnectivitySnackbar) {
         LaunchedEffect(snackbarHostState) {
             val res = snackbarHostState.showSnackbar(
-                message = "No Internet connectivity",
-                actionLabel = "Go to Settings",
+                message = noInternet,
+                actionLabel = gosettings,
                 duration = SnackbarDuration.Long
             )
             if (res == SnackbarResult.ActionPerformed) {

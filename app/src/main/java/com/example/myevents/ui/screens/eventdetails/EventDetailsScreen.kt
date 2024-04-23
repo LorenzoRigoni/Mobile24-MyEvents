@@ -25,12 +25,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.myevents.R
 import com.example.myevents.data.database.Event
 
 @Composable
 fun EventDetailsScreen(event: Event) {
     val ctx = LocalContext.current
+    val shareEvent = stringResource(R.string.share_event)
 
     fun shareDetails() {
         val sendIntent = Intent().apply {
@@ -38,7 +41,7 @@ fun EventDetailsScreen(event: Event) {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, event.eventID)
         }
-        val shareIntent = Intent.createChooser(sendIntent, "Share event")
+        val shareIntent = Intent.createChooser(sendIntent, shareEvent)
         if (shareIntent.resolveActivity(ctx.packageManager) != null) {
             ctx.startActivity(shareIntent)
         }
@@ -50,7 +53,7 @@ fun EventDetailsScreen(event: Event) {
                 containerColor = MaterialTheme.colorScheme.primary,
                 onClick = ::shareDetails
             ) {
-                Icon(Icons.Outlined.Share, "Share Event")
+                Icon(Icons.Outlined.Share, shareEvent)
             }
         },
     ) { contentPadding ->
@@ -61,7 +64,7 @@ fun EventDetailsScreen(event: Event) {
         ) {
             Image(
                 Icons.Outlined.Image,
-                "Event picture",
+                stringResource(R.string.event_pic),
                 contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
                 modifier = Modifier
@@ -83,7 +86,7 @@ fun EventDetailsScreen(event: Event) {
             )
             Spacer(Modifier.size(8.dp))
             Text(
-                "Description",
+                stringResource(R.string.desc),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 style = MaterialTheme.typography.bodyMedium
             )

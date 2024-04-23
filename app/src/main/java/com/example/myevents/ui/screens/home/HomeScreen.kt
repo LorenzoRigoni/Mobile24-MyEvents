@@ -31,9 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.myevents.R
 import com.example.myevents.ui.MyEventsRoute
 
 @Composable
@@ -46,7 +48,7 @@ fun HomeScreen(navController: NavHostController) {
                 containerColor = MaterialTheme.colorScheme.primary,
                 onClick = { navController.navigate(MyEventsRoute.AddEvent.route) }
             ) {
-                Icon(Icons.Outlined.Add, "Add Event")
+                Icon(Icons.Outlined.Add, stringResource(R.string.add_event))
             }
         },
     ) { contentPadding ->
@@ -90,7 +92,7 @@ fun EventItem(item: String, onClick: () -> Unit) {
         ) {
             Image(
                 Icons.Outlined.Image,
-                "Event picture",
+                stringResource(R.string.event_pic),
                 contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
                 modifier = Modifier

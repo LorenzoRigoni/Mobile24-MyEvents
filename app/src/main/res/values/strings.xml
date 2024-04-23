@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">MyEvents</string>
+    <string name="hello">Hello </string>
+    <string name="logout">Logout</string>
+    <string name="welcome">Welcome! We ask you to login to continue</string>
+    <string name="log">Login</string>
+    <string name="browse">Browse my events</string>
+    <string name="remember">Remember me</string>
+    <string name="wrong_us">Error in the authentication: wrong username or password</string>
+    <string name="no_account">You don\'t have an account? Register here!</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="conf_pass">Confirm password</string>
+    <string name="error_empty_fields">Error in the registration: some fields are empty or the passwords given are different each other</string>
+    <string name="error_us_used">Error in the registration: the username entered has already been used</string>
+    <string name="register">Register</string>
+    <string name="already_have_acc">You already have an account? Login here!</string>
+    <string name="add_event">Add Event</string>
+    <string name="event_pic">Event picture</string>
+    <string name="share_event">Share event</string>
+    <string name="desc">Description</string>
+    <string name="per_denied">Permission denied</string>
+    <string name="dest">Destination</string>
+    <string name="date">Date</string>
+    <string name="take_pic">Take a picture</string>
+    <string name="loc_disabled">Location disabled</string>
+    <string name="loc_alert">Location must be enabled to get your current location in the app.</string>
+    <string name="enable">Enable</string>
+    <string name="loc_perm_disabled">Location permission denied</string>
+    <string name="loc_perm_alert">Location permission is required to get your current location in the app.</string>
+    <string name="grant">Grant</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="loc_perm_req">Location permission is required.</string>
+    <string name="go_set">Go to Settings</string>
+    <string name="no_internet">No Internet connectivity</string>
 </resources>

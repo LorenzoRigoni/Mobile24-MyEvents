@@ -28,11 +28,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
+import com.example.myevents.R
 import com.example.myevents.data.database.User
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserActions
@@ -51,6 +53,8 @@ fun RegisterScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var isChecked by remember { mutableStateOf(false) }
+    val errorEmpty = stringResource(R.string.error_empty_fields)
+    val errorUsername = stringResource(R.string.error_us_used)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -71,7 +75,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Name") },
+            label = { Text(stringResource(R.string.name)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -80,7 +84,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = surname,
             onValueChange = { surname = it },
-            label = { Text("Surname") },
+            label = { Text(stringResource(R.string.surname)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -100,7 +104,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
+            label = { Text(stringResource(R.string.conf_pass)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth()
@@ -112,7 +116,7 @@ fun RegisterScreen(
             checked = isChecked,
             onCheckedChange = { isChecked = it }
         )
-        Text(text = "Remember me", modifier = Modifier.padding(16.dp))
+        Text(text = stringResource(R.string.remember), modifier = Modifier.padding(16.dp))
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -126,21 +130,21 @@ fun RegisterScreen(
                     } else {
                         Toast.makeText(
                             navController.context,
-                            "Error in the registration: the username entered has already been used",
+                            errorUsername,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 } else {
                     Toast.makeText(
                         navController.context,
-                        "Error in the registration: some fields are empty or the passwords given are different each other",
+                        errorEmpty,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
             },
             modifier = Modifier.align(Alignment.End)
         ) {
-            Text(text = "Register")
+            Text(text = stringResource(R.string.register))
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -151,7 +155,7 @@ fun RegisterScreen(
             },
             modifier = Modifier.align(Alignment.End)
         ) {
-            Text(text = "You already have an account? Login here!")
+            Text(text = stringResource(R.string.already_have_acc))
         }
     }
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyEvents</string>
+    <string name="hello">Ciao </string>
+    <string name="logout">Esci</string>
+    <string name="welcome">Benvenuto! Ti chiedo di accedere per continuare</string>
+    <string name="log">Accedi</string>
+    <string name="browse">Sfoglia i miei eventi</string>
+    <string name="remember">Ricordami</string>
+    <string name="wrong_us">Errore nell\'autenticazione: l\'username e/o la password sono sbagliate</string>
+    <string name="no_account">Non hai un account? Registrati qui!</string>
+    <string name="name">Nome</string>
+    <string name="surname">Cognome</string>
+    <string name="conf_pass">Conferma la password</string>
+    <string name="error_empty_fields">Errore nella registrazione: qualche campo è vuoto oppure le password non coincidono tra loro</string>
+    <string name="error_us_used">Errore nella registrazione: l\'username inserito è già stato inserito</string>
+    <string name="register">Registrati</string>
+    <string name="already_have_acc">Hai già un account? Accedi qui!</string>
+    <string name="add_event">Aggiungi un evento</string>
+    <string name="event_pic">Immagine dell\'evento</string>
+    <string name="share_event">Condividi l\'evento</string>
+    <string name="desc">Descrizione</string>
+    <string name="per_denied">Permesso negato</string>
+    <string name="dest">Destinazione</string>
+    <string name="date">Data</string>
+    <string name="take_pic">Scatta una foto</string>
+    <string name="loc_disabled">Posizione disabilitata</string>
+    <string name="loc_alert">La posizione deve essere abilitata per ottenere nell\'applicazione la tua posizione corrente</string>
+    <string name="enable">Abilita</string>
+    <string name="loc_perm_disabled">Permesso sulla posizione negato</string>
+    <string name="loc_perm_alert">Il permesso sulla posizione è richiesto per ottenere nell\'applicazione la tua posizione corrente</string>
+    <string name="grant">Concedi</string>
+    <string name="dismiss">Respingi</string>
+    <string name="loc_perm_req">Viene richiesto il permesso per la posizione</string>
+    <string name="go_set">Vai alle Impostazioni</string>
+    <string name="no_internet">Nessuna connessione ad Internet</string>
+</resources>
