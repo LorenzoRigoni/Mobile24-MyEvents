@@ -2,6 +2,7 @@ package com.example.myevents.ui.screens.user
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -123,11 +124,18 @@ fun RegisterScreen(
                         onRegisterAction(username, isChecked)
                         navController.navigate(MyEventsRoute.Welcome.route)
                     } else {
-                        /*TODO: alert for username witch is already taken*/
+                        Toast.makeText(
+                            navController.context,
+                            "Error in the registration: the username entered has already been used",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 } else {
-                    /*TODO: alert for empty fields or different passwords*/
-                    //For alerts, see https://developer.android.com/develop/ui/compose/components/dialog?hl=it
+                    Toast.makeText(
+                        navController.context,
+                        "Error in the registration: some fields are empty or the passwords given are different each other",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             },
             modifier = Modifier.align(Alignment.End)

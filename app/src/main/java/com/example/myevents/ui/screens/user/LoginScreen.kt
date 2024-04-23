@@ -1,5 +1,6 @@
 package com.example.myevents.ui.screens.user
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -78,7 +79,11 @@ fun LoginScreen(
                         onLoginAction(username, isChecked)
                         navController.navigate(MyEventsRoute.Welcome.route)
                     } else {
-                        /*TODO: alert for error in login*/
+                        Toast.makeText(
+                            navController.context,
+                            "Error in the authentication: wrong username or password",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             },
