@@ -89,7 +89,7 @@ fun MyEventsNavGraph(
         with(MyEventsRoute.EventDetails) {
             composable(route, arguments) { backStackEntry ->
                 val event = requireNotNull(eventsState.events.find {
-                    it.eventID == backStackEntry.arguments?.getString("eventId")?.toInt()
+                    it.eventID == 10
                 })
                 EventDetailsScreen(event)
             }

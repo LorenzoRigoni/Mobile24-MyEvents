@@ -49,12 +49,16 @@ class UserViewModel (
     }
 
     fun checkLogin(username: String, password: String) : Boolean {
-        user = repository.getUserForLogin(username, password)
+        viewModelScope.launch {
+            user = repository.getUserForLogin(username, password)
+        }
         return user != null
     }
 
     fun isUsernameAlreadyTaken(username: String) : Boolean {
-        user = repository.getUserByUsername(username)
+        viewModelScope.launch {
+            user = repository.getUserByUsername(username)
+        }
         return user != null
     }
 

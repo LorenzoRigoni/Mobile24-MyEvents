@@ -24,11 +24,11 @@ class UserRepository(
     suspend fun setLoggedUser(value: String) = dataStore.edit { it[USER_KEY] = value }
     suspend fun setIsLogged(value: Boolean) = dataStore.edit { it[LOGGED_KEY] = value }
 
-    fun getUserForLogin(username: String, password: String) : User? {
+    suspend fun getUserForLogin(username: String, password: String) : User? {
         return userDAO.getUserForLogin(username, password)
     }
 
-    fun getUserByUsername(username: String) : User? {
+    suspend fun getUserByUsername(username: String) : User? {
         return userDAO.getUserByUsername(username)
     }
 
