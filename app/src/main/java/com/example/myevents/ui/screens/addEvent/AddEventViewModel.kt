@@ -26,6 +26,8 @@ data class AddEventState(
         title =  description,
         username = date,
         eventType = "Event",
+        date = date,
+        imageUri = "",
         isFavourite = false
     )
 }

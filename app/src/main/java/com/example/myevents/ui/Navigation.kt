@@ -67,7 +67,7 @@ fun MyEventsNavGraph(
     modifier: Modifier = Modifier
 ) {
     val eventsVm = koinViewModel<EventsViewModel>()
-    val eventsState by eventsVm.state.collectAsStateWithLifecycle()
+    //val eventsState by eventsVm.state
 
     val userVm = koinViewModel<UserViewModel>()
 
@@ -83,12 +83,12 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.Home) {
             composable(route) {
-                HomeScreen(navController)
+                HomeScreen(eventsVm, navController)
             }
         }
         with(MyEventsRoute.EventDetails) {
             composable(route, arguments) { backStackEntry ->
-                val event = requireNotNull(eventsState.events.find {
+                val event = requireNotNull(eventsVm.state.events.find {
                     it.eventID == 10
                 })
                 EventDetailsScreen(event)

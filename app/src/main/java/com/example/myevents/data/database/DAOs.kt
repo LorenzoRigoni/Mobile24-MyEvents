@@ -20,9 +20,8 @@ interface UserDAO {
 
 @Dao
 interface EventDAO {
-    //Insert here the queries
-    @Query("SELECT * FROM event")
-    fun getAll(): Flow<List<Event>>
+    @Query("SELECT * FROM event WHERE username = :username AND date >= date('now')")
+    fun getEventsOfUserFromToday(username: String): Flow<List<Event>>
     @Upsert
     suspend fun upsert(event: Event)
     @Delete
@@ -31,7 +30,6 @@ interface EventDAO {
 
 @Dao
 interface NotificationDAO {
-    //Insert here the queries
     @Query("SELECT * FROM notification")
     fun getAll(): Flow<List<Notification>>
     @Upsert

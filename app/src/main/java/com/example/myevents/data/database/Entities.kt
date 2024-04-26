@@ -21,7 +21,9 @@ data class Event(
     @ColumnInfo val eventType: String,
     @ColumnInfo val title: String,
     @ColumnInfo val place: String,
-    @ColumnInfo val isFavourite: Boolean
+    @ColumnInfo val date: String,
+    @ColumnInfo val isFavourite: Boolean,
+    @ColumnInfo val imageUri: String?
 )
 
 @Entity

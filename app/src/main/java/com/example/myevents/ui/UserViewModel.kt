@@ -11,7 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-data class UserState(val user: String)
+data class UserState(val user: String, val isLogged: Boolean)
 
 interface UserActions {
     fun addUser(user: User): Job
@@ -21,14 +21,14 @@ interface UserActions {
 class UserViewModel (
     private val repository: UserRepository
 ) : ViewModel() {
-    var state by mutableStateOf(UserState(""))
+    var state by mutableStateOf(UserState("", false))
         private set
     var user by mutableStateOf<User?>(null)
         private set
 
     init {
         viewModelScope.launch {
-            state = UserState(repository.user.first())
+            state = UserState(repository.user.first(), repository.isLogged.first())
             if (state.user.isNotEmpty()) {
                 user = repository.getUserByUsername(state.user)
             }
@@ -36,15 +36,19 @@ class UserViewModel (
     }
 
     fun setLoggedUser(value: String, rememberMe: Boolean) {
-        if (rememberMe) {
-            viewModelScope.launch { repository.setLoggedUser(value) }
+        viewModelScope.launch {
+            repository.setLoggedUser(value)
+            repository.setIsLogged(rememberMe)
         }
-        state = UserState(value)
+        state = UserState(value, rememberMe)
     }
 
     fun logout() {
-        viewModelScope.launch { repository.setLoggedUser("") }
-        state = UserState("")
+        viewModelScope.launch {
+            repository.setLoggedUser("")
+            repository.setIsLogged(false)
+        }
+        state = UserState("", false)
         user = null
     }
 

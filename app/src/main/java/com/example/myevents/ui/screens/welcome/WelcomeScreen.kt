@@ -31,8 +31,8 @@ fun WelcomeScreen(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            if (state.user.isNotEmpty()) {
-                Text(text = stringResource(R.string.hello) + " " + state.user + "!")
+            if (state.isLogged || state.user.isNotEmpty()) {
+                Text(text = stringResource(R.string.hello) + state.user + "!")
                 Spacer(modifier = Modifier.height(16.dp))
                 FloatingActionButton(
                     onClick = { navController.navigate(MyEventsRoute.Home.route) },

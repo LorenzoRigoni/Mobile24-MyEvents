@@ -1,5 +1,6 @@
 package com.example.myevents.ui.screens.home
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,16 +32,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.myevents.R
+import com.example.myevents.data.database.Event
+import com.example.myevents.ui.EventsState
+import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.MyEventsRoute
+import com.example.myevents.ui.UserState
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
-    val items = (1..20).map { "Item n°$it" }
+fun HomeScreen(
+    eventsVM: EventsViewModel,
+    navController: NavHostController) {
 
     Scaffold(
         floatingActionButton = {
@@ -59,12 +69,14 @@ fun HomeScreen(navController: NavHostController) {
             contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 80.dp),
             modifier = Modifier.padding(contentPadding)
         ) {
-            items(items) { item ->
+            items(eventsVM.state.events) { item ->
                 EventItem(
                     item,
                     onClick = {
-                        navController.navigate(MyEventsRoute.EventDetails.buildRoute(item))
-                    }
+                        navController.navigate(MyEventsRoute.EventDetails.buildRoute(item.eventID.toString()))
+                    }/*,
+                    eventsVM = eventsVM,
+                    events = eventsVM.state.events*/
                 )
             }
         }
@@ -73,7 +85,12 @@ fun HomeScreen(navController: NavHostController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventItem(item: String, onClick: () -> Unit) {
+fun EventItem(
+    item: Event,
+    onClick: () -> Unit,
+    /*eventsVM: EventsViewModel,
+    events: List<Event>*/
+) {
     Card(
         onClick = onClick,
         modifier = Modifier
@@ -90,24 +107,52 @@ fun EventItem(item: String, onClick: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                Icons.Outlined.Image,
-                stringResource(R.string.event_pic),
-                contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
-                modifier = Modifier
-                    .size(72.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondary)
-                    .padding(20.dp)
-            )
-            Spacer(Modifier.size(8.dp))
+            val imageUri = Uri.parse(item.imageUri)
+            if (imageUri.path?.isNotEmpty() == true) {
+                AsyncImage(
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(imageUri)
+                        .crossfade(true)
+                        .build(),
+                    stringResource(R.string.event_pic),
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .size(72.dp)
+                        .clip(CircleShape)
+                )
+            } else {
+                Image(
+                    Icons.Outlined.Image,
+                    stringResource(R.string.event_pic),
+                    contentScale = ContentScale.Fit,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
+                    modifier = Modifier
+                        .size(72.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.secondary)
+                        .padding(20.dp)
+                )
+            }
+            Spacer(modifier = Modifier.size(8.dp))
             Text(
-                item,
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center
+                item.title,
+                textAlign = TextAlign.Left
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                item.eventType,
+                textAlign = TextAlign.Left
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                item.date,
+                textAlign = TextAlign.Left
             )
         }
     }
+}
+
+@Composable
+fun NoEventsPlaceHolder() {
+    /*TODO: placeholder screen when list of events is empty*/
 }

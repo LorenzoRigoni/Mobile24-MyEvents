@@ -58,6 +58,7 @@ val appModule = module {
 
     single {
         MyEventsRepository(
+            get(),
             get<MyEventsDatabase>().eventDAO(),
             get<MyEventsDatabase>().notificationDAO()
         )
