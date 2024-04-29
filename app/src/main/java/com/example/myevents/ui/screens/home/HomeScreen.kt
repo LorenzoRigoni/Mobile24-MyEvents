@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -62,23 +64,25 @@ fun HomeScreen(
             }
         },
     ) { contentPadding ->
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(1),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 80.dp),
-            modifier = Modifier.padding(contentPadding)
-        ) {
-            items(eventsVM.state.events) { item ->
-                EventItem(
-                    item,
-                    onClick = {
-                        navController.navigate(MyEventsRoute.EventDetails.buildRoute(item.eventID.toString()))
-                    }/*,
-                    eventsVM = eventsVM,
-                    events = eventsVM.state.events*/
-                )
+        if (eventsVM.state.events.isNotEmpty()) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(1),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 80.dp),
+                modifier = Modifier.padding(contentPadding)
+            ) {
+                items(eventsVM.state.events) { item ->
+                    EventItem(
+                        item,
+                        onClick = {
+                            navController.navigate(MyEventsRoute.EventDetails.buildRoute(item.eventID.toString()))
+                        }
+                    )
+                }
             }
+        } else {
+            NoEventsPlaceHolder(Modifier.padding(contentPadding))
         }
     }
 }
@@ -87,9 +91,7 @@ fun HomeScreen(
 @Composable
 fun EventItem(
     item: Event,
-    onClick: () -> Unit,
-    /*eventsVM: EventsViewModel,
-    events: List<Event>*/
+    onClick: () -> Unit
 ) {
     Card(
         onClick = onClick,
@@ -153,6 +155,21 @@ fun EventItem(
 }
 
 @Composable
-fun NoEventsPlaceHolder() {
-    /*TODO: placeholder screen when list of events is empty*/
+fun NoEventsPlaceHolder(modifier: Modifier = Modifier) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            stringResource(R.string.no_events),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Text(
+            stringResource(R.string.tap_below),
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
 }
