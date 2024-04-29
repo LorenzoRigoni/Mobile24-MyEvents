@@ -169,7 +169,9 @@ fun NoEventsPlaceHolder(modifier: Modifier = Modifier) {
         )
         Text(
             stringResource(R.string.tap_below),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(bottom = 8.dp)
         )
     }
 }

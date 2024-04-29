@@ -4,7 +4,7 @@
     <string name="logout">Logout</string>
     <string name="welcome">Welcome! We ask you to login to continue</string>
     <string name="no_events">Oops! There seems to be no events here</string>
-    <string name="tap_below">Try changing filters or creating a new event by pressing the + button below</string>
+    <string name="tap_below">Create a new event by pressing the + button below</string>
     <string name="log">Login</string>
     <string name="browse">Browse my events</string>
     <string name="remember">Remember me</string>

@@ -32,7 +32,7 @@ fun WelcomeScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             if (state.isLogged || state.user.isNotEmpty()) {
-                Text(text = stringResource(R.string.hello) + state.user + "!")
+                Text(text = stringResource(R.string.hello) + " " + state.user + "!")
                 Spacer(modifier = Modifier.height(16.dp))
                 FloatingActionButton(
                     onClick = { navController.navigate(MyEventsRoute.Home.route) },
@@ -43,6 +43,7 @@ fun WelcomeScreen(
                         modifier = Modifier.padding(16.dp)
                     )
                 }
+                Spacer(modifier = Modifier.height(16.dp))
                 FloatingActionButton(
                     onClick = {
                         logout()
