@@ -120,7 +120,6 @@ fun EventItem(
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .size(72.dp)
-                        .clip(CircleShape)
                 )
             } else {
                 Image(
@@ -130,7 +129,6 @@ fun EventItem(
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
                     modifier = Modifier
                         .size(72.dp)
-                        .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.secondary)
                         .padding(20.dp)
                 )

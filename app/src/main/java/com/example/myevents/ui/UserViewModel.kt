@@ -25,6 +25,8 @@ class UserViewModel (
         private set
     var user by mutableStateOf<User?>(null)
         private set
+    var imageUri by mutableStateOf<String?>(null)
+        private set
 
     init {
         viewModelScope.launch {
@@ -64,6 +66,13 @@ class UserViewModel (
             user = repository.getUserByUsername(username)
         }
         return user != null
+    }
+
+    fun getImageUri(username: String) : String? {
+        viewModelScope.launch {
+            imageUri = repository.getImageUriByUsername(username)
+        }
+        return imageUri
     }
 
     val actions = object : UserActions {

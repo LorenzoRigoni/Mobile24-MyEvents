@@ -10,7 +10,8 @@ data class User(
     @PrimaryKey val username: String,
     @ColumnInfo val name: String,
     @ColumnInfo val surname: String,
-    @ColumnInfo val password: String
+    @ColumnInfo val password: String,
+    @ColumnInfo val imageUri: String?
 )
 
 @Entity

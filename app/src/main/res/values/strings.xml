@@ -3,6 +3,7 @@
     <string name="hello">Hello </string>
     <string name="logout">Logout</string>
     <string name="welcome">Welcome! We ask you to login to continue</string>
+    <string name="user_pic">Take a profile picture</string>
     <string name="no_events">Oops! There seems to be no events here</string>
     <string name="tap_below">Create a new event by pressing the + button below</string>
     <string name="log">Login</string>

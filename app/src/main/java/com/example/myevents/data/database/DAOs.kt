@@ -12,6 +12,8 @@ interface UserDAO {
     suspend fun getUserForLogin(username: String, password: String): User?
     @Query("SELECT * FROM user WHERE username = :username")
     suspend fun getUserByUsername(username: String): User?
+    @Query("SELECT imageUri FROM user WHERE username = :username")
+    suspend fun getImageUriByUsername(username: String): String?
     @Upsert
     suspend fun upsert(user: User)
     @Delete

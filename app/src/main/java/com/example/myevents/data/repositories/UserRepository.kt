@@ -32,6 +32,10 @@ class UserRepository(
         return userDAO.getUserByUsername(username)
     }
 
+    suspend fun getImageUriByUsername(username: String): String? {
+        return userDAO.getImageUriByUsername(username)
+    }
+
     suspend fun upsertUser(user: User) = userDAO.upsert(user)
     suspend fun deleteUser(user: User) = userDAO.delete(user)
 }

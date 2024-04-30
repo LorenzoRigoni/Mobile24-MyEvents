@@ -78,7 +78,7 @@ fun MyEventsNavGraph(
     ) {
         with(MyEventsRoute.Welcome) {
             composable(route) {
-                WelcomeScreen(userVm.state, navController, userVm::logout)
+                WelcomeScreen(userVm.state, navController, userVm::logout, userVm::getImageUri)
             }
         }
         with(MyEventsRoute.Home) {

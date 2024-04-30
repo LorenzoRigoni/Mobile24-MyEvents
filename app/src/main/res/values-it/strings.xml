@@ -4,6 +4,7 @@
     <string name="hello">Ciao </string>
     <string name="logout">Esci</string>
     <string name="welcome">Benvenuto! Ti chiedo di accedere per continuare</string>
+    <string name="user_pic">Scatta una foto profilo</string>
     <string name="no_events">Oops! Sembra che non ci siano eventi qui</string>
     <string name="tap_below">Crea un nuovo evento premendo il pulsante + qui sotto</string>
     <string name="log">Accedi</string>
