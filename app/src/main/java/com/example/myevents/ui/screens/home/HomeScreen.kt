@@ -3,6 +3,7 @@ package com.example.myevents.ui.screens.home
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.WarningAmber
@@ -77,7 +80,8 @@ fun HomeScreen(
                         item,
                         onClick = {
                             navController.navigate(MyEventsRoute.EventDetails.buildRoute(item.eventID.toString()))
-                        }
+                        },
+                        eventsVM
                     )
                 }
             }
@@ -91,7 +95,8 @@ fun HomeScreen(
 @Composable
 fun EventItem(
     item: Event,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    eventsVM: EventsViewModel
 ) {
     Card(
         onClick = onClick,
@@ -147,6 +152,22 @@ fun EventItem(
             Text(
                 item.date,
                 textAlign = TextAlign.Left
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            Icon(
+                if (item.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
+                contentDescription = "Event star icon",
+                modifier = Modifier.clickable {
+                    if (item.isFavourite) {
+                        eventsVM.addEvent(
+                            Event(item.eventID, item.username, item.eventType,
+                            item.title, item.place, item.date, false, item.imageUri)
+                        )
+                    } else {
+                        eventsVM.addEvent(Event(item.eventID, item.username, item.eventType,
+                            item.title, item.place, item.date, true, item.imageUri))
+                    }
+                }
             )
         }
     }
