@@ -89,7 +89,7 @@ fun MyEventsNavGraph(
         with(MyEventsRoute.EventDetails) {
             composable(route, arguments) { backStackEntry ->
                 val event = requireNotNull(eventsVm.state.events.find {
-                    it.eventID == 10
+                    it.eventID == backStackEntry.arguments?.getString("eventId")?.toInt()
                 })
                 EventDetailsScreen(event)
             }
@@ -129,7 +129,7 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.Login) {
             composable(route) {
-                LoginScreen(navController, userVm::setLoggedUser, userVm::checkLogin)
+                LoginScreen(navController, userVm::setLoggedUser, userVm::checkLogin, eventsVm::getUserEvents)
             }
         }
         with(MyEventsRoute.Register) {

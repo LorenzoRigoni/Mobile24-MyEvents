@@ -26,14 +26,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.myevents.R
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserState
-import com.example.myevents.ui.composables.ImageWithPlaceholder
 
 @Composable
 fun WelcomeScreen(
@@ -49,7 +47,8 @@ fun WelcomeScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             if (state.isLogged || state.user.isNotEmpty()) {
-                val imageUri = Uri.parse(getImage(state.user))
+                val tmpImage = getImage(state.user)
+                val imageUri = if (tmpImage != null) Uri.parse(tmpImage) else Uri.EMPTY
                 if (imageUri.path?.isNotEmpty() == true) {
                     AsyncImage(
                         ImageRequest.Builder(LocalContext.current)
