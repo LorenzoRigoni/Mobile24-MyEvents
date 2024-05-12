@@ -15,13 +15,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Image
-import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,28 +31,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.myevents.R
 import com.example.myevents.data.database.Event
 import com.example.myevents.ui.EventsState
 import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.MyEventsRoute
-import com.example.myevents.ui.UserState
 
 @Composable
 fun HomeScreen(
     eventsVM: EventsViewModel,
+    state: EventsState,
     navController: NavHostController) {
 
     Scaffold(
@@ -67,7 +62,7 @@ fun HomeScreen(
             }
         },
     ) { contentPadding ->
-        if (eventsVM.state.events.isNotEmpty()) {
+        if (state.events.isNotEmpty()) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(1),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -75,7 +70,7 @@ fun HomeScreen(
                 contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 80.dp),
                 modifier = Modifier.padding(contentPadding)
             ) {
-                items(eventsVM.state.events) { item ->
+                items(state.events) { item ->
                     EventItem(
                         item,
                         onClick = {

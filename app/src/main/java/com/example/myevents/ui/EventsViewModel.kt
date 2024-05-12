@@ -1,17 +1,11 @@
 package com.example.myevents.ui
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.database.Event
 import com.example.myevents.data.repositories.MyEventsRepository
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class EventsState(val events: List<Event>)
@@ -20,17 +14,20 @@ class EventsViewModel(
     private val repository: MyEventsRepository
 ) : ViewModel() {
 
-    var state by mutableStateOf(EventsState(emptyList()))
-        private set
+    val state = MutableStateFlow(EventsState(emptyList()))
 
     init {
+        updateEvents("")
+    }
+
+    fun updateEvents(name: String) {
         viewModelScope.launch {
-            state = repository.eventsOfUserFromToday(repository.user.first()).map { EventsState(events = it) }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = EventsState(emptyList())
-            ).value
+            val username = if (name == "") repository.user.first() else name
+            repository.eventsOfUserFromToday(username).collect { events ->
+                state.value = EventsState(events)
+            }
         }
+
     }
 
     fun addEvent(event: Event) = viewModelScope.launch {

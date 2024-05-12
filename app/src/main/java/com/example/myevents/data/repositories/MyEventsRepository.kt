@@ -2,16 +2,12 @@ package com.example.myevents.data.repositories
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.myevents.data.database.Event
 import com.example.myevents.data.database.EventDAO
 import com.example.myevents.data.database.Notification
 import com.example.myevents.data.database.NotificationDAO
-import com.example.myevents.data.database.User
-import com.example.myevents.data.database.UserDAO
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class MyEventsRepository(
