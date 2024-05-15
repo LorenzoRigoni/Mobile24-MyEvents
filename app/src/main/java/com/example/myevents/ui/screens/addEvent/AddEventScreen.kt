@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,6 +52,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.example.camera.utils.PermissionStatus
 import com.example.camera.utils.rememberPermission
@@ -60,6 +63,10 @@ import com.example.myevents.ui.composables.Size
 import com.example.myevents.utils.LocationService
 import com.example.myevents.utils.rememberCameraLauncher
 import org.koin.compose.koinInject
+import org.osmdroid.events.MapEventsReceiver
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
 
 @Composable
 fun AddEventScreen(
@@ -89,11 +96,10 @@ fun AddEventScreen(
                     .padding(bottom = 8.dp)
             ){
                 Text(
-                    "Add a new event!",
+                    "Title of event",
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-
             Row (
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -101,87 +107,150 @@ fun AddEventScreen(
                     value = title,
                     onValueChange = { title = it },
                     textStyle = MaterialTheme.typography.bodyMedium,
-                    label = { Text(text = "Title of event")},
+                    label = { Text(text = "Title")},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
             Spacer(Modifier.size(24.dp))
-        }
-    }
-
-    /*if (state.showLocationDisabledAlert) {
-        AlertDialog(
-            title = { Text(stringResource(R.string.loc_disabled)) },
-            text = { Text(stringResource(R.string.loc_alert)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    locationService.openLocationSettings()
-                    actions.setShowLocationDisabledAlert(false)
-                }) {
-                    Text(stringResource(R.string.enable))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { actions.setShowLocationDisabledAlert(false) }) {
-                    Text(stringResource(R.string.dismiss))
-                }
-            },
-            onDismissRequest = { actions.setShowLocationDisabledAlert(false) }
-        )
-    }
-
-    if (state.showLocationPermissionDeniedAlert) {
-        AlertDialog(
-            title = { Text(stringResource(R.string.loc_perm_disabled)) },
-            text = { Text(stringResource(R.string.loc_perm_alert)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    locationPermission.launchPermissionRequest()
-                    actions.setShowLocationPermissionDeniedAlert(false)
-                }) {
-                    Text(stringResource(R.string.grant))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { actions.setShowLocationPermissionDeniedAlert(false) }) {
-                    Text(stringResource(R.string.dismiss))
-                }
-            },
-            onDismissRequest = { actions.setShowLocationPermissionDeniedAlert(false) }
-        )
-    }
-
-    if (state.showLocationPermissionPermanentlyDeniedSnackbar) {
-        LaunchedEffect(snackbarHostState) {
-            val res = snackbarHostState.showSnackbar(
-                locPermReq,
-                gosettings,
-                duration = SnackbarDuration.Long
-            )
-            if (res == SnackbarResult.ActionPerformed) {
-                ctx.startActivity(
-                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        data = Uri.fromParts("package", ctx.packageName, null)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            ){
+                Text(
+                    "Type of event",
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
-            actions.setShowLocationPermissionPermanentlyDeniedSnackbar(false)
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                OutlinedTextField(
+                    value = eventType,
+                    onValueChange = { eventType = it },
+                    textStyle = MaterialTheme.typography.bodyMedium,
+                    label = { Text(text = "Type")},
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            Spacer(Modifier.size(24.dp))
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            ){
+                Text(
+                    "Date of event",
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            Row (
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                OutlinedTextField(
+                    value = date,
+                    onValueChange = { date = it },
+                    textStyle = MaterialTheme.typography.bodyMedium,
+                    label = { Text(text = "Date")},
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+            Spacer(Modifier.size(24.dp))
+            /*TODO: pick image from gallery*/
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            ){
+                Text(
+                    "Position of event",
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            Spacer(Modifier.size(70.dp))
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            ) {
+                OsmMapView(
+                    addEventViewModel,
+                    latitude,
+                    longitude
+                )
+            }
+            Spacer(Modifier.size(100.dp))
+        }
+        Column (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            Row (
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(
+                    onClick = {
+                        if (title.isNotEmpty() && eventType.isNotEmpty() && date.isNotEmpty()) {
+                            addEventViewModel.addEvent(
+                                eventType,
+                                title,
+                                date,
+                                "",
+                                latitude.toString(),
+                                longitude.toString()
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(46.dp)
+                ) {
+                    Text(
+                        "Add the event!",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
         }
     }
+}
 
-    if (state.showNoInternetConnectivitySnackbar) {
-        LaunchedEffect(snackbarHostState) {
-            val res = snackbarHostState.showSnackbar(
-                message = noInternet,
-                actionLabel = gosettings,
-                duration = SnackbarDuration.Long
-            )
-            if (res == SnackbarResult.ActionPerformed) {
-                openWirelessSettings()
+@Composable
+fun OsmMapView(addEventViewModel: AddEventViewModel, latitude: Double, longitude: Double) {
+    val locService = LocationService(LocalContext.current)
+    var lat = if (latitude == 0.0) locService.coordinates?.latitude else latitude
+    var long = if (longitude == 0.0) locService.coordinates?.longitude else longitude
+    val currLocation = lat?.let { long?.let { it1 -> GeoPoint(it, it1) } }
+    AndroidView(
+        factory = { context ->
+            MapView(context).apply {
+                if (currLocation != null) {
+                    addEventViewModel.loadMap(this, currLocation, context)
+                }
+                this.overlayManager.add(MapEventsOverlay(object : MapEventsReceiver {
+                    override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+                        if (p != null) {
+                            lat = p.latitude
+                            long = p.longitude
+                            addEventViewModel.setMarker(
+                                this@apply,
+                                GeoPoint(lat!!, long!!),
+                                context
+                            )
+                        }
+                        return true
+                    }
+
+                    override fun longPressHelper(p: GeoPoint?): Boolean {
+                        return false
+                    }
+                }))
             }
-            actions.setShowNoInternetConnectivitySnackbar(false)
         }
-    }*/
+    )
 }

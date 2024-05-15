@@ -153,7 +153,7 @@ fun EventItem(
                 if (item.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
                 contentDescription = "Event star icon",
                 modifier = Modifier.clickable {
-                    if (item.isFavourite) {
+                    /*if (item.isFavourite) {
                         eventsVM.addEvent(
                             Event(item.eventID, item.username, item.eventType,
                             item.title, item.place, item.date, false, item.imageUri)
@@ -161,7 +161,7 @@ fun EventItem(
                     } else {
                         eventsVM.addEvent(Event(item.eventID, item.username, item.eventType,
                             item.title, item.place, item.date, true, item.imageUri))
-                    }
+                    }*/
                 }
             )
         }
