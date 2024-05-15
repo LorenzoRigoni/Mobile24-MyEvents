@@ -65,7 +65,7 @@ val appModule = module {
     }
     viewModel { EventsViewModel(get()) }
 
-    viewModel { AddEventViewModel() }
+    viewModel { AddEventViewModel(get()) }
 
     viewModel { SettingsViewModel(get()) }
 

@@ -1,76 +1,97 @@
 package com.example.myevents.ui.screens.addEvent
 
-import android.net.Uri
+import android.content.Context
+import android.location.Address
+import android.location.Geocoder
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.database.Event
+import com.example.myevents.data.repositories.MyEventsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import java.util.Date
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.CustomZoomButtonsController
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
+import java.io.IOException
+import java.util.Locale
 
-data class AddEventState(
-    val destination: String = "",
-    val date: String = "",
-    val description: String = "",
-    val imageUri: Uri = Uri.EMPTY,
+class AddEventViewModel(
+    private val repository: MyEventsRepository
+) : ViewModel() {
+    private var username: String? = null
 
-    val showLocationDisabledAlert: Boolean = false,
-    val showLocationPermissionDeniedAlert: Boolean = false,
-    val showLocationPermissionPermanentlyDeniedSnackbar: Boolean = false,
-    val showNoInternetConnectivitySnackbar: Boolean = false
-) {
-    val canSubmit get() = destination.isNotBlank() && date.isNotBlank() && description.isNotBlank()
+    private val _latitude = MutableStateFlow(0.0)
+    var latitude: StateFlow<Double> = _latitude
+    private val _longitude = MutableStateFlow(0.0)
+    var longitude: StateFlow<Double> = _longitude
 
-    fun toEvent() = Event(
-        place = destination,
-        title =  description,
-        username = date,
-        eventType = "Event",
-        date = date,
-        imageUri = "",
-        isFavourite = false
-    )
-}
+    private var marker: Marker? = null
 
-interface AddEventActions {
-    fun setDestination(title: String)
-    fun setDate(date: String)
-    fun setDescription(description: String)
-    fun setImageUri(imageUri: Uri)
+    init {
+        viewModelScope.launch {
+            username = repository.user.first()
+        }
+    }
 
-    fun setShowLocationDisabledAlert(show: Boolean)
-    fun setShowLocationPermissionDeniedAlert(show: Boolean)
-    fun setShowLocationPermissionPermanentlyDeniedSnackbar(show: Boolean)
-    fun setShowNoInternetConnectivitySnackbar(show: Boolean)
-}
+    fun addEvent(
+        eventType: String,
+        title: String,
+        date: String,
+        imageUri: String?,
+        latitude: String,
+        longitude: String
+    ) {
+        val event = Event(0, username.toString(), eventType, title, longitude, latitude,
+            date, false, imageUri)
+        viewModelScope.launch {
+            repository.upsertEvent(event)
+        }
+    }
 
-class AddEventViewModel : ViewModel() {
-    private val _state = MutableStateFlow(AddEventState())
-    val state = _state.asStateFlow()
+    fun loadMap(mapView: MapView, currentLocation: GeoPoint, context: Context) {
+        Configuration.getInstance().load(
+            context,
+            context.getSharedPreferences("osmdroid", Context.MODE_PRIVATE)
+        )
+        mapView.setTileSource(TileSourceFactory.MAPNIK)
+        mapView.isClickable = true
+        mapView.setMultiTouchControls(true)
+        mapView.zoomController.setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT)
+        setMarker(mapView, currentLocation, context)
+        mapView.controller.setZoom(7.0)
+        mapView.controller.setCenter(currentLocation)
+    }
 
-    val actions = object : AddEventActions {
-        override fun setDestination(title: String) =
-            _state.update { it.copy(destination = title) }
+    @Throws(IOException::class)
+    fun setMarker(mapView: MapView, currentLocation: GeoPoint, context: Context) {
+        mapView.overlays.remove(marker)
+        marker = Marker(mapView)
+        setLocation(
+            currentLocation.latitude,
+            currentLocation.longitude,
+            context
+        )?.let { location ->
+            marker!!.title = location.countryName
+            marker!!.snippet = location.locality
+        }
+        marker!!.position = currentLocation
+        marker!!.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        mapView.overlays.add(marker)
+        _latitude.value = currentLocation.latitude
+        _longitude.value = currentLocation.longitude
+    }
 
-        override fun setDate(date: String) =
-            _state.update { it.copy(date = date) }
-
-        override fun setDescription(description: String) =
-            _state.update { it.copy(description = description) }
-
-        override fun setImageUri(imageUri: Uri) =
-            _state.update { it.copy(imageUri = imageUri) }
-
-        override fun setShowLocationDisabledAlert(show: Boolean) =
-            _state.update { it.copy(showLocationDisabledAlert = show) }
-
-        override fun setShowLocationPermissionDeniedAlert(show: Boolean) =
-            _state.update { it.copy(showLocationPermissionDeniedAlert = show) }
-
-        override fun setShowLocationPermissionPermanentlyDeniedSnackbar(show: Boolean) =
-            _state.update { it.copy(showLocationPermissionPermanentlyDeniedSnackbar = show) }
-
-        override fun setShowNoInternetConnectivitySnackbar(show: Boolean) =
-            _state.update { it.copy(showNoInternetConnectivitySnackbar = show) }
+    private fun setLocation(lat: Double, long: Double, context: Context): Address? {
+        val gcd = Geocoder(context, Locale.getDefault())
+        val addresses: List<Address>? = gcd.getFromLocation(lat, long, 1)
+        assert(addresses != null)
+        return if (addresses!!.isNotEmpty()) {
+            addresses[0]
+        } else null
     }
 }

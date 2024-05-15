@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,18 +28,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.myevents.R
 import com.example.myevents.ui.MyEventsRoute
+import com.example.myevents.ui.UserViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    onLoginAction: (String, Boolean) -> Unit,
-    onLoginCheck: (String, String) -> Boolean,
+    userVm: UserViewModel,
     onLoginGetUserEvents: (String) -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isChecked by remember { mutableStateOf(false) }
     val wrongUsername = stringResource(R.string.wrong_us)
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,17 +80,19 @@ fun LoginScreen(
 
         FloatingActionButton(
             onClick = {
-                if (username.isNotEmpty() && password.isNotEmpty()) {
-                    if (onLoginCheck(username, password)) {
-                        onLoginAction(username, isChecked)
-                        onLoginGetUserEvents(username)
-                        navController.navigate(MyEventsRoute.Welcome.route)
-                    } else {
-                        Toast.makeText(
-                            navController.context,
-                            wrongUsername,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                coroutineScope.launch {
+                    if (username.isNotEmpty() && password.isNotEmpty()) {
+                        if (userVm.checkLogin(username, password)) {
+                            userVm.setLoggedUser(username, isChecked)
+                            onLoginGetUserEvents(username)
+                            navController.navigate(MyEventsRoute.Welcome.route)
+                        } else {
+                            Toast.makeText(
+                                navController.context,
+                                wrongUsername,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             },

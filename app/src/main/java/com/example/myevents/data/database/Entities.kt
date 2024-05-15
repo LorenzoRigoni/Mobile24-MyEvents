@@ -21,7 +21,8 @@ data class Event(
     @ColumnInfo val username: String,
     @ColumnInfo val eventType: String,
     @ColumnInfo val title: String,
-    @ColumnInfo val place: String,
+    @ColumnInfo val longitude: String,
+    @ColumnInfo val latitude: String,
     @ColumnInfo val date: String,
     @ColumnInfo val isFavourite: Boolean,
     @ColumnInfo val imageUri: String?

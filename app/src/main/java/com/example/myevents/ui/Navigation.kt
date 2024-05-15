@@ -97,13 +97,7 @@ fun MyEventsNavGraph(
         with(MyEventsRoute.AddEvent) {
             composable(route) {
                 val addEventVm = koinViewModel<AddEventViewModel>()
-                val state by addEventVm.state.collectAsStateWithLifecycle()
-                AddEventScreen(
-                    state = state,
-                    actions = addEventVm.actions,
-                    onSubmit = { eventsVm.addEvent(state.toEvent()) },
-                    navController = navController
-                )
+                AddEventScreen(addEventVm, navController)
             }
         }
         with(MyEventsRoute.Settings) {
@@ -129,7 +123,7 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.Login) {
             composable(route) {
-                LoginScreen(navController, userVm::setLoggedUser, userVm::checkLogin, eventsVm::updateEvents)
+                LoginScreen(navController, userVm, eventsVm::updateEvents)
             }
         }
         with(MyEventsRoute.Register) {

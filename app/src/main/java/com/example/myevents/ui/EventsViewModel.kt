@@ -29,12 +29,4 @@ class EventsViewModel(
         }
 
     }
-
-    fun addEvent(event: Event) = viewModelScope.launch {
-        repository.upsertEvent(event)
-    }
-
-    fun deleteEvent(event: Event) = viewModelScope.launch {
-        repository.deleteEvent(event)
-    }
 }
