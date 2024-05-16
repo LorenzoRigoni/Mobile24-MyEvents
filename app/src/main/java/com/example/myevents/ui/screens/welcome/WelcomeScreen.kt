@@ -37,7 +37,6 @@ import com.example.myevents.ui.UserState
 fun WelcomeScreen(
     state: UserState,
     navController: NavHostController,
-    logout: () -> Unit,
     getImage: (String) -> String?
 ) {
     Scaffold { contentPadding ->
@@ -83,19 +82,6 @@ fun WelcomeScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.browse),
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                FloatingActionButton(
-                    onClick = {
-                        logout()
-                        navController.navigate(MyEventsRoute.Welcome.route)
-                    },
-                    modifier = Modifier.padding(contentPadding),
-                ) {
-                    Text(
-                        text = stringResource(R.string.logout),
                         modifier = Modifier.padding(16.dp)
                     )
                 }

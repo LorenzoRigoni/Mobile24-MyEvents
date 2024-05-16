@@ -33,7 +33,8 @@ import com.example.myevents.ui.MyEventsRoute
 @Composable
 fun AppBar(
     navController: NavHostController,
-    currentRoute: MyEventsRoute
+    currentRoute: MyEventsRoute,
+    logoutAction: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val onMenuClicked: () -> Unit = { showMenu = !showMenu }
@@ -61,7 +62,7 @@ fun AppBar(
         actions = {
             when (currentRoute) {
                 MyEventsRoute.Welcome -> {
-                    AddLogoutButton(navController)
+                    AddLogoutButton(navController, logoutAction)
                 }
                 MyEventsRoute.Home -> {
                     AddSearchButton()
@@ -70,7 +71,8 @@ fun AppBar(
                         navController,
                         showMenu,
                         onMenuClicked,
-                        onMenuDismissed
+                        onMenuDismissed,
+                        logoutAction
                     )
                 }
                 MyEventsRoute.AddEvent -> {
@@ -87,7 +89,8 @@ fun AppBar(
                         navController,
                         showMenu,
                         onMenuClicked,
-                        onMenuDismissed
+                        onMenuDismissed,
+                        logoutAction
                     )
                 }
                 MyEventsRoute.Profile -> {
@@ -109,7 +112,8 @@ private fun AddDropDownMenu (
     navController: NavHostController,
     showMenu: Boolean,
     onMenuClicked: () -> Unit,
-    onMenuDismissed: () -> Unit
+    onMenuDismissed: () -> Unit,
+    logoutAction: () -> Unit
 ) {
     IconButton(onClick = onMenuClicked) {
         Icon(
@@ -131,6 +135,14 @@ private fun AddDropDownMenu (
             trailingIcon = { Icon(Icons.Outlined.Person, "Profile") },
             onClick = { navController.navigate(MyEventsRoute.Profile.route) }
         )
+        DropdownMenuItem(
+            text = { Text("Logout") },
+            trailingIcon = { Icon(Icons.Outlined.Logout, "Logout") },
+            onClick = {
+                logoutAction()
+                navController.navigate(MyEventsRoute.Welcome.route)
+            }
+        )
     }
 }
 @Composable
@@ -140,8 +152,11 @@ private fun AddSearchButton () {
     }
 }
 @Composable
-private fun AddLogoutButton (navController: NavHostController) {
-    IconButton(onClick = { navController.navigate(MyEventsRoute.Welcome.route) }) {
+private fun AddLogoutButton (navController: NavHostController, logoutAction: () -> Unit) {
+    IconButton(onClick = {
+        logoutAction()
+        navController.navigate(MyEventsRoute.Welcome.route)
+    }) {
         Icon(Icons.Outlined.Logout, "Logout")
     }
 }

@@ -16,10 +16,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myevents.ui.MyEventsNavGraph
 import com.example.myevents.ui.MyEventsRoute
+import com.example.myevents.ui.UserViewModel
 import com.example.myevents.ui.composables.AppBar
 import com.example.myevents.ui.theme.MyEventsTheme
 import com.example.myevents.utils.LocationService
 import org.koin.android.ext.android.get
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     private lateinit var locationService: LocationService
@@ -44,11 +46,14 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
+                    val userVm = koinViewModel<UserViewModel>()
+
                     Scaffold(
-                        topBar = { AppBar(navController, currentRoute) }
+                        topBar = { AppBar(navController, currentRoute, userVm::logout) }
                     ) { contentPadding ->
                         MyEventsNavGraph(
                             navController,
+                            userVm,
                             modifier =  Modifier.padding(contentPadding)
                         )
                     }

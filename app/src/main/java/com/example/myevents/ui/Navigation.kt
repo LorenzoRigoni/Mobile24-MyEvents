@@ -64,12 +64,11 @@ sealed class MyEventsRoute(
 @Composable
 fun MyEventsNavGraph(
     navController: NavHostController,
+    userVm: UserViewModel,
     modifier: Modifier = Modifier
 ) {
     val eventsVm = koinViewModel<EventsViewModel>()
     val eventsState by eventsVm.state.collectAsStateWithLifecycle()
-
-    val userVm = koinViewModel<UserViewModel>()
 
     NavHost(
         navController = navController,
@@ -78,7 +77,7 @@ fun MyEventsNavGraph(
     ) {
         with(MyEventsRoute.Welcome) {
             composable(route) {
-                WelcomeScreen(userVm.state, navController, userVm::logout, userVm::getImageUri)
+                WelcomeScreen(userVm.state, navController, userVm::getImageUri)
             }
         }
         with(MyEventsRoute.Home) {
