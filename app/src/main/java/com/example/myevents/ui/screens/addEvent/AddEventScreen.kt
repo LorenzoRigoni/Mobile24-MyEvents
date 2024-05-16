@@ -9,16 +9,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -34,7 +43,11 @@ import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEventScreen(
     addEventViewModel: AddEventViewModel,
@@ -46,6 +59,10 @@ fun AddEventScreen(
     val latitude by addEventViewModel.latitude.collectAsState()
     val longitude by addEventViewModel.longitude.collectAsState()
 
+    val scrollState = rememberScrollState()
+
+    var openDialog = remember { mutableStateOf(false) }
+
     Scaffold(
 
     ) { contentPadding ->
@@ -56,6 +73,7 @@ fun AddEventScreen(
                 .padding(contentPadding)
                 .padding(12.dp)
                 .fillMaxSize()
+                .verticalScroll(scrollState)
         ) {
             Row (
                 modifier = Modifier
@@ -116,14 +134,47 @@ fun AddEventScreen(
             Row (
                 modifier = Modifier.fillMaxWidth()
             ) {
-                OutlinedTextField(
-                    value = date,
-                    onValueChange = { date = it },
-                    textStyle = MaterialTheme.typography.bodyMedium,
-                    label = { Text(text = "Date")},
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Button(onClick = { openDialog.value = true }) {
+                    Text("Select Date")
+                }
+                Text("Selected Date: $date")
+
+                if (openDialog.value) {
+                    val datePickerState = rememberDatePickerState()
+                    val confirmEnabled = remember {
+                        derivedStateOf { datePickerState.selectedDateMillis != null }
+                    }
+                    DatePickerDialog(
+                        onDismissRequest = {
+                            openDialog.value = false
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    openDialog.value = false
+                                    date = datePickerState.selectedDateMillis?.let { millis ->
+                                        val selectedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+                                        selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                                    } ?: ""
+                                },
+                                enabled = confirmEnabled.value
+                            ) {
+                                Text("OK")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    openDialog.value = false
+                                }
+                            ) {
+                                Text("Cancel")
+                            }
+                        }
+                    ) {
+                        DatePicker(state = datePickerState)
+                    }
+                }
             }
             Spacer(Modifier.size(24.dp))
             /*TODO: pick image from gallery*/
