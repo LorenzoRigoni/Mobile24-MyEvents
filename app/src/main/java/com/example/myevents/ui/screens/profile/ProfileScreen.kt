@@ -1,8 +1,11 @@
 package com.example.myevents.ui.screens.profile
 
+import android.Manifest
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,14 +55,39 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.camera.utils.rememberPermission
 import com.example.myevents.R
 import com.example.myevents.ui.UserViewModel
+import com.example.myevents.utils.rememberCameraLauncher
 
 @Composable
 fun ProfileScreen(
     userVm: UserViewModel,
     navController: NavHostController
 ) {
+    val ctx = LocalContext.current
+    val per_denied = stringResource(R.string.per_denied)
+
+    val cameraLauncher = rememberCameraLauncher {
+        imageUri -> userVm.editState.newImage = imageUri.toString()
+    }
+
+    val cameraPermission = rememberPermission(Manifest.permission.CAMERA) { status ->
+        if (status.isGranted) {
+            cameraLauncher.captureImage()
+        } else {
+            Toast.makeText(ctx, per_denied, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun takePicture() {
+        if (cameraPermission.status.isGranted) {
+            cameraLauncher.captureImage()
+        } else {
+            cameraPermission.launchPermissionRequest()
+        }
+    }
+
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
@@ -86,7 +114,7 @@ fun ProfileScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
         ) {
-            DrawUserImage(userVm, screenWidth, screenHeight)
+            DrawUserImage(userVm, screenWidth, screenHeight, false, ::takePicture)
 
             Spacer(Modifier.size(8.dp))
 
@@ -117,7 +145,7 @@ fun ProfileScreen(
                         ) {
                             Spacer(Modifier.size(8.dp))
 
-                            DrawUserImage(userVm, screenWidth, screenHeight)
+                            DrawUserImage(userVm, screenWidth, screenHeight, true, ::takePicture)
 
                             Spacer(Modifier.size(8.dp))
 
@@ -159,7 +187,7 @@ fun ProfileScreen(
 }
 
 @Composable
-fun DrawUserImage(userVm: UserViewModel, screenWidth: Dp, screenHeight: Dp) {
+fun DrawUserImage(userVm: UserViewModel, screenWidth: Dp, screenHeight: Dp, isEditable: Boolean, takePicture: () -> Unit) {
     val tmpImage = userVm.getImageUri(userVm.state.user)
     val imageUri = if (tmpImage != null) Uri.parse(tmpImage) else Uri.EMPTY
     if (imageUri.path?.isNotEmpty() == true) {
@@ -173,6 +201,11 @@ fun DrawUserImage(userVm: UserViewModel, screenWidth: Dp, screenHeight: Dp) {
             modifier = Modifier
                 .size(if (screenWidth > screenHeight) screenHeight / 2 else screenWidth / 2)
                 .clip(CircleShape)
+                .clickable {
+                    if (isEditable) {
+                        takePicture()
+                    }
+                }
         )
     } else {
         Image(
@@ -185,6 +218,11 @@ fun DrawUserImage(userVm: UserViewModel, screenWidth: Dp, screenHeight: Dp) {
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.secondary)
                 .padding(20.dp)
+                .clickable {
+                    if (isEditable) {
+                        takePicture()
+                    }
+                }
         )
     }
 }
