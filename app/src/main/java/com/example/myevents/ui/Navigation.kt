@@ -114,7 +114,7 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.Profile) {
             composable(route) {
-                ProfileScreen(navController)
+                ProfileScreen(userVm, navController)
             }
         }
         with(MyEventsRoute.Login) {

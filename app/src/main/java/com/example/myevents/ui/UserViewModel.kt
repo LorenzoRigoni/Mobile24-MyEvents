@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class UserState(val user: String, val isLogged: Boolean)
+data class UserEditState(var newName: String, var newSurname: String, var newImage: String)
 
 interface UserActions {
     fun addUser(user: User): Job
@@ -26,6 +27,8 @@ class UserViewModel (
     var user by mutableStateOf<User?>(null)
         private set
     var imageUri by mutableStateOf<String?>(null)
+        private set
+    var editState by mutableStateOf(UserEditState("", "", ""))
         private set
 
     init {
@@ -73,6 +76,30 @@ class UserViewModel (
             imageUri = repository.getImageUriByUsername(username)
         }
         return imageUri
+    }
+
+    fun saveEditState() {
+        // TODO METTERE NUOVA IMMAGINE E CONTROLLO
+        if (user!! != User(state.user, editState.newName, editState.newSurname, user!!.password, user!!.imageUri)
+        ) {
+            viewModelScope.launch {
+                repository.upsertUser(
+                    User(
+                        state.user,
+                        if (editState.newName == "" || editState.newName == user!!.name) user!!.name else editState.newName,
+                        if (editState.newSurname == "" || editState.newSurname == user!!.surname) user!!.surname else editState.newSurname,
+                        user!!.password,
+                        if (editState.newImage == "" || editState.newImage == user!!.imageUri) user!!.imageUri else editState.newImage,
+                    )
+                )
+                user = repository.getUserByUsername(state.user)
+            }
+        }
+        clearEditState()
+    }
+
+    fun clearEditState() {
+        editState = UserEditState("", "", "")
     }
 
     val actions = object : UserActions {
