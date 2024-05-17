@@ -12,12 +12,15 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.MyEventsNavGraph
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserViewModel
 import com.example.myevents.ui.composables.AppBar
+import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.theme.MyEventsTheme
 import com.example.myevents.utils.LocationService
 import org.koin.android.ext.android.get
@@ -45,15 +48,22 @@ class MainActivity : ComponentActivity() {
                             } ?: MyEventsRoute.Welcome
                         }
                     }
-
                     val userVm = koinViewModel<UserViewModel>()
 
+                    val eventsVm = koinViewModel<EventsViewModel>()
+                    val eventsState by eventsVm.state.collectAsStateWithLifecycle()
+
+                    val addEventVm = koinViewModel<AddEventViewModel>()
+
                     Scaffold(
-                        topBar = { AppBar(navController, currentRoute, userVm::logout) }
+                        topBar = { AppBar(navController, currentRoute, userVm, eventsVm, addEventVm) }
                     ) { contentPadding ->
                         MyEventsNavGraph(
                             navController,
                             userVm,
+                            eventsVm,
+                            eventsState,
+                            addEventVm,
                             modifier =  Modifier.padding(contentPadding)
                         )
                     }

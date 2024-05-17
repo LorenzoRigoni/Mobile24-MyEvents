@@ -31,7 +31,7 @@ class UserViewModel (
     init {
         viewModelScope.launch {
             state = UserState(repository.user.first(), repository.isLogged.first())
-            if (state.user.isNotEmpty()) {
+            if (state.isLogged) {
                 user = repository.getUserByUsername(state.user)
             }
         }
@@ -39,9 +39,7 @@ class UserViewModel (
 
     fun setLoggedUser(value: String, rememberMe: Boolean) {
         viewModelScope.launch {
-            if (rememberMe) {
-                repository.setLoggedUser(value)
-            }
+            repository.setLoggedUser(value)
             repository.setIsLogged(rememberMe)
         }
         state = UserState(value, true)

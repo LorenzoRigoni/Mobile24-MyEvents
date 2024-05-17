@@ -1,9 +1,7 @@
 package com.example.myevents.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -65,11 +63,11 @@ sealed class MyEventsRoute(
 fun MyEventsNavGraph(
     navController: NavHostController,
     userVm: UserViewModel,
+    eventsVm: EventsViewModel,
+    eventsState: EventsState,
+    addEventVm: AddEventViewModel,
     modifier: Modifier = Modifier
 ) {
-    val eventsVm = koinViewModel<EventsViewModel>()
-    val eventsState by eventsVm.state.collectAsStateWithLifecycle()
-
     NavHost(
         navController = navController,
         startDestination = MyEventsRoute.Welcome.route,
@@ -95,7 +93,6 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.AddEvent) {
             composable(route) {
-                val addEventVm = koinViewModel<AddEventViewModel>()
                 AddEventScreen(addEventVm, navController)
             }
         }

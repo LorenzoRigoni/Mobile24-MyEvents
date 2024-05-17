@@ -45,7 +45,7 @@ fun WelcomeScreen(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            if (state.isLogged || state.user.isNotEmpty()) {
+            if (state.isLogged) {
                 val tmpImage = getImage(state.user)
                 val imageUri = if (tmpImage != null) Uri.parse(tmpImage) else Uri.EMPTY
                 if (imageUri.path?.isNotEmpty() == true) {

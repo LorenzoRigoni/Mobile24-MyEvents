@@ -20,10 +20,19 @@ import org.osmdroid.views.overlay.Marker
 import java.io.IOException
 import java.util.Locale
 
+data class AddEventState(
+    var eventType: String,
+    var title: String,
+    var date: String,
+    var imageUri: String?
+)
+
 class AddEventViewModel(
     private val repository: MyEventsRepository
 ) : ViewModel() {
     private var username: String? = null
+
+    val state = MutableStateFlow(AddEventState("", "", "", ""))
 
     private val _latitude = MutableStateFlow(0.0)
     var latitude: StateFlow<Double> = _latitude
@@ -38,16 +47,23 @@ class AddEventViewModel(
         }
     }
 
-    fun addEvent(
-        eventType: String,
-        title: String,
-        date: String,
-        imageUri: String?,
-        latitude: String,
-        longitude: String
-    ) {
-        val event = Event(0, username.toString(), eventType, title, longitude, latitude,
-            date, false, imageUri)
+    fun checkCanAdd(): Boolean {
+        return state.value.title.isNotEmpty()
+                && state.value.date.isNotEmpty()
+                && state.value.eventType.isNotEmpty();
+    }
+
+    fun addEvent() {
+        val event = Event(
+            0,
+            username.toString(),
+            state.value.eventType,
+            state.value.title,
+            _latitude.value.toString(),
+            _longitude.value.toString(),
+            state.value.date,
+            false,
+            state.value.imageUri)
         viewModelScope.launch {
             repository.upsertEvent(event)
         }

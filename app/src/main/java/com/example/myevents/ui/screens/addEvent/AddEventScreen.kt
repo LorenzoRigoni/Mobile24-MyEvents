@@ -37,7 +37,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
-import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.utils.LocationService
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
@@ -61,11 +60,9 @@ fun AddEventScreen(
 
     val scrollState = rememberScrollState()
 
-    var openDialog = remember { mutableStateOf(false) }
+    val openDialog = remember { mutableStateOf(false) }
 
-    Scaffold(
-
-    ) { contentPadding ->
+    Scaffold { contentPadding ->
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -90,7 +87,10 @@ fun AddEventScreen(
             ) {
                 OutlinedTextField(
                     value = title,
-                    onValueChange = { title = it },
+                    onValueChange = {
+                        title = it
+                        addEventViewModel.state.value.title = title
+                    },
                     textStyle = MaterialTheme.typography.bodyMedium,
                     label = { Text(text = "Title")},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -113,7 +113,10 @@ fun AddEventScreen(
             ) {
                 OutlinedTextField(
                     value = eventType,
-                    onValueChange = { eventType = it },
+                    onValueChange = {
+                        eventType = it
+                        addEventViewModel.state.value.eventType = eventType
+                    },
                     textStyle = MaterialTheme.typography.bodyMedium,
                     label = { Text(text = "Type")},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -156,6 +159,7 @@ fun AddEventScreen(
                                         val selectedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
                                         selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                                     } ?: ""
+                                    addEventViewModel.state.value.date = date
                                 },
                                 enabled = confirmEnabled.value
                             ) {
@@ -201,40 +205,6 @@ fun AddEventScreen(
                 )
             }
             Spacer(Modifier.size(100.dp))
-        }
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            Row (
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(
-                    onClick = {
-                        if (title.isNotEmpty() && eventType.isNotEmpty() && date.isNotEmpty()) {
-                            addEventViewModel.addEvent(
-                                eventType,
-                                title,
-                                date,
-                                "",
-                                latitude.toString(),
-                                longitude.toString()
-                            )
-                            navController.navigate(MyEventsRoute.Home.route)
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(46.dp)
-                ) {
-                    Text(
-                        "Add the event!",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-            }
         }
     }
 }

@@ -27,14 +27,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
+import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.MyEventsRoute
+import com.example.myevents.ui.UserViewModel
+import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     navController: NavHostController,
     currentRoute: MyEventsRoute,
-    logoutAction: () -> Unit
+    userVm: UserViewModel,
+    eventsVm: EventsViewModel,
+    addEventVm: AddEventViewModel,
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val onMenuClicked: () -> Unit = { showMenu = !showMenu }
@@ -62,7 +67,7 @@ fun AppBar(
         actions = {
             when (currentRoute) {
                 MyEventsRoute.Welcome -> {
-                    AddLogoutButton(navController, logoutAction)
+                    AddLogoutButton(navController, userVm::logout)
                 }
                 MyEventsRoute.Home -> {
                     AddSearchButton()
@@ -72,14 +77,14 @@ fun AppBar(
                         showMenu,
                         onMenuClicked,
                         onMenuDismissed,
-                        logoutAction
+                        userVm::logout
                     )
                 }
                 MyEventsRoute.AddEvent -> {
-                    AddConfirmButton(navController)
+                    AddConfirmButton(navController, addEventVm::addEvent, addEventVm::checkCanAdd)
                 }
                 MyEventsRoute.EventDetails -> {
-                    AddConfirmButton(navController)
+                    AddConfirmButton(navController, addEventVm::addEvent, addEventVm::checkCanAdd)
                 }
                 MyEventsRoute.ManageEvents -> {
                     AddDeleteButton(navController)
@@ -90,11 +95,11 @@ fun AppBar(
                         showMenu,
                         onMenuClicked,
                         onMenuDismissed,
-                        logoutAction
+                        userVm::logout
                     )
                 }
                 MyEventsRoute.Profile -> {
-                    AddConfirmButton(navController)
+                    AddConfirmButton(navController, addEventVm::addEvent, addEventVm::checkCanAdd)
                 }
                 MyEventsRoute.Login -> {}
                 MyEventsRoute.Register -> {}
@@ -167,9 +172,14 @@ private fun AddNotificationsButton (navController: NavHostController) {
     }
 }
 @Composable
-private fun AddConfirmButton (navController: NavHostController) {
+private fun AddConfirmButton (navController: NavHostController, saveAction: () -> Unit, check: () -> Boolean) {
     IconButton(onClick = {
-        navController.navigate(MyEventsRoute.Home.route)
+        if (check()) {
+            saveAction()
+            navController.navigate(MyEventsRoute.Home.route)
+        } else {
+            // TODO TOAST COME NEL LOGIN
+        }
     }) {
         Icon(Icons.Outlined.Check, "Cancel")
     }
