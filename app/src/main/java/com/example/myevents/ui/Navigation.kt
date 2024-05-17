@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.example.myevents.ui.screens.addEvent.AddEventScreen
 import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.screens.eventdetails.EventDetailsScreen
+import com.example.myevents.ui.screens.eventdetails.EventDetailsViewModel
 import com.example.myevents.ui.screens.home.HomeScreen
 import com.example.myevents.ui.screens.manageEvents.ManageEventsScreen
 import com.example.myevents.ui.screens.notifications.NotificationsScreen
@@ -66,6 +67,7 @@ fun MyEventsNavGraph(
     eventsVm: EventsViewModel,
     eventsState: EventsState,
     addEventVm: AddEventViewModel,
+    eventDetailsVm: EventDetailsViewModel,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -88,7 +90,7 @@ fun MyEventsNavGraph(
                 val event = requireNotNull(eventsState.events.find {
                     it.eventID == backStackEntry.arguments?.getString("eventId")?.toInt()
                 })
-                EventDetailsScreen(event)
+                EventDetailsScreen(event, eventDetailsVm)
             }
         }
         with(MyEventsRoute.AddEvent) {
