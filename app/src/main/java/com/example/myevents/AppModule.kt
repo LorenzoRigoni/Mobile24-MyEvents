@@ -12,6 +12,7 @@ import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.screens.settings.SettingsViewModel
 import com.example.myevents.ui.UserViewModel
+import com.example.myevents.ui.screens.eventdetails.EventDetailsViewModel
 import com.example.myevents.utils.LocationService
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -66,6 +67,8 @@ val appModule = module {
     viewModel { EventsViewModel(get()) }
 
     viewModel { AddEventViewModel(get()) }
+
+    viewModel { EventDetailsViewModel(get()) }
 
     viewModel { SettingsViewModel(get()) }
 

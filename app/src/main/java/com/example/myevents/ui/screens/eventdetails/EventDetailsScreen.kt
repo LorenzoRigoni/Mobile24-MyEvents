@@ -5,8 +5,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -27,11 +30,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.example.myevents.R
 import com.example.myevents.data.database.Event
+import org.osmdroid.views.MapView
 
 @Composable
-fun EventDetailsScreen(event: Event) {
+fun EventDetailsScreen(
+    event: Event,
+    eventDetailsVm: EventDetailsViewModel
+    ) {
     val ctx = LocalContext.current
     val shareEvent = stringResource(R.string.share_event)
 
@@ -60,7 +68,10 @@ fun EventDetailsScreen(event: Event) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(contentPadding).padding(12.dp).fillMaxSize()
+            modifier = Modifier
+                .padding(contentPadding)
+                .padding(12.dp)
+                .fillMaxSize()
         ) {
             Image(
                 Icons.Outlined.Image,
@@ -90,6 +101,28 @@ fun EventDetailsScreen(event: Event) {
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 style = MaterialTheme.typography.bodyMedium
             )
+            Spacer(Modifier.size(50.dp))
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            ) {
+                OsmMapView(
+                    eventDetailsVm,
+                    event
+                )
+            }
         }
     }
+}
+
+@Composable
+fun OsmMapView(eventDetailsVm: EventDetailsViewModel, event: Event) {
+    AndroidView(
+        factory = {context ->
+            MapView(context).apply {
+                eventDetailsVm.openMap(event.latitude, event.longitude, this, context)
+            }
+        }
+    )
 }
