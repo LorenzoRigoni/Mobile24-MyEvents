@@ -102,6 +102,7 @@ class AddEventViewModel(
         _longitude.value = currentLocation.longitude
     }
 
+    @Suppress("DEPRECATION")
     private fun setLocation(lat: Double, long: Double, context: Context): Address? {
         val gcd = Geocoder(context, Locale.getDefault())
         val addresses: List<Address>? = gcd.getFromLocation(lat, long, 1)

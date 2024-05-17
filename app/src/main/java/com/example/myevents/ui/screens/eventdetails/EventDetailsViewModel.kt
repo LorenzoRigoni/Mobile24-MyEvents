@@ -31,7 +31,7 @@ class EventDetailsViewModel(
         val lat = latitude.toDouble()
         val long = longitude.toDouble()
         val currentLocation = GeoPoint(lat, long)
-        mapView.controller.setZoom(5.0)
+        mapView.controller.setZoom(7.0)
         mapView.controller.setCenter(currentLocation)
         val startMarker = Marker(mapView)
         if (setLocation(lat, long, context) != null) {
@@ -43,6 +43,7 @@ class EventDetailsViewModel(
         mapView.overlays.add(startMarker)
     }
 
+    @Suppress("DEPRECATION")
     private fun setLocation(lat: Double, long: Double, context: Context) : Address? {
         val gcd = Geocoder(context, Locale.getDefault())
         val addresses: List<Address>? = gcd.getFromLocation(lat, long, 1)

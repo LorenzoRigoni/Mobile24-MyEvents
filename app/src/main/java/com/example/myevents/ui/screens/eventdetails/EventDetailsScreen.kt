@@ -3,6 +3,7 @@ package com.example.myevents.ui.screens.eventdetails
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.FloatingActionButton
@@ -85,23 +88,50 @@ fun EventDetailsScreen(
                     .background(MaterialTheme.colorScheme.secondary)
                     .padding(36.dp)
             )
-            Text(
-                event.eventID.toString(),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                style = MaterialTheme.typography.titleLarge
-            )
-            Text(
-                "01/01/2024",
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                style = MaterialTheme.typography.bodySmall
-            )
-            Spacer(Modifier.size(8.dp))
-            Text(
-                stringResource(R.string.desc),
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(Modifier.size(50.dp))
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text (
+                    event.title,
+                )
+            }
+            Spacer(Modifier.size(24.dp))
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text (
+                    event.date,
+                )
+            }
+            Spacer(Modifier.size(24.dp))
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text (
+                    event.eventType,
+                )
+            }
+            Spacer(Modifier.size(24.dp))
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    if (event.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
+                    contentDescription = "Event star icon",
+                    /*modifier = Modifier.clickable {
+                        TODO: Aggiungere la logica del click sulla stella
+                    }*/
+                )
+            }
+            Spacer(Modifier.size(150.dp))
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
