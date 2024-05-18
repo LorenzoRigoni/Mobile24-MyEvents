@@ -5,11 +5,11 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
@@ -70,7 +70,7 @@ fun AppBar(
                     AddLogoutButton(navController, userVm::logout)
                 }
                 MyEventsRoute.Home -> {
-                    AddSearchButton()
+                    AddFilterButton()
                     AddNotificationsButton(navController)
                     AddDropDownMenu(
                         navController,
@@ -83,9 +83,7 @@ fun AppBar(
                 MyEventsRoute.AddEvent -> {
                     AddConfirmButton(navController, addEventVm::addEvent, addEventVm::checkCanAdd)
                 }
-                MyEventsRoute.EventDetails -> {
-                    AddConfirmButton(navController, addEventVm::addEvent, addEventVm::checkCanAdd)
-                }
+                MyEventsRoute.EventDetails -> {}
                 MyEventsRoute.ManageEvents -> {
                     AddDeleteButton(navController)
                 }
@@ -98,9 +96,7 @@ fun AppBar(
                         userVm::logout
                     )
                 }
-                MyEventsRoute.Profile -> {
-                    AddConfirmButton(navController, addEventVm::addEvent, addEventVm::checkCanAdd)
-                }
+                MyEventsRoute.Profile -> {}
                 MyEventsRoute.Login -> {}
                 MyEventsRoute.Register -> {}
                 MyEventsRoute.Settings -> {}
@@ -151,9 +147,9 @@ private fun AddDropDownMenu (
     }
 }
 @Composable
-private fun AddSearchButton () {
+private fun AddFilterButton () {
     IconButton(onClick = { /*TODO*/ }) {
-        Icon(Icons.Outlined.Search, "Search")
+        Icon(Icons.Outlined.FilterList, "Filter")
     }
 }
 @Composable

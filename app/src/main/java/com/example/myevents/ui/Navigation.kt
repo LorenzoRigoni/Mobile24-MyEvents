@@ -101,7 +101,7 @@ fun MyEventsNavGraph(
         with(MyEventsRoute.Settings) {
             composable(route) {
                 val settingsVm = koinViewModel<SettingsViewModel>()
-                SettingsScreen(settingsVm.state, settingsVm::setUsername)
+                SettingsScreen(settingsVm)
             }
         }
         with(MyEventsRoute.ManageEvents) {
