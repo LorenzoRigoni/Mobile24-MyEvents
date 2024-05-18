@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.ModeEdit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,15 +52,27 @@ import com.example.myevents.ui.MyEventsRoute
 fun HomeScreen(
     eventsVM: EventsViewModel,
     state: EventsState,
-    navController: NavHostController) {
+    navController: NavHostController
+) {
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.primary,
-                onClick = { navController.navigate(MyEventsRoute.AddEvent.route) }
+            Row (
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(16.dp)
             ) {
-                Icon(Icons.Outlined.Add, stringResource(R.string.add_event))
+                FloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    onClick = { navController.navigate(MyEventsRoute.ManageEvents.route) }
+                ) {
+                    Icon(Icons.Outlined.ModeEdit, "Manage events")
+                }
+                FloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    onClick = { navController.navigate(MyEventsRoute.AddEvent.route) }
+                ) {
+                    Icon(Icons.Outlined.Add, stringResource(R.string.add_event))
+                }
             }
         },
     ) { contentPadding ->
@@ -67,7 +81,7 @@ fun HomeScreen(
                 columns = GridCells.Fixed(1),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 80.dp),
+                contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 8.dp),
                 modifier = Modifier.padding(contentPadding)
             ) {
                 items(state.events) { item ->

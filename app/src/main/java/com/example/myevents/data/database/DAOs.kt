@@ -28,6 +28,8 @@ interface EventDAO {
     suspend fun upsert(event: Event)
     @Delete
     suspend fun delete(event: Event)
+    @Query("DELETE FROM event WHERE eventID = :eventId")
+    suspend fun deleteEventFromId(eventId: Int)
 }
 
 @Dao

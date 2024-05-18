@@ -106,7 +106,7 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.ManageEvents) {
             composable(route) {
-                ManageEventsScreen(navController)
+                ManageEventsScreen(eventsVm, eventsState, navController)
             }
         }
         with(MyEventsRoute.Notifications) {

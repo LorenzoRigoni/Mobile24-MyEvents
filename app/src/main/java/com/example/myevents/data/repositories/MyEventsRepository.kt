@@ -27,6 +27,7 @@ class MyEventsRepository(
 
     suspend fun upsertEvent(event: Event) = eventDAO.upsert(event)
     suspend fun deleteEvent(event: Event) = eventDAO.delete(event)
+    suspend fun deleteEventFromId(eventId: Int) = eventDAO.deleteEventFromId(eventId)
 
     val notifications: Flow<List<Notification>> = notificationDAO.getAll()
     suspend fun upsertNotification(notification: Notification) =

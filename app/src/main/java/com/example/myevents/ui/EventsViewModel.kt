@@ -16,6 +16,8 @@ class EventsViewModel(
 
     val state = MutableStateFlow(EventsState(emptyList()))
 
+    val eventToDelete: List<Int> = emptyList()
+
     init {
         updateEvents("")
     }
@@ -25,6 +27,14 @@ class EventsViewModel(
             val username = if (name == "") repository.user.first() else name
             repository.eventsOfUserFromToday(username).collect { events ->
                 state.value = EventsState(events)
+            }
+        }
+    }
+
+    fun deleteEventsFromListOfIds() {
+        viewModelScope.launch {
+            eventToDelete.forEach { id ->
+                repository.deleteEventFromId(id)
             }
         }
     }
