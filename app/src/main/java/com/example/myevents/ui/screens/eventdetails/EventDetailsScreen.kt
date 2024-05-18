@@ -14,17 +14,37 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.ModeEdit
 import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,39 +52,33 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
 import com.example.myevents.R
 import com.example.myevents.data.database.Event
 import org.osmdroid.views.MapView
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun EventDetailsScreen(
     event: Event,
     eventDetailsVm: EventDetailsViewModel
     ) {
-    val ctx = LocalContext.current
-    val shareEvent = stringResource(R.string.share_event)
-
-    fun shareDetails() {
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, event.eventID)
-        }
-        val shareIntent = Intent.createChooser(sendIntent, shareEvent)
-        if (shareIntent.resolveActivity(ctx.packageManager) != null) {
-            ctx.startActivity(shareIntent)
-        }
-    }
+    val openDialog = remember { mutableStateOf(false) }
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.primary,
-                onClick = ::shareDetails
+                onClick = {
+                    openDialog.value = true
+                }
             ) {
-                Icon(Icons.Outlined.Share, shareEvent)
+                Icon(Icons.Outlined.ModeEdit, "Edit event")
             }
         },
     ) { contentPadding ->
@@ -76,71 +90,259 @@ fun EventDetailsScreen(
                 .padding(12.dp)
                 .fillMaxSize()
         ) {
-            Image(
-                Icons.Outlined.Image,
-                stringResource(R.string.event_pic),
-                contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
-                modifier = Modifier
-                    .padding(vertical = 16.dp)
-                    .size(128.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.secondary)
-                    .padding(36.dp)
+            DrawEventInfo(
+                eventDetailsVm,
+                event
             )
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text (
-                    event.title,
-                )
+
+            if (openDialog.value) {
+                Dialog(
+                    onDismissRequest = { openDialog.value = false }
+                ) {
+                    Card (
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Spacer(Modifier.size(8.dp))
+
+                        DrawModifiableEventInfo(
+                            eventDetailsVm,
+                            event,
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                            )
+                        )
+
+                        Spacer(Modifier.size(8.dp))
+
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            TextButton(
+                                onClick = {
+                                    eventDetailsVm.clearEditState()
+                                    openDialog.value = false
+                                },
+                                modifier = Modifier.padding(8.dp),
+                            ) {
+                                Text("Cancel")
+                            }
+                            TextButton(
+                                onClick = {
+                                    eventDetailsVm.editEvent(event)
+                                    openDialog.value = false
+                                },
+                                modifier = Modifier.padding(8.dp),
+                            ) {
+                                Text("Save")
+                            }
+                        }
+                    }
+                }
             }
-            Spacer(Modifier.size(24.dp))
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+        }
+    }
+}
+
+@Composable
+fun DrawEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event) {
+    Image(
+        Icons.Outlined.Image,
+        stringResource(R.string.event_pic),
+        contentScale = ContentScale.Fit,
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
+        modifier = Modifier
+            .padding(vertical = 16.dp)
+            .size(128.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.secondary)
+            .padding(36.dp)
+    )
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text (
+            event.title,
+        )
+    }
+    Spacer(Modifier.size(24.dp))
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text (
+            event.date,
+        )
+    }
+    Spacer(Modifier.size(24.dp))
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text (
+            event.eventType,
+        )
+    }
+    Spacer(Modifier.size(24.dp))
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            if (event.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
+            contentDescription = "Event star icon",
+            /*modifier = Modifier.clickable {
+                TODO: Aggiungere la logica del click sulla stella
+            }*/
+        )
+    }
+    Spacer(Modifier.size(150.dp))
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+    ) {
+        OsmMapView(
+            eventDetailsVm,
+            event
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DrawModifiableEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event, colors: CardColors) {
+    var editableTitle by rememberSaveable { mutableStateOf(event.title) }
+    var editableType by rememberSaveable { mutableStateOf(event.eventType) }
+    var editableDate by rememberSaveable { mutableStateOf(event.date) }
+    var openDialog = remember { mutableStateOf(false) }
+    //Capire se fare anche la mappa e l'immagine
+
+    Card (
+        colors = colors
+    ) {
+        Column (
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text (
+                "Title",
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                eventDetailsVm.eventEditState.newTitle,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Divider(
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                thickness = 1.dp,
+                modifier = Modifier.padding(vertical = 25.dp)
+            )
+            OutlinedTextField(
+                value = editableTitle,
+                onValueChange = {
+                    editableTitle = it
+                    eventDetailsVm.eventEditState.newTitle = it
+                },
+                label = { Text("Title") },
+                textStyle = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Divider(
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                thickness = 1.dp,
+                modifier = Modifier.padding(vertical = 25.dp)
+            )
+            Text (
+                "Event type",
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                eventDetailsVm.eventEditState.newType,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Divider(
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                thickness = 1.dp,
+                modifier = Modifier.padding(vertical = 25.dp)
+            )
+            OutlinedTextField(
+                value = editableType,
+                onValueChange = {
+                    editableType = it
+                    eventDetailsVm.eventEditState.newType = it
+                },
+                label = { Text("Event type") },
+                textStyle = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Divider(
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                thickness = 1.dp,
+                modifier = Modifier.padding(vertical = 25.dp)
+            )
+            Text (
+                "Date",
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                eventDetailsVm.eventEditState.newDate,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Divider(
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                thickness = 1.dp,
+                modifier = Modifier.padding(vertical = 25.dp)
+            )
+            Button(
+                onClick = { openDialog.value = true }
             ) {
-                Text (
-                    event.date,
-                )
+                Text("Select new date")
             }
-            Spacer(Modifier.size(24.dp))
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text (
-                    event.eventType,
-                )
-            }
-            Spacer(Modifier.size(24.dp))
-            Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    if (event.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
-                    contentDescription = "Event star icon",
-                    /*modifier = Modifier.clickable {
-                        TODO: Aggiungere la logica del click sulla stella
-                    }*/
-                )
-            }
-            Spacer(Modifier.size(150.dp))
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-            ) {
-                OsmMapView(
-                    eventDetailsVm,
-                    event
-                )
+            if (openDialog.value) {
+                val datePickerState = rememberDatePickerState()
+                val confirmEnabled = remember { derivedStateOf { datePickerState.selectedDateMillis != null }}
+                DatePickerDialog(
+                    onDismissRequest = { openDialog.value = false },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                openDialog.value = false
+                                editableDate = datePickerState.selectedDateMillis?.let { millis ->
+                                    val selectedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+                                    selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                                } ?: ""
+                                eventDetailsVm.eventEditState.newDate = editableDate
+                            },
+                            enabled = confirmEnabled.value
+                        ) {
+                            Text("OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                openDialog.value = false
+                            }
+                        ) {
+                            Text("Cancel")
+                        }
+                    }) {
+                    DatePicker(state = datePickerState)
+                }
             }
         }
     }

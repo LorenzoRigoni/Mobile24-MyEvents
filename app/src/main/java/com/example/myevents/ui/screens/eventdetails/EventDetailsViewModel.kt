@@ -4,8 +4,14 @@ import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.location.Address
 import android.location.Geocoder
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.myevents.data.database.Event
 import com.example.myevents.data.repositories.MyEventsRepository
+import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -14,9 +20,48 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import java.util.Locale
 
+data class EventEditState(var newTitle: String, var newType: String, var newDate: String)
+
 class EventDetailsViewModel(
     private val repository: MyEventsRepository
 ) : ViewModel() {
+
+    var eventEditState by mutableStateOf(EventEditState("", "", ""))
+
+    fun editEvent(originalEvent: Event) {
+        if (originalEvent != Event(
+            originalEvent.eventID,
+            originalEvent.username,
+            eventEditState.newType,
+            eventEditState.newTitle,
+            originalEvent.longitude,
+            originalEvent.latitude,
+            eventEditState.newDate,
+            originalEvent.isFavourite,
+            originalEvent.imageUri
+        )) {
+            viewModelScope.launch {
+                repository.upsertEvent(
+                    Event(
+                        originalEvent.eventID,
+                        originalEvent.username,
+                        if (eventEditState.newType == "" || eventEditState.newType == originalEvent.eventType) originalEvent.eventType else eventEditState.newType,
+                        if (eventEditState.newTitle == "" || eventEditState.newTitle == originalEvent.title) originalEvent.title else eventEditState.newTitle,
+                        originalEvent.longitude,
+                        originalEvent.latitude,
+                        if (eventEditState.newDate == "" || eventEditState.newDate == originalEvent.date) originalEvent.date else eventEditState.newDate,
+                        originalEvent.isFavourite,
+                        originalEvent.imageUri
+                    )
+                )
+            }
+            clearEditState()
+        }
+    }
+
+    fun clearEditState() {
+        eventEditState = EventEditState("", "", "")
+    }
 
     fun openMap(latitude: String, longitude: String, mapView: MapView, context: Context) {
         Configuration.getInstance().load(
