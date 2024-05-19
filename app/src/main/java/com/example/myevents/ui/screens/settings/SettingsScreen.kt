@@ -1,14 +1,19 @@
 package com.example.myevents.ui.screens.settings
 
+import android.app.TimePickerDialog
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Switch
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,8 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Calendar
 
 @Composable
 fun SettingsScreen(
@@ -30,9 +37,23 @@ fun SettingsScreen(
             .padding(12.dp)
             .fillMaxSize()
     ) {
-        var checked by remember { mutableStateOf(false) }
+        var theme by remember { mutableStateOf("Light") }
+        var language by remember { mutableStateOf("English") }
 
         val scrollState = rememberScrollState()
+        val expandedTheme = remember { mutableStateOf(false) }
+        val expandedLanguage = remember { mutableStateOf(false) }
+
+        val context = LocalContext.current
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        var reminderTime by remember { mutableStateOf("") }
+        val timePickerDialog = TimePickerDialog(context, { _, selectedHour: Int, selectedMinute: Int ->
+            reminderTime = String.format("%02d:%02d", selectedHour, selectedMinute)
+            settingsVm.setReminderTime(reminderTime)
+        }, hour, minute, true)
 
         Column(
             modifier = Modifier
@@ -40,7 +61,7 @@ fun SettingsScreen(
                 .verticalScroll(scrollState)
         ) {
             Text(
-                text = "Generali",
+                text = "Generals",
                 fontSize = 20.sp,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -51,16 +72,97 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
             ) {
-                Text(text = "Test", modifier = Modifier.weight(1f))
-                Switch(
-                    checked = checked,
-                    onCheckedChange = {
-                        checked = it
+                Text(text = "Theme", modifier = Modifier.weight(1f))
+                Box {
+                    Button(
+                        onClick = { expandedTheme.value = true },
+                        Modifier.width(100.dp)
+                    ) {
+                        Text(text = theme)
                     }
-                )
+                    DropdownMenu(
+                        expanded = expandedTheme.value,
+                        onDismissRequest = { expandedTheme.value = false },
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Light") },
+                            onClick = {
+                                theme = "Light"
+                                expandedTheme.value = false
+                                settingsVm.setTheme(theme)
+                            },
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Dark") },
+                            onClick = {
+                                theme = "Dark"
+                                expandedTheme.value = false
+                                settingsVm.setTheme(theme)
+                            },
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Auto") },
+                            onClick = {
+                                theme = "Auto"
+                                expandedTheme.value = false
+                                settingsVm.setTheme(theme)
+                            },
+                        )
+                    }
+                }
             }
-            Row {
-                Text(text = checked.toString())
+            Divider()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            ) {
+                Text(text = "Language", modifier = Modifier.weight(1f))
+                Box {
+                    Button(
+                        onClick = { expandedLanguage.value = true },
+                        Modifier.width(100.dp)
+                    ) {
+                        Text(text = language)
+                    }
+                    DropdownMenu(
+                        expanded = expandedLanguage.value,
+                        onDismissRequest = { expandedLanguage.value = false },
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Italian") },
+                            onClick = {
+                                language = "Italian"
+                                expandedLanguage.value = false
+                                settingsVm.setLanguage(language)
+                            },
+                        )
+                        DropdownMenuItem(
+                            text = { Text("English") },
+                            onClick = {
+                                language = "English"
+                                expandedLanguage.value = false
+                                settingsVm.setLanguage(language)
+                            },
+                        )
+                    }
+                }
+            }
+            Divider()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            ) {
+                Text(text = "Reminder time", modifier = Modifier.weight(1f))
+                Button(
+                    onClick = { timePickerDialog.show() },
+                    Modifier.width(100.dp)
+                ) {
+                    Text(text = reminderTime.ifEmpty { "00:00" })
+                }
             }
         }
     }
