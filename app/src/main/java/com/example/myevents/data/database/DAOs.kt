@@ -30,6 +30,8 @@ interface EventDAO {
     suspend fun delete(event: Event)
     @Query("DELETE FROM event WHERE eventID = :eventId")
     suspend fun deleteEventFromId(eventId: Int)
+    @Query("UPDATE event SET isFavourite = :isFavourite WHERE eventID = :eventId")
+    suspend fun updateIsFavourite(isFavourite: Boolean, eventId: Int)
 }
 
 @Dao

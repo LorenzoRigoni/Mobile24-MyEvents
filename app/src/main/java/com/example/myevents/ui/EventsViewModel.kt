@@ -38,4 +38,10 @@ class EventsViewModel(
             }
         }
     }
+
+    fun updateIsFavourite(isFavourite: Boolean, eventId: Int) {
+        viewModelScope.launch {
+            repository.updateIsFavourite(isFavourite, eventId)
+        }
+    }
 }

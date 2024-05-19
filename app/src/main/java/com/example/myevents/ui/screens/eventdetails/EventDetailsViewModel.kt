@@ -63,6 +63,12 @@ class EventDetailsViewModel(
         eventEditState = EventEditState("", "", "")
     }
 
+    fun updateIsFavourite(isFavourite: Boolean, eventId: Int) {
+        viewModelScope.launch {
+            repository.updateIsFavourite(isFavourite, eventId)
+        }
+    }
+
     fun openMap(latitude: String, longitude: String, mapView: MapView, context: Context) {
         Configuration.getInstance().load(
             context,

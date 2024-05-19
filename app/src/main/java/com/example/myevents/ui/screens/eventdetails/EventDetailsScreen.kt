@@ -199,9 +199,9 @@ fun DrawEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event) {
         Icon(
             if (event.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
             contentDescription = "Event star icon",
-            /*modifier = Modifier.clickable {
-                TODO: Aggiungere la logica del click sulla stella
-            }*/
+            modifier = Modifier.clickable {
+                eventDetailsVm.updateIsFavourite(!event.isFavourite, event.eventID)
+            }
         )
     }
     Spacer(Modifier.size(150.dp))
