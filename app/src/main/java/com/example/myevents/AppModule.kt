@@ -53,7 +53,8 @@ val appModule = module {
     single {
         UserRepository(
             get(),
-            get<MyEventsDatabase>().userDAO()
+            get<MyEventsDatabase>().userDAO(),
+            get<Context>().applicationContext.contentResolver
         )
     }
 

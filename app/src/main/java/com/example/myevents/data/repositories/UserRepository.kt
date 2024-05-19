@@ -1,5 +1,7 @@
 package com.example.myevents.data.repositories
 
+import android.content.ContentResolver
+import android.net.Uri
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -7,11 +9,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.myevents.data.database.User
 import com.example.myevents.data.database.UserDAO
+import com.example.myevents.utils.saveImageToStorage
 import kotlinx.coroutines.flow.map
 
 class UserRepository(
     private val dataStore: DataStore<Preferences>,
     private val userDAO: UserDAO,
+    private val contentResolver: ContentResolver
 ) {
     companion object {
         private val USER_KEY = stringPreferencesKey("user")
@@ -36,6 +40,17 @@ class UserRepository(
         return userDAO.getImageUriByUsername(username)
     }
 
-    suspend fun upsertUser(user: User) = userDAO.upsert(user)
+    suspend fun upsertUser(user: User) {
+        if (user.imageUri?.isNotEmpty() == true) {
+            val imageUri = saveImageToStorage(
+                Uri.parse(user.imageUri),
+                contentResolver,
+                "MyEvents_User${user.username}"
+            )
+            userDAO.upsert(user.copy(imageUri = imageUri.toString()))
+        } else {
+            userDAO.upsert(user)
+        }
+    }
     suspend fun deleteUser(user: User) = userDAO.delete(user)
 }

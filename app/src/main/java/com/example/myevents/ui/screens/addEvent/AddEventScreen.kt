@@ -1,5 +1,9 @@
 package com.example.myevents.ui.screens.addEvent
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,11 +21,13 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -36,12 +42,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.example.myevents.utils.LocationService
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
+import java.security.Permission
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -55,8 +63,17 @@ fun AddEventScreen(
     var title by rememberSaveable { mutableStateOf("") }
     var eventType by rememberSaveable { mutableStateOf("") }
     var date by rememberSaveable { mutableStateOf("") }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val latitude by addEventViewModel.latitude.collectAsState()
     val longitude by addEventViewModel.longitude.collectAsState()
+
+    val photoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {uri ->
+            selectedImageUri = uri
+            addEventViewModel.state.value.imageUri = selectedImageUri.toString()
+        }
+    )
 
     val scrollState = rememberScrollState()
 
@@ -181,7 +198,22 @@ fun AddEventScreen(
                 }
             }
             Spacer(Modifier.size(24.dp))
-            /*TODO: pick image from gallery*/
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            ) {
+                Button(
+                    onClick = {
+                        photoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
+                    }
+                ) {
+                    Text(text = "Choose an image from the gallery")
+                }
+            }
+            Spacer(Modifier.size(24.dp))
             Row (
                 modifier = Modifier
                     .fillMaxWidth()

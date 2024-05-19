@@ -1,6 +1,7 @@
 package com.example.myevents.ui.screens.eventdetails
 
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -56,6 +57,8 @@ import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.myevents.R
 import com.example.myevents.data.database.Event
 import org.osmdroid.views.MapView
@@ -149,18 +152,30 @@ fun EventDetailsScreen(
 
 @Composable
 fun DrawEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event) {
-    Image(
-        Icons.Outlined.Image,
-        stringResource(R.string.event_pic),
-        contentScale = ContentScale.Fit,
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
-        modifier = Modifier
-            .padding(vertical = 16.dp)
-            .size(128.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.secondary)
-            .padding(36.dp)
-    )
+    val imageUri = Uri.parse(event.imageUri)
+    if (imageUri.path?.isNotEmpty() == true) {
+        AsyncImage(
+            ImageRequest.Builder(LocalContext.current)
+                .data(imageUri)
+                .crossfade(true)
+                .build(),
+            stringResource(R.string.event_pic),
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .size(72.dp)
+        )
+    } else {
+        Image(
+            Icons.Outlined.Image,
+            stringResource(R.string.event_pic),
+            contentScale = ContentScale.Fit,
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary),
+            modifier = Modifier
+                .size(72.dp)
+                .background(MaterialTheme.colorScheme.secondary)
+                .padding(20.dp)
+        )
+    }
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
