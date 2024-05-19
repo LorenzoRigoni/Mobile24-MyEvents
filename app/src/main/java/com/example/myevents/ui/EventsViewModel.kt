@@ -16,11 +16,12 @@ class EventsViewModel(
 
     val state = MutableStateFlow(EventsState(emptyList()))
 
-    val eventToDelete: List<Int> = emptyList()
+    val eventsToDelete: MutableList<Int> = mutableListOf()
 
     init {
         updateEvents("")
     }
+
 
     fun updateEvents(name: String) {
         viewModelScope.launch {
@@ -32,11 +33,14 @@ class EventsViewModel(
     }
 
     fun deleteEventsFromListOfIds() {
+        if (eventsToDelete.isEmpty()) return
         viewModelScope.launch {
-            eventToDelete.forEach { id ->
+            val idsToDelete = eventsToDelete.toList()
+            idsToDelete.forEach { id ->
                 repository.deleteEventFromId(id)
             }
         }
+        eventsToDelete.clear()
     }
 
     fun updateIsFavourite(isFavourite: Boolean, eventId: Int) {

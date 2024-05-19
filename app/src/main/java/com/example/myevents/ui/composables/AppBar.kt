@@ -31,6 +31,7 @@ import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserViewModel
 import com.example.myevents.ui.screens.addEvent.AddEventViewModel
+import com.example.myevents.ui.screens.eventdetails.EventDetailsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,6 +41,7 @@ fun AppBar(
     userVm: UserViewModel,
     eventsVm: EventsViewModel,
     addEventVm: AddEventViewModel,
+    eventDetailsVm: EventDetailsViewModel
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val onMenuClicked: () -> Unit = { showMenu = !showMenu }
@@ -83,9 +85,11 @@ fun AppBar(
                 MyEventsRoute.AddEvent -> {
                     AddConfirmButton(navController, addEventVm::addEvent, addEventVm::checkCanAdd)
                 }
-                MyEventsRoute.EventDetails -> {}
+                MyEventsRoute.EventDetails -> {
+                    AddDeleteButton(navController, eventDetailsVm::deleteSingleEvent, MyEventsRoute.Home.route)
+                }
                 MyEventsRoute.ManageEvents -> {
-                    AddDeleteButton(navController)
+                    AddDeleteButton(navController, eventsVm::deleteEventsFromListOfIds, MyEventsRoute.ManageEvents.route)
                 }
                 MyEventsRoute.Notifications -> {
                     AddDropDownMenu(
@@ -181,9 +185,10 @@ private fun AddConfirmButton (navController: NavHostController, saveAction: () -
     }
 }
 @Composable
-private fun AddDeleteButton (navController: NavHostController) {
+private fun AddDeleteButton (navController: NavHostController, deleteAction: () -> Unit, returnRoute: String) {
     IconButton(onClick = {
-        navController.navigate(MyEventsRoute.ManageEvents.route)
+        deleteAction()
+        navController.navigate(returnRoute)
     }) {
         Icon(Icons.Outlined.Delete, "Delete")
     }

@@ -1,7 +1,6 @@
 package com.example.myevents.ui.screens.eventdetails
 
 import android.content.Context
-import android.graphics.drawable.BitmapDrawable
 import android.location.Address
 import android.location.Geocoder
 import androidx.compose.runtime.getValue
@@ -27,6 +26,8 @@ class EventDetailsViewModel(
 ) : ViewModel() {
 
     var eventEditState by mutableStateOf(EventEditState("", "", ""))
+    var singleEventToDelete: Int? = null
+        private set
 
     fun editEvent(originalEvent: Event) {
         if (originalEvent != Event(
@@ -57,6 +58,19 @@ class EventDetailsViewModel(
             }
             clearEditState()
         }
+    }
+
+    fun setSingleEventToDelete(eventId: Int) {
+        singleEventToDelete = eventId
+    }
+
+    fun deleteSingleEvent() {
+        if (singleEventToDelete == null) return
+        viewModelScope.launch {
+            val id = singleEventToDelete!!
+            repository.deleteEventFromId(id)
+        }
+        singleEventToDelete = null
     }
 
     fun clearEditState() {

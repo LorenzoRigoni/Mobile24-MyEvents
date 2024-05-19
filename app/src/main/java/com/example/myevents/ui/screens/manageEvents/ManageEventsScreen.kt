@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,7 +43,6 @@ import coil.request.ImageRequest
 import com.example.myevents.R
 import com.example.myevents.ui.EventsState
 import com.example.myevents.ui.EventsViewModel
-import com.example.myevents.ui.screens.home.NoEventsPlaceHolder
 
 @Composable
 fun ManageEventsScreen(
@@ -56,23 +56,25 @@ fun ManageEventsScreen(
 
     Scaffold (
         floatingActionButton = {
-            FloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.primary,
-                onClick = {
-                    if (switchStates.values.contains(false)) {
-                        switchStates.forEach { (key, _) ->
-                            switchStates[key] = true
-                            eventsVm.eventToDelete.plus(key)
-                        }
-                    } else {
-                        switchStates.forEach { (key, _) ->
-                            switchStates[key] = false
-                            eventsVm.eventToDelete.minus(key)
+            if (state.events.isNotEmpty()) {
+                FloatingActionButton(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    onClick = {
+                        if (switchStates.values.contains(false)) {
+                            switchStates.forEach { (key, _) ->
+                                switchStates[key] = true
+                                eventsVm.eventsToDelete.add(key)
+                            }
+                        } else {
+                            switchStates.forEach { (key, _) ->
+                                switchStates[key] = false
+                                eventsVm.eventsToDelete.remove(key)
+                            }
                         }
                     }
+                ) {
+                    Icon(Icons.Outlined.SelectAll, "Select all")
                 }
-            ) {
-                Icon(Icons.Outlined.SelectAll, "Select all")
             }
         },
     ) { contentPadding ->
@@ -133,9 +135,9 @@ fun ManageEventsScreen(
                                 onCheckedChange = { isChecked ->
                                     switchStates[item.eventID] = isChecked
                                     if (isChecked) {
-                                        eventsVm.eventToDelete.plus(item.eventID)
+                                        eventsVm.eventsToDelete.add(item.eventID)
                                     } else {
-                                        eventsVm.eventToDelete.minus(item.eventID)
+                                        eventsVm.eventsToDelete.remove(item.eventID)
                                     }
                                 }
                             )
@@ -146,5 +148,21 @@ fun ManageEventsScreen(
         } else {
             NoEventsPlaceHolder(Modifier.padding(contentPadding))
         }
+    }
+}
+
+@Composable
+fun NoEventsPlaceHolder(modifier: Modifier = Modifier) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text(
+            stringResource(R.string.no_events),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.secondary,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
     }
 }

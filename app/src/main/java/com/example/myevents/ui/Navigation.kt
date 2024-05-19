@@ -90,6 +90,7 @@ fun MyEventsNavGraph(
                 val event = requireNotNull(eventsState.events.find {
                     it.eventID == backStackEntry.arguments?.getString("eventId")?.toInt()
                 })
+                eventDetailsVm.setSingleEventToDelete(event.eventID)
                 EventDetailsScreen(event, eventDetailsVm)
             }
         }

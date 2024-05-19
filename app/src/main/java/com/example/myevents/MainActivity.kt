@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     val eventDetailsVm = koinViewModel<EventDetailsViewModel>()
 
                     Scaffold(
-                        topBar = { AppBar(navController, currentRoute, userVm, eventsVm, addEventVm) }
+                        topBar = { AppBar(navController, currentRoute, userVm, eventsVm, addEventVm, eventDetailsVm) }
                     ) { contentPadding ->
                         MyEventsNavGraph(
                             navController,
