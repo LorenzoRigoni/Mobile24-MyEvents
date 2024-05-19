@@ -24,6 +24,12 @@ interface UserDAO {
 interface EventDAO {
     @Query("SELECT * FROM event WHERE username = :username AND date >= date('now') ORDER BY date ASC")
     fun getEventsOfUserFromToday(username: String): Flow<List<Event>>
+    @Query("SELECT * FROM event WHERE username = :username ORDER BY date ASC")
+    fun getAllEventsOfUser(username: String): Flow<List<Event>>
+    @Query("SELECT * FROM event WHERE username = :username AND date < date('now') ORDER BY date ASC")
+    fun getPastEventsOfUser(username: String): Flow<List<Event>>
+    @Query("SELECT * FROM event WHERE username = :username AND isFavourite = 1 ORDER BY date ASC")
+    fun getFavouritesEventsOfUser(username: String): Flow<List<Event>>
     @Upsert
     suspend fun upsert(event: Event)
     @Delete

@@ -27,6 +27,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.myevents.R
+import com.example.myevents.ui.EventsViewModel
+import com.example.myevents.ui.FilterEnum
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserViewModel
 import kotlinx.coroutines.launch
@@ -35,7 +37,7 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     navController: NavHostController,
     userVm: UserViewModel,
-    onLoginGetUserEvents: (String) -> Unit
+    eventsViewModel: EventsViewModel
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -84,7 +86,7 @@ fun LoginScreen(
                     if (username.isNotEmpty() && password.isNotEmpty()) {
                         if (userVm.checkLogin(username, password)) {
                             userVm.setLoggedUser(username, isChecked)
-                            onLoginGetUserEvents(username)
+                            eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
                             navController.navigate(MyEventsRoute.Welcome.route)
                         } else {
                             Toast.makeText(
