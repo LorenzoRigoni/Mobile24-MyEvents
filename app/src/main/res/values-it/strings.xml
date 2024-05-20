@@ -37,4 +37,27 @@
     <string name="loc_perm_req">Viene richiesto il permesso per la posizione</string>
     <string name="go_set">Vai alle Impostazioni</string>
     <string name="no_internet">Nessuna connessione ad Internet</string>
+    <string name="future_events">Eventi futuri</string>
+    <string name="all_events">Tutti eventi</string>
+    <string name="past_events">Eventi passati</string>
+    <string name="favourites_events">Eventi preferiti</string>
+    <string name="title_event">Titolo dell evento</string>
+    <string name="type_event">Tipo di evento</string>
+    <string name="date_event">Data dell evento</string>
+    <string name="select_date">Seleziona la data</string>
+    <string name="selected_date">Data selezionata</string>
+    <string name="cancel">Cancella</string>
+    <string name="choose_image">Scegli una immagine dalla galleria</string>
+    <string name="position_event">Posizione dell evento</string>
+    <string name="save">Salva</string>
+    <string name="select_new_date">Seleziona una nuova data</string>
+    <string name="generals">Generali</string>
+    <string name="theme">Tema</string>
+    <string name="light">Chiaro</string>
+    <string name="dark">Scuro</string>
+    <string name="auto">Tema di default</string>
+    <string name="language">Lingua</string>
+    <string name="italian">Italiano</string>
+    <string name="english">Inglese</string>
+    <string name="reminder_time">Orario per la notifica</string>
 </resources>
