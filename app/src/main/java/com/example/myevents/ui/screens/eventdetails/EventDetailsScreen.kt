@@ -125,7 +125,7 @@ fun EventDetailsScreen(
                                 },
                                 modifier = Modifier.padding(8.dp),
                             ) {
-                                Text("Cancel")
+                                Text(stringResource(R.string.cancel))
                             }
                             TextButton(
                                 onClick = {
@@ -134,7 +134,7 @@ fun EventDetailsScreen(
                                 },
                                 modifier = Modifier.padding(8.dp),
                             ) {
-                                Text("Save")
+                                Text(stringResource(R.string.save))
                             }
                         }
                     }
@@ -242,7 +242,7 @@ fun DrawModifiableEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event,
             horizontalAlignment = Alignment.Start
         ) {
             Text (
-                "Title",
+                stringResource(R.string.title_event),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 style = MaterialTheme.typography.bodyLarge
             )
@@ -272,7 +272,7 @@ fun DrawModifiableEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event,
                 modifier = Modifier.padding(vertical = 25.dp)
             )
             Text (
-                "Event type",
+                stringResource(R.string.type_event),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 style = MaterialTheme.typography.bodyLarge
             )
@@ -302,7 +302,7 @@ fun DrawModifiableEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event,
                 modifier = Modifier.padding(vertical = 25.dp)
             )
             Text (
-                "Date",
+                stringResource(R.string.date_event),
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 style = MaterialTheme.typography.bodyLarge
             )
@@ -319,7 +319,7 @@ fun DrawModifiableEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event,
             Button(
                 onClick = { openDialog.value = true }
             ) {
-                Text("Select new date")
+                Text(stringResource(R.string.select_new_date))
             }
             if (openDialog.value) {
                 val datePickerState = rememberDatePickerState()
@@ -347,7 +347,7 @@ fun DrawModifiableEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event,
                                 openDialog.value = false
                             }
                         ) {
-                            Text("Cancel")
+                            Text(stringResource(R.string.cancel))
                         }
                     }) {
                     DatePicker(state = datePickerState)

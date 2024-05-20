@@ -254,7 +254,7 @@ fun DrawUserInfos(userVm: UserViewModel, screenWidth: Dp, screenHeight: Dp, colo
                     modifier = Modifier.padding(vertical = 25.dp)
                 )
                 Text(
-                    text = "Name",
+                    text = stringResource(R.string.name),
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -269,7 +269,7 @@ fun DrawUserInfos(userVm: UserViewModel, screenWidth: Dp, screenHeight: Dp, colo
                     modifier = Modifier.padding(vertical = 25.dp)
                 )
                 Text(
-                    text = "Surname",
+                    text = stringResource(R.string.surname),
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -318,7 +318,7 @@ fun DrawUserModifiableInfos(userVm: UserViewModel, screenWidth: Dp, screenHeight
                         editableName = it
                         userVm.editState.newName = it
                     },
-                    label = { Text("Name") },
+                    label = { Text(stringResource(R.string.name)) },
                     textStyle = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -333,7 +333,7 @@ fun DrawUserModifiableInfos(userVm: UserViewModel, screenWidth: Dp, screenHeight
                         editableSurname = it
                         userVm.editState.newSurname = it
                     },
-                    label = { Text("Surname") },
+                    label = { Text(stringResource(R.string.surname)) },
                     textStyle = MaterialTheme.typography.bodyLarge,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     modifier = Modifier.fillMaxWidth()

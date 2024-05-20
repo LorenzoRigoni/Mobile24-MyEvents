@@ -57,18 +57,12 @@ import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.FilterEnum
 import com.example.myevents.ui.MyEventsRoute
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     eventsVM: EventsViewModel,
     state: EventsState,
     navController: NavHostController
 ) {
-    var selectedFuture by remember { mutableStateOf(true) }
-    var selectedAll by remember { mutableStateOf(false) }
-    var selectedPast by remember { mutableStateOf(false) }
-    var selectedFavourites by remember { mutableStateOf(false) }
-
     Scaffold(
         floatingActionButton = {
             Row (
@@ -90,137 +84,10 @@ fun HomeScreen(
             }
         },
     ) { contentPadding ->
-        //Filter chips
-        Column (
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(contentPadding)
-                .fillMaxSize()
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(8.dp)
-                    .fillMaxWidth()
-            ) {
-                FilterChip(
-                    selected = selectedFuture,
-                    onClick = {
-                        if (!selectedFuture) {
-                            selectedFuture = true
-                            selectedAll = false
-                            selectedPast = false
-                            selectedFavourites = false
-                            eventsVM.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-                        }
-                    },
-                    label = {
-                        Text("Future events")
-                    },
-                    leadingIcon = if (selectedFuture) {
-                        {
-                            Icon(
-                                imageVector = Icons.Filled.Done,
-                                contentDescription = "Done icon",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
-                            )
-                        }
-                    } else {
-                        null
-                    }
-                )
-                FilterChip(
-                    selected = selectedAll,
-                    onClick = {
-                        if (!selectedAll) {
-                            selectedAll = true
-                            selectedFuture = false
-                            selectedPast = false
-                            selectedFavourites = false
-                            eventsVM.updateEvents(FilterEnum.SHOW_ALL_EVENTS)
-                        }
-                    },
-                    label = {
-                        Text("All events")
-                    },
-                    leadingIcon = if (selectedAll) {
-                        {
-                            Icon(
-                                imageVector = Icons.Filled.Done,
-                                contentDescription = "Done icon",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
-                            )
-                        }
-                    } else {
-                        null
-                    }
-                )
-            }
-
-            Spacer(Modifier.height(8.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(8.dp)
-                    .fillMaxWidth()
-            ) {
-                FilterChip(
-                    selected = selectedPast,
-                    onClick = {
-                        if (!selectedPast) {
-                            selectedPast = true
-                            selectedFuture = false
-                            selectedAll = false
-                            selectedFavourites = false
-                            eventsVM.updateEvents(FilterEnum.SHOW_PAST_EVENTS)
-                        }
-                    },
-                    label = {
-                        Text("Past events")
-                    },
-                    leadingIcon = if (selectedPast) {
-                        {
-                            Icon(
-                                imageVector = Icons.Filled.Done,
-                                contentDescription = "Done icon",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
-                            )
-                        }
-                    } else {
-                        null
-                    }
-                )
-                FilterChip(
-                    selected = selectedFavourites,
-                    onClick = {
-                        if (!selectedFavourites) {
-                            selectedFavourites = true
-                            selectedFuture = false
-                            selectedPast = false
-                            selectedAll = false
-                            eventsVM.updateEvents(FilterEnum.SHOW_FAVOURITES_EVENTS)
-                        }
-                    },
-                    label = {
-                        Text("Favourites events")
-                    },
-                    leadingIcon = if (selectedFavourites) {
-                        {
-                            Icon(
-                                imageVector = Icons.Filled.Done,
-                                contentDescription = "Done icon",
-                                modifier = Modifier.size(FilterChipDefaults.IconSize)
-                            )
-                        }
-                    } else {
-                        null
-                    }
-                )
-            }
-        }
-
-        //Cards
-        Spacer(Modifier.size(24.dp))
+        FilterChips(
+            eventsVM,
+            contentPadding
+        )
         if (state.events.isNotEmpty()) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(1),
@@ -338,5 +205,146 @@ fun NoEventsPlaceHolder(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(bottom = 8.dp)
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilterChips(
+    eventsVM: EventsViewModel,
+    contentPadding: PaddingValues
+) {
+    var selectedFuture by remember { mutableStateOf(true) }
+    var selectedAll by remember { mutableStateOf(false) }
+    var selectedPast by remember { mutableStateOf(false) }
+    var selectedFavourites by remember { mutableStateOf(false) }
+    Column (
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(contentPadding)
+            .fillMaxSize()
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+        ) {
+            FilterChip(
+                selected = selectedFuture,
+                onClick = {
+                    if (!selectedFuture) {
+                        selectedFuture = true
+                        selectedAll = false
+                        selectedPast = false
+                        selectedFavourites = false
+                        eventsVM.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
+                    }
+                },
+                label = {
+                    Text(stringResource(R.string.future_events))
+                },
+                leadingIcon = if (selectedFuture) {
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Done,
+                            contentDescription = "Done icon",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
+                } else {
+                    null
+                }
+            )
+            FilterChip(
+                selected = selectedAll,
+                onClick = {
+                    if (!selectedAll) {
+                        selectedAll = true
+                        selectedFuture = false
+                        selectedPast = false
+                        selectedFavourites = false
+                        eventsVM.updateEvents(FilterEnum.SHOW_ALL_EVENTS)
+                    }
+                },
+                label = {
+                    Text(stringResource(R.string.all_events))
+                },
+                leadingIcon = if (selectedAll) {
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Done,
+                            contentDescription = "Done icon",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
+                } else {
+                    null
+                }
+            )
+        }
+
+        Spacer(Modifier.height(8.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .padding(8.dp)
+                .fillMaxWidth()
+        ) {
+            FilterChip(
+                selected = selectedPast,
+                onClick = {
+                    if (!selectedPast) {
+                        selectedPast = true
+                        selectedFuture = false
+                        selectedAll = false
+                        selectedFavourites = false
+                        eventsVM.updateEvents(FilterEnum.SHOW_PAST_EVENTS)
+                    }
+                },
+                label = {
+                    Text(stringResource(R.string.past_events))
+                },
+                leadingIcon = if (selectedPast) {
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Done,
+                            contentDescription = "Done icon",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
+                } else {
+                    null
+                }
+            )
+            FilterChip(
+                selected = selectedFavourites,
+                onClick = {
+                    if (!selectedFavourites) {
+                        selectedFavourites = true
+                        selectedFuture = false
+                        selectedPast = false
+                        selectedAll = false
+                        eventsVM.updateEvents(FilterEnum.SHOW_FAVOURITES_EVENTS)
+                    }
+                },
+                label = {
+                    Text(stringResource(R.string.favourites_events))
+                },
+                leadingIcon = if (selectedFavourites) {
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Done,
+                            contentDescription = "Done icon",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
+                } else {
+                    null
+                }
+            )
+        }
     }
 }

@@ -39,11 +39,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
+import com.example.myevents.R
 import com.example.myevents.utils.LocationService
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
@@ -95,7 +97,7 @@ fun AddEventScreen(
                     .padding(bottom = 8.dp)
             ){
                 Text(
-                    "Title of event",
+                    stringResource(R.string.title_event),
                     color = MaterialTheme.colorScheme.primary
                 )
             }
@@ -109,7 +111,7 @@ fun AddEventScreen(
                         addEventViewModel.state.value.title = title
                     },
                     textStyle = MaterialTheme.typography.bodyMedium,
-                    label = { Text(text = "Title")},
+                    label = { Text(text = stringResource(R.string.title_event))},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -121,7 +123,7 @@ fun AddEventScreen(
                     .padding(bottom = 8.dp)
             ){
                 Text(
-                    "Type of event",
+                    stringResource(R.string.type_event),
                     color = MaterialTheme.colorScheme.primary
                 )
             }
@@ -135,7 +137,7 @@ fun AddEventScreen(
                         addEventViewModel.state.value.eventType = eventType
                     },
                     textStyle = MaterialTheme.typography.bodyMedium,
-                    label = { Text(text = "Type")},
+                    label = { Text(text = stringResource(R.string.type_event))},
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -147,7 +149,7 @@ fun AddEventScreen(
                     .padding(bottom = 8.dp)
             ){
                 Text(
-                    "Date of event",
+                    stringResource(R.string.date_event),
                     color = MaterialTheme.colorScheme.primary
                 )
             }
@@ -155,9 +157,9 @@ fun AddEventScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(onClick = { openDialog.value = true }) {
-                    Text("Select Date")
+                    Text(stringResource(R.string.select_date))
                 }
-                Text("Selected Date: $date")
+                Text(stringResource(R.string.selected_date) + ": $date")
 
                 if (openDialog.value) {
                     val datePickerState = rememberDatePickerState()
@@ -189,7 +191,7 @@ fun AddEventScreen(
                                     openDialog.value = false
                                 }
                             ) {
-                                Text("Cancel")
+                                Text(stringResource(R.string.cancel))
                             }
                         }
                     ) {
@@ -210,7 +212,7 @@ fun AddEventScreen(
                         )
                     }
                 ) {
-                    Text(text = "Choose an image from the gallery")
+                    Text(text = stringResource(R.string.choose_image))
                 }
             }
             Spacer(Modifier.size(24.dp))
@@ -220,7 +222,7 @@ fun AddEventScreen(
                     .padding(bottom = 8.dp)
             ){
                 Text(
-                    "Position of event",
+                    stringResource(R.string.position_event),
                     color = MaterialTheme.colorScheme.primary
                 )
             }

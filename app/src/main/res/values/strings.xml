@@ -36,4 +36,27 @@
     <string name="loc_perm_req">Location permission is required.</string>
     <string name="go_set">Go to Settings</string>
     <string name="no_internet">No Internet connectivity</string>
+    <string name="future_events">Future events</string>
+    <string name="all_events">All events</string>
+    <string name="past_events">Past events</string>
+    <string name="favourites_events">Favourites events</string>
+    <string name="title_event">Title of event</string>
+    <string name="type_event">Type of event</string>
+    <string name="date_event">Date of event</string>
+    <string name="select_date">Select date</string>
+    <string name="selected_date">Selected date</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_image">Choose an image from the gallery</string>
+    <string name="position_event">Position of the event</string>
+    <string name="save">Save</string>
+    <string name="select_new_date">Select new date</string>
+    <string name="generals">Generals</string>
+    <string name="theme">Theme</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="auto">System</string>
+    <string name="language">Language</string>
+    <string name="italian">Italian</string>
+    <string name="english">English</string>
+    <string name="reminder_time">Reminder time</string>
 </resources>

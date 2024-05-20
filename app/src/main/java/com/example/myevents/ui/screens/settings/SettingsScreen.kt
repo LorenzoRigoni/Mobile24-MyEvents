@@ -23,8 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.preferences.core.stringPreferencesKey
+import com.example.myevents.R
 import java.util.Calendar
 
 @Composable
@@ -61,7 +64,7 @@ fun SettingsScreen(
                 .verticalScroll(scrollState)
         ) {
             Text(
-                text = "Generals",
+                text = stringResource(R.string.generals),
                 fontSize = 20.sp,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -85,7 +88,7 @@ fun SettingsScreen(
                         onDismissRequest = { expandedTheme.value = false },
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Light") },
+                            text = { Text(stringResource(R.string.light)) },
                             onClick = {
                                 theme = "Light"
                                 expandedTheme.value = false
@@ -93,7 +96,7 @@ fun SettingsScreen(
                             },
                         )
                         DropdownMenuItem(
-                            text = { Text("Dark") },
+                            text = { Text(stringResource(R.string.dark)) },
                             onClick = {
                                 theme = "Dark"
                                 expandedTheme.value = false
@@ -101,7 +104,7 @@ fun SettingsScreen(
                             },
                         )
                         DropdownMenuItem(
-                            text = { Text("Auto") },
+                            text = { Text(stringResource(R.string.auto)) },
                             onClick = {
                                 theme = "Auto"
                                 expandedTheme.value = false
@@ -118,7 +121,7 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
             ) {
-                Text(text = "Language", modifier = Modifier.weight(1f))
+                Text(text = stringResource(R.string.language), modifier = Modifier.weight(1f))
                 Box {
                     Button(
                         onClick = { expandedLanguage.value = true },
@@ -131,7 +134,7 @@ fun SettingsScreen(
                         onDismissRequest = { expandedLanguage.value = false },
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Italian") },
+                            text = { Text(stringResource(R.string.italian)) },
                             onClick = {
                                 language = "Italian"
                                 expandedLanguage.value = false
@@ -139,7 +142,7 @@ fun SettingsScreen(
                             },
                         )
                         DropdownMenuItem(
-                            text = { Text("English") },
+                            text = { Text(stringResource(R.string.english)) },
                             onClick = {
                                 language = "English"
                                 expandedLanguage.value = false
@@ -156,7 +159,7 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
             ) {
-                Text(text = "Reminder time", modifier = Modifier.weight(1f))
+                Text(text = stringResource(R.string.reminder_time), modifier = Modifier.weight(1f))
                 Button(
                     onClick = { timePickerDialog.show() },
                     Modifier.width(100.dp)
