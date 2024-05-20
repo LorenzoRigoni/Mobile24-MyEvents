@@ -84,7 +84,6 @@ fun AppBar(
                     AddLogoutButton(navController, userVm::logout)
                 }
                 MyEventsRoute.Home -> {
-                    AddFilterButton()
                     AddNotificationsButton(navController)
                     AddDropDownMenu(
                         navController,
@@ -162,12 +161,7 @@ private fun AddDropDownMenu (
         )
     }
 }
-@Composable
-private fun AddFilterButton () {
-    IconButton(onClick = { /*TODO*/ }) {
-        Icon(Icons.Outlined.FilterList, "Filter")
-    }
-}
+
 @Composable
 private fun AddLogoutButton (navController: NavHostController, logoutAction: () -> Unit) {
     IconButton(onClick = {
