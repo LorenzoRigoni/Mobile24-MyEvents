@@ -84,7 +84,8 @@ fun LoginScreen(
             onClick = {
                 coroutineScope.launch {
                     if (username.isNotEmpty() && password.isNotEmpty()) {
-                        if (userVm.checkLogin(username, password)) {
+                        userVm.checkLogin(username, password).join()
+                        if (userVm.user != null) {
                             userVm.setLoggedUser(username, isChecked)
                             eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
                             navController.navigate(MyEventsRoute.Welcome.route)
