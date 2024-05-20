@@ -68,6 +68,7 @@ fun MyEventsNavGraph(
     eventsState: EventsState,
     addEventVm: AddEventViewModel,
     eventDetailsVm: EventDetailsViewModel,
+    settingsVm: SettingsViewModel,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -101,7 +102,6 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.Settings) {
             composable(route) {
-                val settingsVm = koinViewModel<SettingsViewModel>()
                 SettingsScreen(settingsVm)
             }
         }

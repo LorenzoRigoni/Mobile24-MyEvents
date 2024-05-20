@@ -22,6 +22,7 @@ import com.example.myevents.ui.UserViewModel
 import com.example.myevents.ui.composables.AppBar
 import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.screens.eventdetails.EventDetailsViewModel
+import com.example.myevents.ui.screens.settings.SettingsViewModel
 import com.example.myevents.ui.theme.MyEventsTheme
 import com.example.myevents.utils.LocationService
 import org.koin.android.ext.android.get
@@ -56,9 +57,19 @@ class MainActivity : ComponentActivity() {
 
                     val addEventVm = koinViewModel<AddEventViewModel>()
                     val eventDetailsVm = koinViewModel<EventDetailsViewModel>()
+                    val settingsVm = koinViewModel<SettingsViewModel>()
 
                     Scaffold(
-                        topBar = { AppBar(navController, currentRoute, userVm, eventsVm, addEventVm, eventDetailsVm) }
+                        topBar = {
+                            AppBar(
+                                navController,
+                                currentRoute,
+                                userVm,
+                                eventsVm,
+                                addEventVm,
+                                eventDetailsVm,
+                                settingsVm)
+                        }
                     ) { contentPadding ->
                         MyEventsNavGraph(
                             navController,
@@ -67,6 +78,7 @@ class MainActivity : ComponentActivity() {
                             eventsState,
                             addEventVm,
                             eventDetailsVm,
+                            settingsVm,
                             modifier =  Modifier.padding(contentPadding)
                         )
                     }
