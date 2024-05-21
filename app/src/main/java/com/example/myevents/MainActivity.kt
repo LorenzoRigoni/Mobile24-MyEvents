@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
             val settingsVm = koinViewModel<SettingsViewModel>()
 
             MyEventsTheme (
-                darkTheme = if (settingsVm.selectedTheme == "Light") false else if(settingsVm.selectedTheme == "Dark") true else isSystemInDarkTheme()
+                darkTheme = if (settingsVm.preferences.theme == "Light") false else if(settingsVm.preferences.theme == "Dark") true else isSystemInDarkTheme()
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),

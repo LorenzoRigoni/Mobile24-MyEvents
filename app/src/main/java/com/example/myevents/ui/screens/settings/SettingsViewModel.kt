@@ -9,38 +9,36 @@ import com.example.myevents.data.repositories.SettingsRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-data class SettingsPreferences(var theme: String, var language: String, var reminderTime: String)
+data class SettingsPreferences(val theme: String, val language: String, val reminderTime: String)
 
 class SettingsViewModel (
     private val repository: SettingsRepository
 ) : ViewModel() {
 
-    val preferences by mutableStateOf(SettingsPreferences("", "", ""))
-
-    var selectedTheme by mutableStateOf("Light")
+    var preferences by mutableStateOf(SettingsPreferences("", "", ""))
 
     init {
         viewModelScope.launch {
-            preferences.theme = repository.theme.first()
-            selectedTheme = preferences.theme
-            preferences.language = repository.language.first()
-            preferences.reminderTime = repository.reminderTime.first()
+            preferences = SettingsPreferences(
+                repository.theme.first(),
+                repository.language.first(),
+                repository.reminderTime.first()
+            )
         }
     }
 
     fun setTheme(value: String) {
-        preferences.theme = value
-        selectedTheme = value
+        preferences = preferences.copy(theme = value)
         viewModelScope.launch { repository.setTheme(value) }
     }
 
     fun setLanguage(value: String) {
-        preferences.language = value
+        preferences = preferences.copy(language = value)
         viewModelScope.launch { repository.setLanguage(value) }
     }
 
     fun setReminderTime(value: String) {
-        preferences.reminderTime = value
+        preferences = preferences.copy(reminderTime = value)
         viewModelScope.launch { repository.setReminderTime(value) }
     }
 }
