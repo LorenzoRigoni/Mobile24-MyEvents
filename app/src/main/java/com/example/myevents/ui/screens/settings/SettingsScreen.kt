@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.myevents.R
 import java.util.Calendar
 
@@ -40,8 +39,8 @@ fun SettingsScreen(
             .padding(12.dp)
             .fillMaxSize()
     ) {
-        var theme by remember { mutableStateOf("Light") }
-        var language by remember { mutableStateOf("English") }
+        var theme by remember { mutableStateOf(settingsVm.preferences.theme) }
+        var language by remember { mutableStateOf(settingsVm.preferences.language) }
 
         val scrollState = rememberScrollState()
         val expandedTheme = remember { mutableStateOf(false) }
@@ -52,7 +51,7 @@ fun SettingsScreen(
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
 
-        var reminderTime by remember { mutableStateOf("") }
+        var reminderTime by remember { mutableStateOf(settingsVm.preferences.reminderTime) }
         val timePickerDialog = TimePickerDialog(context, { _, selectedHour: Int, selectedMinute: Int ->
             reminderTime = String.format("%02d:%02d", selectedHour, selectedMinute)
             settingsVm.setReminderTime(reminderTime)

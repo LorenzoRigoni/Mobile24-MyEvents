@@ -15,19 +15,18 @@ class SettingsViewModel (
     private val repository: SettingsRepository
 ) : ViewModel() {
 
-    private val preferences by mutableStateOf(SettingsPreferences("", "", ""))
+    val preferences by mutableStateOf(SettingsPreferences("", "", ""))
 
     var selectedTheme by mutableStateOf("Light")
 
     init {
         viewModelScope.launch {
             preferences.theme = repository.theme.first()
+            selectedTheme = preferences.theme
             preferences.language = repository.language.first()
             preferences.reminderTime = repository.reminderTime.first()
         }
     }
-
-    fun getTheme() = preferences.theme
 
     fun setTheme(value: String) {
         preferences.theme = value

@@ -27,8 +27,6 @@ import com.example.myevents.ui.screens.eventdetails.EventDetailsViewModel
 import com.example.myevents.ui.screens.settings.SettingsViewModel
 import com.example.myevents.ui.theme.MyEventsTheme
 import com.example.myevents.utils.LocationService
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("StaticFieldLeak")
@@ -65,8 +63,6 @@ class MainActivity : ComponentActivity() {
 
                     val addEventVm = koinViewModel<AddEventViewModel>()
                     val eventDetailsVm = koinViewModel<EventDetailsViewModel>()
-
-                    val theme = settingsVm.getTheme();
 
                     Scaffold(
                         topBar = {
