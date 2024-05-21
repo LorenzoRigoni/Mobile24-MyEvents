@@ -16,6 +16,16 @@ class SettingsViewModel (
 
     val preferences by mutableStateOf(SettingsPreferences("", "", ""))
 
+    init {
+        viewModelScope.launch {
+            preferences.theme = repository.theme.first()
+            preferences.language = repository.language.first()
+            preferences.reminderTime = repository.reminderTime.first()
+        }
+    }
+
+    fun getTheme() = preferences.theme
+
     fun setTheme(value: String) {
         preferences.theme = value
         viewModelScope.launch { repository.setTheme(value) }
@@ -29,13 +39,5 @@ class SettingsViewModel (
     fun setReminderTime(value: String) {
         preferences.reminderTime = value
         viewModelScope.launch { repository.setReminderTime(value) }
-    }
-
-    init {
-        viewModelScope.launch {
-            preferences.theme = repository.theme.first()
-            preferences.language = repository.language.first()
-            preferences.reminderTime = repository.reminderTime.first()
-        }
     }
 }

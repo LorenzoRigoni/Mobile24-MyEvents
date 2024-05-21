@@ -62,6 +62,8 @@ class MainActivity : ComponentActivity() {
                     val eventDetailsVm = koinViewModel<EventDetailsViewModel>()
                     val settingsVm = koinViewModel<SettingsViewModel>()
 
+                    val theme = settingsVm.getTheme();
+
                     Scaffold(
                         topBar = {
                             AppBar(
