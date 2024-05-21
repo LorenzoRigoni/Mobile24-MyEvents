@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.database.Event
 import com.example.myevents.data.repositories.MyEventsRepository
+import com.example.myevents.getLocationService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -44,6 +45,10 @@ class AddEventViewModel(
     init {
         viewModelScope.launch {
             username = repository.user.first()
+            getLocationService().coordinates?.let {
+                _latitude.value = it.latitude
+                _longitude.value = it.longitude
+            }
         }
     }
 
@@ -105,8 +110,12 @@ class AddEventViewModel(
     @Suppress("DEPRECATION")
     private fun setLocation(lat: Double, long: Double, context: Context): Address? {
         val gcd = Geocoder(context, Locale.getDefault())
-        val addresses: List<Address>? = gcd.getFromLocation(lat, long, 1)
-        assert(addresses != null)
+        var addresses: List<Address>? = null
+        try {
+            addresses = gcd.getFromLocation(lat, long, 1)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
         return if (addresses!!.isNotEmpty()) {
             addresses[0]
         } else null

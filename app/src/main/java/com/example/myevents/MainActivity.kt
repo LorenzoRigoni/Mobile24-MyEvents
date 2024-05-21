@@ -1,5 +1,6 @@
 package com.example.myevents
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,14 +27,16 @@ import com.example.myevents.ui.screens.settings.SettingsViewModel
 import com.example.myevents.ui.theme.MyEventsTheme
 import com.example.myevents.utils.LocationService
 import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
 
+@SuppressLint("StaticFieldLeak")
+private lateinit var locationService: LocationService
+
 class MainActivity : ComponentActivity() {
-    private lateinit var locationService: LocationService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        locationService = get<LocationService>()
+        locationService = LocationService(this)
 
         setContent {
             MyEventsTheme {
@@ -86,4 +89,8 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+fun getLocationService(): LocationService {
+    return locationService
 }
