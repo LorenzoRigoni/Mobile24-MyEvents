@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class UserState(val user: String, val isLogged: Boolean)
-data class UserEditState(var newName: String, var newSurname: String, var newImage: String)
+data class UserEditState(val newName: String, val newSurname: String, val newImage: String)
 
 interface UserActions {
     fun addUser(user: User): Job
@@ -93,6 +93,18 @@ class UserViewModel (
             }
         }
         clearEditState()
+    }
+
+    fun setNewName(newName: String) {
+        editState = editState.copy(newName = newName)
+    }
+
+    fun setNewSurname(newSurname: String) {
+        editState = editState.copy(newSurname = newSurname)
+    }
+
+    fun setNewImage(newImage: String) {
+        editState = editState.copy(newImage = newImage)
     }
 
     fun clearEditState() {

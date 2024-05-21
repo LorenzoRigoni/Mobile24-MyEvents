@@ -21,13 +21,11 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -43,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.example.myevents.R
 import com.example.myevents.utils.LocationService
@@ -51,7 +48,6 @@ import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
-import java.security.Permission
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -73,7 +69,7 @@ fun AddEventScreen(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {uri ->
             selectedImageUri = uri
-            addEventViewModel.state.value.imageUri = selectedImageUri.toString()
+            addEventViewModel.setImageUri(selectedImageUri.toString())
         }
     )
 
@@ -108,7 +104,7 @@ fun AddEventScreen(
                     value = title,
                     onValueChange = {
                         title = it
-                        addEventViewModel.state.value.title = title
+                        addEventViewModel.setTitle(title)
                     },
                     textStyle = MaterialTheme.typography.bodyMedium,
                     label = { Text(text = stringResource(R.string.title_event))},
@@ -134,7 +130,7 @@ fun AddEventScreen(
                     value = eventType,
                     onValueChange = {
                         eventType = it
-                        addEventViewModel.state.value.eventType = eventType
+                        addEventViewModel.setEventType(eventType)
                     },
                     textStyle = MaterialTheme.typography.bodyMedium,
                     label = { Text(text = stringResource(R.string.type_event))},
@@ -178,7 +174,7 @@ fun AddEventScreen(
                                         val selectedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
                                         selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                                     } ?: ""
-                                    addEventViewModel.state.value.date = date
+                                    addEventViewModel.setDate(date)
                                 },
                                 enabled = confirmEnabled.value
                             ) {

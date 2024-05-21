@@ -16,6 +16,7 @@ class SettingsViewModel (
 ) : ViewModel() {
 
     var preferences by mutableStateOf(SettingsPreferences("", "", ""))
+        private set
 
     init {
         viewModelScope.launch {

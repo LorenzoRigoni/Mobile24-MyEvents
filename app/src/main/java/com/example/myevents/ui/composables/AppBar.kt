@@ -7,7 +7,6 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Notifications
@@ -187,8 +186,8 @@ private fun AddConfirmButton (navController: NavHostController, saveAction: () -
 @Composable
 private fun AddDeleteButton (navController: NavHostController, deleteAction: () -> Unit, returnRoute: String) {
     IconButton(onClick = {
-        deleteAction()
         navController.navigate(returnRoute)
+        deleteAction()
     }) {
         Icon(Icons.Outlined.Delete, "Delete")
     }

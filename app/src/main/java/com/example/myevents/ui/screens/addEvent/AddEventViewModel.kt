@@ -22,10 +22,10 @@ import java.io.IOException
 import java.util.Locale
 
 data class AddEventState(
-    var eventType: String,
-    var title: String,
-    var date: String,
-    var imageUri: String?
+    val eventType: String,
+    val title: String,
+    val date: String,
+    val imageUri: String?
 )
 
 class AddEventViewModel(
@@ -33,7 +33,8 @@ class AddEventViewModel(
 ) : ViewModel() {
     private var username: String? = null
 
-    val state = MutableStateFlow(AddEventState("", "", "", ""))
+    var state = MutableStateFlow(AddEventState("", "", "", ""))
+        private set
 
     private val _latitude = MutableStateFlow(0.0)
     var latitude: StateFlow<Double> = _latitude
@@ -56,6 +57,22 @@ class AddEventViewModel(
         return state.value.title.isNotEmpty()
                 && state.value.date.isNotEmpty()
                 && state.value.eventType.isNotEmpty();
+    }
+
+    fun setEventType(eventType: String) {
+        state.value = state.value.copy(eventType = eventType)
+    }
+
+    fun setTitle(title: String) {
+        state.value = state.value.copy(title = title)
+    }
+
+    fun setDate(date: String) {
+        state.value = state.value.copy(date = date)
+    }
+
+    fun setImageUri(imageUri: String) {
+        state.value = state.value.copy(imageUri = imageUri)
     }
 
     fun addEvent() {

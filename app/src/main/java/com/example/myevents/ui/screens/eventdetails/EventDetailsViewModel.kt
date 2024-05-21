@@ -19,15 +19,16 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import java.util.Locale
 
-data class EventEditState(var newTitle: String, var newType: String, var newDate: String)
+data class EventEditState(val newTitle: String, val newType: String, val newDate: String)
 
 class EventDetailsViewModel(
     private val repository: MyEventsRepository
 ) : ViewModel() {
 
     var eventEditState by mutableStateOf(EventEditState("", "", ""))
-    var singleEventToDelete: Int? = null
         private set
+
+    private var singleEventToDelete: Int? = null
 
     fun editEvent(originalEvent: Event) {
         if (originalEvent != Event(
@@ -71,6 +72,18 @@ class EventDetailsViewModel(
             repository.deleteEventFromId(id)
         }
         singleEventToDelete = null
+    }
+
+    fun setNewTitle(newTitle: String) {
+        eventEditState = eventEditState.copy(newTitle = newTitle)
+    }
+
+    fun setNewType(newType: String) {
+        eventEditState = eventEditState.copy(newType = newType)
+    }
+
+    fun setNewDate(newDate: String) {
+        eventEditState = eventEditState.copy(newDate = newDate)
     }
 
     fun clearEditState() {

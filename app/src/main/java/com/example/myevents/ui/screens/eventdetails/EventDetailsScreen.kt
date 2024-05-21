@@ -260,7 +260,7 @@ fun DrawModifiableEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event,
                 value = editableTitle,
                 onValueChange = {
                     editableTitle = it
-                    eventDetailsVm.eventEditState.newTitle = it
+                    eventDetailsVm.setNewTitle(it)
                 },
                 label = { Text("Title") },
                 textStyle = MaterialTheme.typography.bodyLarge,
@@ -290,7 +290,7 @@ fun DrawModifiableEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event,
                 value = editableType,
                 onValueChange = {
                     editableType = it
-                    eventDetailsVm.eventEditState.newType = it
+                    eventDetailsVm.setNewType(it)
                 },
                 label = { Text("Event type") },
                 textStyle = MaterialTheme.typography.bodyLarge,
@@ -334,7 +334,7 @@ fun DrawModifiableEventInfo(eventDetailsVm: EventDetailsViewModel, event: Event,
                                     val selectedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
                                     selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                                 } ?: ""
-                                eventDetailsVm.eventEditState.newDate = editableDate
+                                eventDetailsVm.setNewDate(editableDate)
                             },
                             enabled = confirmEnabled.value
                         ) {

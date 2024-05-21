@@ -69,7 +69,7 @@ fun ProfileScreen(
     val per_denied = stringResource(R.string.per_denied)
 
     val cameraLauncher = rememberCameraLauncher {
-        imageUri -> userVm.editState.newImage = imageUri.toString()
+        imageUri -> userVm.setNewImage(imageUri.toString())
     }
 
     val cameraPermission = rememberPermission(Manifest.permission.CAMERA) { status ->
@@ -316,7 +316,7 @@ fun DrawUserModifiableInfos(userVm: UserViewModel, screenWidth: Dp, screenHeight
                     value = editableName,
                     onValueChange = {
                         editableName = it
-                        userVm.editState.newName = it
+                        userVm.setNewName(it)
                     },
                     label = { Text(stringResource(R.string.name)) },
                     textStyle = MaterialTheme.typography.bodyLarge,
@@ -331,7 +331,7 @@ fun DrawUserModifiableInfos(userVm: UserViewModel, screenWidth: Dp, screenHeight
                     value = editableSurname,
                     onValueChange = {
                         editableSurname = it
-                        userVm.editState.newSurname = it
+                        userVm.setNewSurname(it)
                     },
                     label = { Text(stringResource(R.string.surname)) },
                     textStyle = MaterialTheme.typography.bodyLarge,
