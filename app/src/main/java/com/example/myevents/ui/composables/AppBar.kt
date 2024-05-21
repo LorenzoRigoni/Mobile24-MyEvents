@@ -56,7 +56,7 @@ fun AppBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                currentRoute.title,
+                "MyEvents",
                 fontWeight = FontWeight.Medium,
             )
         },

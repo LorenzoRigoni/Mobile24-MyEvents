@@ -2,6 +2,7 @@ package com.example.myevents.ui.screens.settings
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.repositories.SettingsRepository
@@ -16,6 +17,8 @@ class SettingsViewModel (
 
     private val preferences by mutableStateOf(SettingsPreferences("", "", ""))
 
+    var selectedTheme by mutableStateOf("Light")
+
     init {
         viewModelScope.launch {
             preferences.theme = repository.theme.first()
@@ -28,6 +31,7 @@ class SettingsViewModel (
 
     fun setTheme(value: String) {
         preferences.theme = value
+        selectedTheme = value
         viewModelScope.launch { repository.setTheme(value) }
     }
 

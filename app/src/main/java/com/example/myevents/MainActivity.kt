@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -39,7 +40,11 @@ class MainActivity : ComponentActivity() {
         locationService = LocationService(this)
 
         setContent {
-            MyEventsTheme {
+            val settingsVm = koinViewModel<SettingsViewModel>()
+
+            MyEventsTheme (
+                darkTheme = if (settingsVm.selectedTheme == "Light") false else if(settingsVm.selectedTheme == "Dark") true else isSystemInDarkTheme()
+            ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -60,7 +65,6 @@ class MainActivity : ComponentActivity() {
 
                     val addEventVm = koinViewModel<AddEventViewModel>()
                     val eventDetailsVm = koinViewModel<EventDetailsViewModel>()
-                    val settingsVm = koinViewModel<SettingsViewModel>()
 
                     val theme = settingsVm.getTheme();
 
