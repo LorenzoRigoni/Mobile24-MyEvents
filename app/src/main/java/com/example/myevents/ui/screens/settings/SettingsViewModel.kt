@@ -14,7 +14,7 @@ class SettingsViewModel (
     private val repository: SettingsRepository
 ) : ViewModel() {
 
-    val preferences by mutableStateOf(SettingsPreferences("", "", ""))
+    private val preferences by mutableStateOf(SettingsPreferences("", "", ""))
 
     init {
         viewModelScope.launch {
