@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">MyEvents</string>
+    <string name="welcomeScreenTitle">Welcome</string>
+    <string name="homeScreenTitle">Home</string>
+    <string name="addEventScreenTitle">Add event</string>
+    <string name="eventDetailScreenTitle">Event detail</string>
+    <string name="manageEventsScreenTitle">Manage events</string>
+    <string name="notificationsScreenTitle">Notifications</string>
+    <string name="profileScreenTitle">Profile</string>
+    <string name="loginScreenTitle">Login</string>
+    <string name="registerScreenTitle">Register</string>
+    <string name="settingsScreenTitle">Settings</string>
     <string name="hello">Hello </string>
     <string name="logout">Logout</string>
     <string name="settings">Settings</string>

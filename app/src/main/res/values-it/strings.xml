@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MyEvents</string>
+    <string name="welcomeScreenTitle">Benvenuto</string>
+    <string name="homeScreenTitle">Home</string>
+    <string name="addEventScreenTitle">Aggiungi evento</string>
+    <string name="eventDetailScreenTitle">Dettagli evento</string>
+    <string name="manageEventsScreenTitle">Gestisci eventi</string>
+    <string name="notificationsScreenTitle">Notifiche</string>
+    <string name="profileScreenTitle">Profilo</string>
+    <string name="loginScreenTitle">Accedi</string>
+    <string name="registerScreenTitle">Registrati</string>
+    <string name="settingsScreenTitle">Impostazioni</string>
     <string name="hello">Ciao </string>
     <string name="logout">Esci</string>
     <string name="settings">Impostazioni</string>

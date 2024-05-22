@@ -57,7 +57,19 @@ fun AppBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                "MyEvents",
+                when (currentRoute.title) {
+                    MyEventsRoute.Welcome.route -> stringResource(R.string.welcomeScreenTitle)
+                    MyEventsRoute.Home.route -> stringResource(R.string.homeScreenTitle)
+                    MyEventsRoute.AddEvent.route -> stringResource(R.string.addEventScreenTitle)
+                    MyEventsRoute.EventDetails.route -> stringResource(R.string.eventDetailScreenTitle)
+                    MyEventsRoute.ManageEvents.route -> stringResource(R.string.manageEventsScreenTitle)
+                    MyEventsRoute.Notifications.route -> stringResource(R.string.notificationsScreenTitle)
+                    MyEventsRoute.Profile.route -> stringResource(R.string.profileScreenTitle)
+                    MyEventsRoute.Login.route -> stringResource(R.string.loginScreenTitle)
+                    MyEventsRoute.Register.route -> stringResource(R.string.registerScreenTitle)
+                    MyEventsRoute.Settings.route -> stringResource(R.string.settingsScreenTitle)
+                    else -> stringResource(R.string.app_name)
+                },
                 fontWeight = FontWeight.Medium,
             )
         },
