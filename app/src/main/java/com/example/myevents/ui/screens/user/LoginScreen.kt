@@ -124,7 +124,7 @@ fun LoginScreen(
                             activity,
                             onSuccess = {
                                 if (userVm.bioUser.isNotEmpty()) {
-                                    userVm.setLoggedUser(userVm.bioUser, userVm.bioPassword, false)
+                                    userVm.setLoggedUser(userVm.bioUser, userVm.bioPassword, isChecked)
                                     eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
                                     navController.navigate(MyEventsRoute.Welcome.route)
                                 } else {

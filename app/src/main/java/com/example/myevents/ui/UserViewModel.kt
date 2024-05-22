@@ -28,8 +28,7 @@ class UserViewModel (
         private set
     var imageUri by mutableStateOf<String?>(null)
         private set
-    var editState by mutableStateOf(UserEditState("", "", ""))
-        private set
+    private var editState by mutableStateOf(UserEditState("", "", ""))
     var bioUser by mutableStateOf("")
         private set
     var bioPassword by mutableStateOf("")
@@ -132,5 +131,6 @@ class UserViewModel (
     fun canLogWithBiometric() = viewModelScope.launch {
         bioUser = repository.bioUser.first()
         bioPassword = repository.bioPassword.first()
+        user = repository.getUserForLogin(bioUser, bioPassword)
     }
 }
