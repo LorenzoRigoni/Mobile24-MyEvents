@@ -83,7 +83,6 @@ class UserViewModel (
     }
 
     fun saveEditState() {
-        // TODO METTERE NUOVA IMMAGINE E CONTROLLO
         if (user!! != User(state.user, editState.newName, editState.newSurname, user!!.password, user!!.imageUri)
         ) {
             viewModelScope.launch {
