@@ -1,8 +1,6 @@
 package com.example.myevents.ui.screens.user
 
 import android.Manifest
-import android.app.Activity
-import android.app.AlertDialog
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,18 +12,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.PhotoCamera
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,14 +32,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import com.example.camera.utils.rememberPermission
 import com.example.myevents.R
 import com.example.myevents.data.database.User
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserActions
-import com.example.myevents.ui.UserState
 import com.example.myevents.utils.rememberCameraLauncher
 
 @Composable
@@ -174,7 +166,9 @@ fun RegisterScreen(
                     if (!onRegisterCheck(username)) {
                         actions.addUser(User(username = username, name = name, surname = surname, password = password, imageUri = imageURI))
                         onRegisterAction(username, password, isChecked)
-                        navController.navigate(MyEventsRoute.Welcome.route)
+                        navController.navigate(MyEventsRoute.Welcome.route) {
+                            popUpTo(MyEventsRoute.Register.route) { inclusive = true }
+                        }
                     } else {
                         Toast.makeText(
                             navController.context,
@@ -199,7 +193,9 @@ fun RegisterScreen(
 
         FloatingActionButton(
             onClick = {
-                navController.navigate(MyEventsRoute.Login.route)
+                navController.navigate(MyEventsRoute.Login.route) {
+                    popUpTo(MyEventsRoute.Register.route) { inclusive = true }
+                }
             },
             modifier = Modifier.align(Alignment.End)
         ) {

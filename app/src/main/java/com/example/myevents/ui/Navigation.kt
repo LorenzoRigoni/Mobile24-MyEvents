@@ -1,5 +1,7 @@
 package com.example.myevents.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NamedNavArgument
@@ -21,7 +23,6 @@ import com.example.myevents.ui.screens.settings.SettingsViewModel
 import com.example.myevents.ui.screens.user.LoginScreen
 import com.example.myevents.ui.screens.user.RegisterScreen
 import com.example.myevents.ui.screens.welcome.WelcomeScreen
-import org.koin.androidx.compose.koinViewModel
 
 sealed class MyEventsRoute(
     val route: String,
@@ -60,6 +61,7 @@ sealed class MyEventsRoute(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun MyEventsNavGraph(
     navController: NavHostController,
@@ -88,11 +90,15 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.EventDetails) {
             composable(route, arguments) { backStackEntry ->
-                val event = requireNotNull(eventsState.events.find {
+                val event = eventsState.events.find {
                     it.eventID == backStackEntry.arguments?.getString("eventId")?.toInt()
-                })
-                eventDetailsVm.setSingleEventToDelete(event.eventID)
-                EventDetailsScreen(event, eventDetailsVm)
+                }
+                if (event != null) {
+                    eventDetailsVm.setSingleEventToDelete(event.eventID)
+                    EventDetailsScreen(event, eventDetailsVm)
+                } else {
+                    navController.navigate(MyEventsRoute.Home.route)
+                }
             }
         }
         with(MyEventsRoute.AddEvent) {

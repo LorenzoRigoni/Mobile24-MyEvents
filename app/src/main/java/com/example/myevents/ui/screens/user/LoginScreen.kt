@@ -97,7 +97,9 @@ fun LoginScreen(
                         if (userVm.user != null) {
                             userVm.setLoggedUser(username, password, isChecked)
                             eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-                            navController.navigate(MyEventsRoute.Welcome.route)
+                            navController.navigate(MyEventsRoute.Welcome.route) {
+                                popUpTo(MyEventsRoute.Login.route) { inclusive = true }
+                            }
                         } else {
                             Toast.makeText(
                                 navController.context,
@@ -126,7 +128,9 @@ fun LoginScreen(
                                 if (userVm.bioUser.isNotEmpty()) {
                                     userVm.setLoggedUser(userVm.bioUser, userVm.bioPassword, isChecked)
                                     eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-                                    navController.navigate(MyEventsRoute.Welcome.route)
+                                    navController.navigate(MyEventsRoute.Welcome.route) {
+                                        popUpTo(MyEventsRoute.Login.route) { inclusive = true }
+                                    }
                                 } else {
                                     Toast.makeText(
                                         activity,
@@ -160,7 +164,11 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         FloatingActionButton(
-            onClick = { navController.navigate(MyEventsRoute.Register.route) },
+            onClick = {
+                navController.navigate(MyEventsRoute.Register.route) {
+                    popUpTo(MyEventsRoute.Login.route) { inclusive = true }
+                }
+            },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text(text = stringResource(R.string.no_account))

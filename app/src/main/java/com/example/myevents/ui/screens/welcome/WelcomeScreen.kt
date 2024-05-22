@@ -77,7 +77,11 @@ fun WelcomeScreen(
                 Text(text = stringResource(R.string.hello) + " " + state.user + "!")
                 Spacer(modifier = Modifier.height(16.dp))
                 FloatingActionButton(
-                    onClick = { navController.navigate(MyEventsRoute.Home.route) },
+                    onClick = {
+                        navController.navigate(MyEventsRoute.Home.route) {
+                            popUpTo(MyEventsRoute.Welcome.route) { inclusive = true }
+                        }
+                    },
                     modifier = Modifier.padding(contentPadding),
                 ) {
                     Text(
@@ -89,7 +93,11 @@ fun WelcomeScreen(
                 Text(text = stringResource(R.string.welcome))
                 Spacer(modifier = Modifier.height(16.dp))
                 FloatingActionButton(
-                    onClick = { navController.navigate(MyEventsRoute.Login.route) },
+                    onClick = {
+                        navController.navigate(MyEventsRoute.Login.route) {
+                            popUpTo(MyEventsRoute.Welcome.route) { inclusive = true }
+                        }
+                    },
                     modifier = Modifier.padding(contentPadding),
                 ) {
                     Text(
