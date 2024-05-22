@@ -60,4 +60,9 @@
     <string name="italian">Italiano</string>
     <string name="english">Inglese</string>
     <string name="reminder_time">Orario per la notifica</string>
+    <string name="bio_not_av">Autenticazione biometrica non disponibile</string>
+    <string name="bio_temp_not">Autenticazione biometrica temporaneamente non disponibile</string>
+    <string name="bio_not_roll">Devi prima registrare una impronta digitale o un face id</string>
+    <string name="log_bio">Accedi con autenticazione biometrica</string>
+    <string name="bio_failed">Autenticazione biometrica fallita. Si prega di ritentare</string>
 </resources>

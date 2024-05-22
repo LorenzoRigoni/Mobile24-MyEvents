@@ -20,13 +20,19 @@ class UserRepository(
     companion object {
         private val USER_KEY = stringPreferencesKey("user")
         private val LOGGED_KEY = booleanPreferencesKey("isLogged")
+        private val BIOMETRIC_KEY = stringPreferencesKey("bioUser")
+        private val BIOPASSWORD_KEY = stringPreferencesKey("bioPassword")
     }
 
     val user = dataStore.data.map { it[USER_KEY] ?: "" }
     val isLogged = dataStore.data.map { it[LOGGED_KEY] ?: false }
+    val bioUser = dataStore.data.map { it[BIOMETRIC_KEY] ?: "" }
+    val bioPassword = dataStore.data.map { it[BIOPASSWORD_KEY] ?: "" }
 
     suspend fun setLoggedUser(value: String) = dataStore.edit { it[USER_KEY] = value }
     suspend fun setIsLogged(value: Boolean) = dataStore.edit { it[LOGGED_KEY] = value }
+    suspend fun setBiometricUser(value: String) = dataStore.edit { it[BIOMETRIC_KEY] = value }
+    suspend fun setBiometricPassword(value: String) = dataStore.edit { it[BIOPASSWORD_KEY] = value }
 
     suspend fun getUserForLogin(username: String, password: String) : User? {
         return userDAO.getUserForLogin(username, password)

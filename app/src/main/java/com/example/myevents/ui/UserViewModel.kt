@@ -30,6 +30,10 @@ class UserViewModel (
         private set
     var editState by mutableStateOf(UserEditState("", "", ""))
         private set
+    var bioUser by mutableStateOf("")
+        private set
+    var bioPassword by mutableStateOf("")
+        private set
 
     init {
         viewModelScope.launch {
@@ -40,10 +44,12 @@ class UserViewModel (
         }
     }
 
-    fun setLoggedUser(value: String, rememberMe: Boolean) {
+    fun setLoggedUser(value: String, password: String, rememberMe: Boolean) {
         viewModelScope.launch {
             repository.setLoggedUser(value)
             repository.setIsLogged(rememberMe)
+            repository.setBiometricUser(value)
+            repository.setBiometricPassword(password)
         }
         state = UserState(value, true)
     }
@@ -58,7 +64,7 @@ class UserViewModel (
     }
 
     fun checkLogin(username: String, password: String) = viewModelScope.launch {
-            user = repository.getUserForLogin(username, password)
+        user = repository.getUserForLogin(username, password)
     }
 
     fun isUsernameAlreadyTaken(username: String) : Boolean {
@@ -119,5 +125,10 @@ class UserViewModel (
         override fun removeUser(user: User) = viewModelScope.launch {
             repository.deleteUser(user)
         }
+    }
+
+    fun canLogWithBiometric() = viewModelScope.launch {
+        bioUser = repository.bioUser.first()
+        bioPassword = repository.bioPassword.first()
     }
 }

@@ -51,7 +51,7 @@ import com.example.myevents.utils.rememberCameraLauncher
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    onRegisterAction: (String, Boolean) -> Unit,
+    onRegisterAction: (String, String, Boolean) -> Unit,
     onRegisterCheck: (String) -> Boolean,
     actions: UserActions
 ) {
@@ -173,7 +173,7 @@ fun RegisterScreen(
                 if (username.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
                     if (!onRegisterCheck(username)) {
                         actions.addUser(User(username = username, name = name, surname = surname, password = password, imageUri = imageURI))
-                        onRegisterAction(username, isChecked)
+                        onRegisterAction(username, password, isChecked)
                         navController.navigate(MyEventsRoute.Welcome.route)
                     } else {
                         Toast.makeText(

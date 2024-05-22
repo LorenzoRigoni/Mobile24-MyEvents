@@ -59,4 +59,9 @@
     <string name="italian">Italian</string>
     <string name="english">English</string>
     <string name="reminder_time">Reminder time</string>
+    <string name="bio_not_av">Biometric authentication is not available</string>
+    <string name="bio_temp_not">Biometric authentication is not temporarily available</string>
+    <string name="bio_not_roll">You must add a fingerprint or a face id first</string>
+    <string name="log_bio">Login with biometric authentication</string>
+    <string name="bio_failed">Biometric authentication failed. Please try again</string>
 </resources>
