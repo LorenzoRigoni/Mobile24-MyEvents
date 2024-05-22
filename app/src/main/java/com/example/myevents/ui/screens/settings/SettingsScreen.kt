@@ -77,13 +77,17 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
             ) {
-                Text(text = "Theme", modifier = Modifier.weight(1f))
+                Text(text = stringResource(R.string.theme), modifier = Modifier.weight(1f))
                 Box {
                     Button(
                         onClick = { expandedTheme.value = true },
                         Modifier.width(100.dp)
                     ) {
-                        Text(text = theme)
+                        Text(text = when (theme) {
+                            "Light" -> stringResource(R.string.light)
+                            "Dark" -> stringResource(R.string.dark)
+                            else -> stringResource(R.string.auto)
+                        })
                     }
                     DropdownMenu(
                         expanded = expandedTheme.value,
@@ -129,7 +133,10 @@ fun SettingsScreen(
                         onClick = { expandedLanguage.value = true },
                         Modifier.width(100.dp)
                     ) {
-                        Text(text = language)
+                        Text(text = when (language) {
+                            "Italian" -> stringResource(R.string.italian)
+                            else -> stringResource(R.string.english)
+                        })
                     }
                     DropdownMenu(
                         expanded = expandedLanguage.value,

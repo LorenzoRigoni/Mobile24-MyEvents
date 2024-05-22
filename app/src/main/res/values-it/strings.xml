@@ -3,6 +3,8 @@
     <string name="app_name">MyEvents</string>
     <string name="hello">Ciao </string>
     <string name="logout">Esci</string>
+    <string name="settings">Impostazioni</string>
+    <string name="profile">Profilo</string>
     <string name="welcome">Benvenuto! Per favore accedi per continuare</string>
     <string name="user_pic">Scatta una foto</string>
     <string name="no_events">Oops! Sembra che non ci siano eventi qui</string>

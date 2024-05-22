@@ -27,8 +27,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
+import com.example.myevents.R
 import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserViewModel
@@ -135,17 +137,17 @@ private fun AddDropDownMenu (
         onDismissRequest = onMenuDismissed
     ) {
         DropdownMenuItem(
-            text = { Text("Settings") },
+            text = { Text(stringResource(R.string.settings)) },
             trailingIcon = { Icon(Icons.Outlined.Settings, "Settings") },
             onClick = { navController.navigate(MyEventsRoute.Settings.route) }
         )
         DropdownMenuItem(
-            text = { Text("Profile") },
+            text = { Text(stringResource(R.string.profile)) },
             trailingIcon = { Icon(Icons.Outlined.Person, "Profile") },
             onClick = { navController.navigate(MyEventsRoute.Profile.route) }
         )
         DropdownMenuItem(
-            text = { Text("Logout") },
+            text = { Text(stringResource(R.string.logout)) },
             trailingIcon = { Icon(Icons.Outlined.Logout, "Logout") },
             onClick = {
                 logoutAction()
