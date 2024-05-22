@@ -84,4 +84,5 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation ("org.osmdroid:osmdroid-android:6.1.14")
+    implementation ("androidx.biometric:biometric-ktx:1.2.0-alpha05")
 }
