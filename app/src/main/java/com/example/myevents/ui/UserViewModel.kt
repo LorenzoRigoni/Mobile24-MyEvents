@@ -83,8 +83,7 @@ class UserViewModel (
     }
 
     fun saveEditState() {
-        if (user!! != User(state.user, editState.newName, editState.newSurname, user!!.password, user!!.imageUri)
-        ) {
+        if (user!! != User(state.user, editState.newName, editState.newSurname, user!!.password, user!!.imageUri)) {
             viewModelScope.launch {
                 repository.upsertUser(
                     User(
