@@ -1,6 +1,8 @@
 package com.example.myevents.ui.screens.settings
 
 import android.app.TimePickerDialog
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.example.myevents.R
 import java.util.Calendar
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun SettingsScreen(
     settingsVm: SettingsViewModel,
@@ -137,7 +140,7 @@ fun SettingsScreen(
                             onClick = {
                                 language = "Italian"
                                 expandedLanguage.value = false
-                                settingsVm.setLanguage(language)
+                                settingsVm.setLanguage(language, context)
                             },
                         )
                         DropdownMenuItem(
@@ -145,7 +148,7 @@ fun SettingsScreen(
                             onClick = {
                                 language = "English"
                                 expandedLanguage.value = false
-                                settingsVm.setLanguage(language)
+                                settingsVm.setLanguage(language, context)
                             },
                         )
                     }
