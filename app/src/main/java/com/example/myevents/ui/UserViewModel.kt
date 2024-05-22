@@ -48,8 +48,10 @@ class UserViewModel (
         viewModelScope.launch {
             repository.setLoggedUser(value)
             repository.setIsLogged(rememberMe)
-            repository.setBiometricUser(value)
-            repository.setBiometricPassword(password)
+            if (repository.bioUser.first().isEmpty() && repository.bioPassword.first().isEmpty()) {
+                repository.setBiometricUser(value)
+                repository.setBiometricPassword(password)
+            }
         }
         state = UserState(value, true)
     }
