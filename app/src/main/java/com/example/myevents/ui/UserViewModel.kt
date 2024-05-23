@@ -50,6 +50,7 @@ class UserViewModel (
             repository.setBiometricUser(value)
             repository.setBiometricPassword(password)
         }
+        user = repository.getUserByUsername(value)
         state = UserState(value, true)
     }
 

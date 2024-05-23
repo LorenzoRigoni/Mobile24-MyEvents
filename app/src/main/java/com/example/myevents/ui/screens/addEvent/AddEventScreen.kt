@@ -56,6 +56,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun AddEventScreen(
     addEventViewModel: AddEventViewModel,
+    incrementNotificationBadge: () -> Unit,
     navController: NavHostController
 ) {
     var title by rememberSaveable { mutableStateOf("") }

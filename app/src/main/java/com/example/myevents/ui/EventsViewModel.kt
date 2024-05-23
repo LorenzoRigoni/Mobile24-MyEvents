@@ -23,11 +23,12 @@ class EventsViewModel(
 
     val eventsToDelete: MutableList<Int> = mutableListOf()
 
+    val notificationBadges = MutableStateFlow(0)
+
     init {
         updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
         updateNotifications()
     }
-
 
     fun updateEvents(filter: FilterEnum) {
         viewModelScope.launch {
@@ -74,7 +75,16 @@ class EventsViewModel(
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 )
             )
+            incrementNotificationBadge()
         }
+    }
+
+    fun incrementNotificationBadge() {
+        notificationBadges.value++
+    }
+
+    fun resetNotificationBadges() {
+        notificationBadges.value = 0
     }
 
     fun getNextEvent(): Event? {
@@ -96,6 +106,7 @@ class EventsViewModel(
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                     )
                 )
+                incrementNotificationBadge()
             }
         }
         eventsToDelete.clear()

@@ -37,6 +37,8 @@ import androidx.navigation.NavHostController
 import com.example.camera.utils.rememberPermission
 import com.example.myevents.R
 import com.example.myevents.data.database.User
+import com.example.myevents.ui.EventsViewModel
+import com.example.myevents.ui.FilterEnum
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserActions
 import com.example.myevents.ui.UserViewModel
@@ -47,7 +49,8 @@ import kotlinx.coroutines.launch
 fun RegisterScreen(
     navController: NavHostController,
     userVm: UserViewModel,
-    actions: UserActions
+    actions: UserActions,
+    eventsViewModel: EventsViewModel
 ) {
     var username by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -60,7 +63,7 @@ fun RegisterScreen(
     val errorEmpty = stringResource(R.string.error_empty_fields)
     val errorUsername = stringResource(R.string.error_us_used)
     val ctx = LocalContext.current
-    val per_denied = stringResource(R.string.per_denied)
+    val perDenied = stringResource(R.string.per_denied)
 
     //Camera
     val cameraLauncher = rememberCameraLauncher {
@@ -71,7 +74,7 @@ fun RegisterScreen(
         if (status.isGranted) {
             cameraLauncher.captureImage()
         } else {
-            Toast.makeText(ctx, per_denied, Toast.LENGTH_SHORT).show()
+            Toast.makeText(ctx, perDenied, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -178,6 +181,8 @@ fun RegisterScreen(
                                 )
                             )
                             userVm.setLoggedUser(username, password, isChecked).join()
+                            eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
+                            eventsViewModel.updateNotifications()
                             navController.navigate(MyEventsRoute.Welcome.route) {
                                 popUpTo(MyEventsRoute.Register.route) { inclusive = true }
                             }

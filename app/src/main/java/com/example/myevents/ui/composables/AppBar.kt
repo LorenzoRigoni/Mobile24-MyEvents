@@ -2,6 +2,8 @@ package com.example.myevents.ui.composables
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Check
@@ -12,6 +14,7 @@ import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Badge
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -22,13 +25,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.myevents.R
 import com.example.myevents.ui.EventsViewModel
@@ -52,6 +59,7 @@ fun AppBar(
     var showMenu by remember { mutableStateOf(false) }
     val onMenuClicked: () -> Unit = { showMenu = !showMenu }
     val onMenuDismissed: () -> Unit = { showMenu = false }
+    val badgeCount by eventsVm.notificationBadges.collectAsState()
     val ctx = LocalContext.current
 
     CenterAlignedTopAppBar(
@@ -91,7 +99,11 @@ fun AppBar(
                     AddLogoutButton(navController, userVm::logout)
                 }
                 MyEventsRoute.Home -> {
-                    AddNotificationsButton(navController)
+                    AddNotificationsButton(
+                        navController,
+                        eventsVm::resetNotificationBadges,
+                        badgeCount
+                    )
                     AddDropDownMenu(
                         navController,
                         showMenu,
@@ -101,13 +113,29 @@ fun AppBar(
                     )
                 }
                 MyEventsRoute.AddEvent -> {
-                    AddConfirmButton(navController, addEventVm::addEvent, addEventVm::checkCanAdd, ctx)
+                    AddConfirmButton(
+                        navController,
+                        addEventVm::addEvent,
+                        eventsVm::incrementNotificationBadge,
+                        addEventVm::checkCanAdd,
+                        ctx
+                    )
                 }
                 MyEventsRoute.EventDetails -> {
-                    AddDeleteButton(navController, eventDetailsVm::deleteSingleEvent, MyEventsRoute.Home.route, ctx)
+                    AddDeleteButton(
+                        navController,
+                        eventDetailsVm::deleteSingleEvent,
+                        eventsVm::incrementNotificationBadge,
+                        MyEventsRoute.Home.route,
+                    )
                 }
                 MyEventsRoute.ManageEvents -> {
-                    AddDeleteButton(navController, eventsVm::deleteEventsFromListOfIds, MyEventsRoute.ManageEvents.route, ctx)
+                    AddDeleteButton(
+                        navController,
+                        eventsVm::deleteEventsFromListOfIds,
+                        {},
+                        MyEventsRoute.ManageEvents.route,
+                    )
                 }
                 MyEventsRoute.Notifications -> {
                     AddDropDownMenu(
@@ -178,16 +206,35 @@ private fun AddLogoutButton (navController: NavHostController, logoutAction: () 
         Icon(Icons.Outlined.Logout, "Logout")
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AddNotificationsButton (navController: NavHostController) {
-    IconButton(onClick = { navController.navigate(MyEventsRoute.Notifications.route) }) {
-        Icon(Icons.Outlined.Notifications, "Notifications")
+private fun AddNotificationsButton (
+    navController: NavHostController,
+    resetNotificationBadge: () -> Unit,
+    badgeCount: Int
+) {
+    Box {
+        IconButton(onClick = {
+            navController.navigate(MyEventsRoute.Notifications.route)
+            resetNotificationBadge()
+        }) {
+            Icon(Icons.Outlined.Notifications, "Notifications")
+        }
+        if (badgeCount > 0) {
+            Badge(
+                modifier = Modifier.align(Alignment.Center)
+                    .padding(start = 20.dp, bottom = 20.dp),
+                content = { Text("$badgeCount") }
+            )
+        }
     }
 }
+
 @Composable
 private fun AddConfirmButton (
     navController: NavHostController,
     saveAction: () -> Unit,
+    incrementNotificationBadge: () -> Unit,
     check: () -> Boolean,
     context: Context
 ) {
@@ -206,10 +253,11 @@ private fun AddConfirmButton (
 private fun AddDeleteButton (
     navController: NavHostController,
     deleteAction: () -> Unit,
+    incrementNotificationBadge: () -> Unit,
     returnRoute: String,
-    context: Context
 ) {
     IconButton(onClick = {
+        incrementNotificationBadge()
         navController.navigate(returnRoute)
         deleteAction()
     }) {
