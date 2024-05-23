@@ -81,4 +81,7 @@
     <string name="changed_surname">Surname has been changed into</string>
     <string name="new_event">has been created</string>
     <string name="event_deleted">has been deleted</string>
+    <string name="gps_disabled">GPS is disabled</string>
+    <string name="per_perm_denied">Permission permanently denied</string>
+    <string name="unknown_perm">Unknown permission status</string>
 </resources>

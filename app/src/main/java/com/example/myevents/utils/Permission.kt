@@ -1,15 +1,23 @@
 package com.example.camera.utils
 
+import android.Manifest
+import android.content.Context
+import android.location.LocationManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import com.example.myevents.MainActivity
+import com.example.myevents.R
+import com.example.myevents.utils.LocationService
 
 enum class PermissionStatus {
     Unknown,
@@ -18,7 +26,6 @@ enum class PermissionStatus {
     PermanentlyDenied;
 
     val isGranted get() = this == Granted
-    val isDenied get() = this == Denied || this == PermanentlyDenied
 }
 
 interface PermissionHandler {
@@ -57,4 +64,50 @@ fun rememberPermission(
         }
     }
     return permissionHandler
+}
+
+@Composable
+fun CheckLocationPermission(mainActivity: MainActivity, locationService: LocationService) {
+    val context = LocalContext.current
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    val isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+    fun printError(error: String) {
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+    }
+
+    if (!isGPSEnabled) {
+        printError(context.getString(R.string.gps_disabled))
+        locationService.openLocationSettings()
+    }
+
+    val locationPermission = rememberPermission(
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    ) { status ->
+        when (status) {
+            PermissionStatus.Granted ->
+                locationService.requestCurrentLocation()
+
+            PermissionStatus.Denied -> {
+                printError(context.getString(R.string.per_denied))
+                mainActivity.finish()
+            }
+
+            PermissionStatus.PermanentlyDenied -> {
+                printError(context.getString(R.string.per_perm_denied))
+                mainActivity.finish()
+            }
+
+            PermissionStatus.Unknown -> {
+                printError(context.getString(R.string.unknown_perm))
+                mainActivity.finish()
+            }
+        }
+    }
+
+    LaunchedEffect(locationPermission.status) {
+        if (!locationPermission.status.isGranted) {
+            locationPermission.launchPermissionRequest()
+        }
+    }
 }

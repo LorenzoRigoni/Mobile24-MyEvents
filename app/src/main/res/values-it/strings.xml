@@ -82,4 +82,7 @@
     <string name="changed_surname">Il cognome è stato cambiato in</string>
     <string name="event_deleted">è stato eliminato</string>
     <string name="new_event">è stato creato</string>
+    <string name="gps_disabled">Il GPS è disabilitato</string>
+    <string name="per_perm_denied">Permesso perennamente negato</string>
+    <string name="unknown_perm">Stato del permesso sconosciuto</string>
 </resources>

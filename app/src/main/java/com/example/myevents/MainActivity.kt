@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.camera.utils.CheckLocationPermission
 import com.example.myevents.data.database.Event
 import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.MyEventsNavGraph
@@ -84,6 +85,7 @@ class MainActivity : FragmentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    CheckLocationPermission(this, locationService)
                     val navController = rememberNavController()
                     val backStackEntry by navController.currentBackStackEntryAsState()
                     val currentRoute by remember {
@@ -177,6 +179,16 @@ class MainActivity : FragmentActivity() {
         calendar.set(Calendar.HOUR_OF_DAY, hours.toInt())
         calendar.set(Calendar.MINUTE, minutes.toInt())
         return calendar.timeInMillis
+    }
+
+    override fun onPause() {
+        super.onPause()
+        locationService.pauseLocationRequest()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        locationService.resumeLocationRequest()
     }
 }
 

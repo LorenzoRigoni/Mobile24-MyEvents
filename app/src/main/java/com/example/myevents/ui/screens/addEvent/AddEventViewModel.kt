@@ -84,8 +84,8 @@ class AddEventViewModel(
             username.toString(),
             state.value.eventType,
             state.value.title,
-            _latitude.value.toString(),
             _longitude.value.toString(),
+            _latitude.value.toString(),
             state.value.date,
             false,
             state.value.imageUri)
