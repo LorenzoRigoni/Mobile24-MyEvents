@@ -57,6 +57,10 @@ fun NotificationsScreen(
 fun NotificationItem(
     item: Notification,
 ) {
+    val split = item.notificationText.split(";")
+    val notificationSubject = split[0]
+    val notificationAction = split[1]
+
     Card(
         modifier = Modifier
             .size(150.dp)
@@ -74,7 +78,12 @@ fun NotificationItem(
         ) {
             Spacer(modifier = Modifier.size(8.dp))
             Text(
-                item.notificationText,
+                when(notificationAction) {
+                    "changeName" -> "${stringResource(R.string.changed_name)} $notificationSubject"
+                    "changeSurname" -> "${stringResource(R.string.changed_surname)} $notificationSubject"
+                    "delete" -> "$notificationSubject ${stringResource(R.string.event_deleted)}"
+                    else -> "$notificationSubject ${stringResource(R.string.new_event)}"
+                },
                 textAlign = TextAlign.Left
             )
             Spacer(modifier = Modifier.size(8.dp))

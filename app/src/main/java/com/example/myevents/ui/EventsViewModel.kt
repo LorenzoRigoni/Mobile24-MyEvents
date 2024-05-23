@@ -81,7 +81,7 @@ class EventsViewModel(
         return state.value.events.minByOrNull { it.date }
     }
 
-    fun deleteEventsFromListOfIds(notificationText: String) {
+    fun deleteEventsFromListOfIds() {
         if (eventsToDelete.isEmpty()) return
         viewModelScope.launch {
             val idsToDelete = eventsToDelete.toList()
@@ -92,7 +92,7 @@ class EventsViewModel(
                     Notification(
                         0,
                         event!!.username,
-                        "${event.title} $notificationText",
+                        "${event.title};delete",
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                     )
                 )

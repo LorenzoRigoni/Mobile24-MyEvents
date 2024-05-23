@@ -78,7 +78,7 @@ class AddEventViewModel(
         state.value = state.value.copy(imageUri = imageUri)
     }
 
-    fun addEvent(notificationText: String) {
+    fun addEvent() {
         val event = Event(
             0,
             username.toString(),
@@ -95,7 +95,7 @@ class AddEventViewModel(
                 Notification(
                     0,
                     event.username,
-                    "${event.title} $notificationText",
+                    "${event.title};add",
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 )
             )

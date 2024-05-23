@@ -68,9 +68,7 @@ fun ProfileScreen(
     navController: NavHostController
 ) {
     val ctx = LocalContext.current
-    val per_denied = stringResource(R.string.per_denied)
-    val changedName = stringResource(R.string.changed_name)
-    val changedSurname = stringResource(R.string.changed_surname)
+    val perDenied = stringResource(R.string.per_denied)
 
     val cameraLauncher = rememberCameraLauncher {
         imageUri -> userVm.setNewImage(imageUri.toString())
@@ -80,7 +78,7 @@ fun ProfileScreen(
         if (status.isGranted) {
             cameraLauncher.captureImage()
         } else {
-            Toast.makeText(ctx, per_denied, Toast.LENGTH_SHORT).show()
+            Toast.makeText(ctx, perDenied, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -177,8 +175,8 @@ fun ProfileScreen(
                                         val modifiedFields = userVm.saveEditState()
                                         modifiedFields.forEach {
                                             when (it.key) {
-                                                "name" -> eventsVm.generateNotification("$changedName ${it.value}")
-                                                "surname" -> eventsVm.generateNotification("$changedSurname ${it.value}")
+                                                "name" -> eventsVm.generateNotification("${it.value};changeName")
+                                                "surname" -> eventsVm.generateNotification("${it.value};changeSurname")
                                             }
                                         }
                                         openDialog.value = false

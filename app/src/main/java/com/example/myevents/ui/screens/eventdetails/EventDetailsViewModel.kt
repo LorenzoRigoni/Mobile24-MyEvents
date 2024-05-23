@@ -68,7 +68,7 @@ class EventDetailsViewModel(
         singleEventToDelete = eventId
     }
 
-    fun deleteSingleEvent(notificationText: String) {
+    fun deleteSingleEvent() {
         if (singleEventToDelete == null) return
         viewModelScope.launch {
             val id = singleEventToDelete!!
@@ -78,7 +78,7 @@ class EventDetailsViewModel(
                 Notification(
                     0,
                     event!!.username,
-                    "${event.title} $notificationText",
+                    "${event.title};delete",
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 )
             )
