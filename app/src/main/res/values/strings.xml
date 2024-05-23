@@ -17,6 +17,7 @@
     <string name="welcome">Welcome! Please login to continue</string>
     <string name="user_pic">Take picture</string>
     <string name="no_events">Oops! It seems there are no events here</string>
+    <string name="no_notifications">Oops! It seems there are no notifications here</string>
     <string name="tap_below">Create a new event by pressing the + button below</string>
     <string name="log">Login</string>
     <string name="browse">Browse my events</string>
@@ -76,4 +77,8 @@
     <string name="bio_not_roll">You must add a fingerprint or a face id first</string>
     <string name="log_bio">Login with biometric authentication</string>
     <string name="bio_failed">Biometric authentication failed. Please try again</string>
+    <string name="changed_name">Name has been changed into</string>
+    <string name="changed_surname">Surname has been changed into</string>
+    <string name="new_event">has been created</string>
+    <string name="event_deleted">has been deleted</string>
 </resources>

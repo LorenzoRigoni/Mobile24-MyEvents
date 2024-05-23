@@ -18,6 +18,7 @@
     <string name="welcome">Benvenuto! Per favore accedi per continuare</string>
     <string name="user_pic">Scatta una foto</string>
     <string name="no_events">Oops! Sembra che non ci siano eventi qui</string>
+    <string name="no_notifications">Oops! Sembra che non ci siano notifiche qua</string>
     <string name="tap_below">Crea un nuovo evento premendo il pulsante + qui sotto</string>
     <string name="log">Accedi</string>
     <string name="browse">Sfoglia i miei eventi</string>
@@ -77,4 +78,8 @@
     <string name="bio_not_roll">Devi prima registrare una impronta digitale o un face id</string>
     <string name="log_bio">Accedi con autenticazione biometrica</string>
     <string name="bio_failed">Autenticazione biometrica fallita. Si prega di ritentare</string>
+    <string name="changed_name">Il nome è stato cambiato in</string>
+    <string name="changed_surname">Il cognome è stato cambiato in</string>
+    <string name="event_deleted">è stato eliminato</string>
+    <string name="new_event">è stato creato</string>
 </resources>
