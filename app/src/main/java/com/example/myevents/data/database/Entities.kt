@@ -3,7 +3,6 @@ package com.example.myevents.data.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
 
 @Entity
 data class User(
@@ -34,4 +33,5 @@ data class Notification(
     val notificationID: Int,
     @ColumnInfo val username: String,
     @ColumnInfo val notificationText: String,
+    @ColumnInfo val date: String
 )

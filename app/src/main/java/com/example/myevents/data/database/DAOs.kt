@@ -30,6 +30,8 @@ interface EventDAO {
     fun getPastEventsOfUser(username: String): Flow<List<Event>>
     @Query("SELECT * FROM event WHERE username = :username AND isFavourite = 1 ORDER BY date ASC")
     fun getFavouritesEventsOfUser(username: String): Flow<List<Event>>
+    @Query("SELECT * FROM event WHERE eventID = :eventId")
+    suspend fun getEventFromId(eventId: Int): Event?
     @Upsert
     suspend fun upsert(event: Event)
     @Delete
@@ -42,8 +44,8 @@ interface EventDAO {
 
 @Dao
 interface NotificationDAO {
-    @Query("SELECT * FROM notification")
-    fun getAll(): Flow<List<Notification>>
+    @Query("SELECT * FROM notification WHERE username = :username ORDER BY date DESC")
+    fun getAllUserNotifications(username: String): Flow<List<Notification>>
     @Upsert
     suspend fun upsert(notification: Notification)
     @Delete
