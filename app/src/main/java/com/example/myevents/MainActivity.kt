@@ -48,54 +48,6 @@ import java.util.Calendar
 private lateinit var locationService: LocationService
 
 class MainActivity : FragmentActivity() {
-
-    private fun createNotificationChannel() {
-        val name = "Notif Channel"
-        val desc = "A Description of the Channel"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(channelID, name, importance)
-        channel.description = desc
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-    }
-
-    private fun scheduleNotification(hours: String, minutes: String, nextEvent: Event?) {
-        val intent = Intent(applicationContext, Notification::class.java)
-        val title = "Your Daily reminder !"
-        val message = if (nextEvent != null) {
-            "Your next event is ${nextEvent.title} at ${nextEvent.date}"
-        } else {
-            "You have no upcoming events !"
-        }
-        intent.putExtra(titleExtra, title)
-        intent.putExtra(messageExtra, message)
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            applicationContext,
-            notificationID,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val time = getTime(hours, minutes)
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            time,
-            pendingIntent
-        )
-    }
-
-    private fun getTime(hours: String, minutes: String): Long {
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR))
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
-        calendar.set(Calendar.HOUR_OF_DAY, hours.toInt())
-        calendar.set(Calendar.MINUTE, minutes.toInt())
-        return calendar.timeInMillis
-    }
-
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,11 +65,12 @@ class MainActivity : FragmentActivity() {
             val addEventVm = koinViewModel<AddEventViewModel>()
             val eventDetailsVm = koinViewModel<EventDetailsViewModel>()
 
-            if (settingsVm.preferences.reminderTime.isNotEmpty()) {
+            if (settingsVm.preferences.reminderTime.isNotEmpty() && settingsVm.preferences.language.isNotEmpty()) {
                 scheduleNotification(
                     settingsVm.preferences.reminderTime.split(":")[0],
                     settingsVm.preferences.reminderTime.split(":")[1],
-                    eventsVm.getNextEvent()
+                    eventsVm.getNextEvent(),
+                    settingsVm.preferences.language
                 )
             }
 
@@ -164,6 +117,62 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }
+    }
+
+    private fun createNotificationChannel() {
+        val name = "Notif Channel"
+        val desc = "A Description of the Channel"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelID, name, importance)
+        channel.description = desc
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun scheduleNotification(hours: String, minutes: String, nextEvent: Event?, language: String) {
+        val intent = Intent(applicationContext, Notification::class.java)
+        val title = when (language) {
+            "English" -> "Daily reminder !"
+            else -> "Promemoria giornaliero !"
+        }
+        val message = if (nextEvent != null) {
+            when (language) {
+                "English" -> "Your next event is ${nextEvent.title} on ${nextEvent.date}"
+                else -> "Il tuo prossimo evento è ${nextEvent.title} il ${nextEvent.date}"
+            }
+        } else {
+            when (language) {
+                "English" -> "You have no upcoming events !"
+                else -> "Non hai eventi in programma !"
+            }
+        }
+        intent.putExtra(titleExtra, title)
+        intent.putExtra(messageExtra, message)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            notificationID,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val time = getTime(hours, minutes)
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            time,
+            pendingIntent
+        )
+    }
+
+    private fun getTime(hours: String, minutes: String): Long {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR))
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
+        calendar.set(Calendar.HOUR_OF_DAY, hours.toInt())
+        calendar.set(Calendar.MINUTE, minutes.toInt())
+        return calendar.timeInMillis
     }
 }
 
