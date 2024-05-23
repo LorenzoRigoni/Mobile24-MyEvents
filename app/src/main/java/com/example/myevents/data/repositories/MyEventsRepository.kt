@@ -37,12 +37,18 @@ class MyEventsRepository(
         return eventDAO.getFavouritesEventsOfUser(username)
     }
 
+    suspend fun getEventFromId(id: Int) : Event? {
+        return eventDAO.getEventFromId(id)
+    }
+
     suspend fun upsertEvent(event: Event) = eventDAO.upsert(event)
     suspend fun deleteEvent(event: Event) = eventDAO.delete(event)
     suspend fun deleteEventFromId(eventId: Int) = eventDAO.deleteEventFromId(eventId)
     suspend fun updateIsFavourite(isFavourite: Boolean, eventId: Int) = eventDAO.updateIsFavourite(isFavourite, eventId)
 
-    val notifications: Flow<List<Notification>> = notificationDAO.getAll()
+    fun allUserNotifications(username: String): Flow<List<Notification>> {
+        return notificationDAO.getAllUserNotifications(username)
+    }
     suspend fun upsertNotification(notification: Notification) =
         notificationDAO.upsert(notification)
 

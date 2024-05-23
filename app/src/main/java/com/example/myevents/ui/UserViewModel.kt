@@ -43,14 +43,12 @@ class UserViewModel (
         }
     }
 
-    fun setLoggedUser(value: String, password: String, rememberMe: Boolean) {
-        viewModelScope.launch {
-            repository.setLoggedUser(value)
-            repository.setIsLogged(rememberMe)
-            if (repository.bioUser.first().isEmpty() && repository.bioPassword.first().isEmpty()) {
-                repository.setBiometricUser(value)
-                repository.setBiometricPassword(password)
-            }
+    fun setLoggedUser(value: String, password: String, rememberMe: Boolean) = viewModelScope.launch {
+        repository.setLoggedUser(value)
+        repository.setIsLogged(rememberMe)
+        if (repository.bioUser.first().isEmpty() && repository.bioPassword.first().isEmpty()) {
+            repository.setBiometricUser(value)
+            repository.setBiometricPassword(password)
         }
         state = UserState(value, true)
     }
@@ -82,9 +80,14 @@ class UserViewModel (
         return imageUri
     }
 
-    fun saveEditState() {
+    fun saveEditState(): Map<String, String> {
+        val mapOfModifiedFields = mutableMapOf<String, String>()
         if (user!! != User(state.user, editState.newName, editState.newSurname, user!!.password, user!!.imageUri)) {
             viewModelScope.launch {
+                if (editState.newName != "" && editState.newName != user!!.name)
+                    mapOfModifiedFields["name"] = editState.newName
+                if (editState.newSurname != "" && editState.newSurname != user!!.surname)
+                    mapOfModifiedFields["surname"] = editState.newSurname
                 repository.upsertUser(
                     User(
                         state.user,
@@ -98,6 +101,7 @@ class UserViewModel (
             }
         }
         clearEditState()
+        return mapOfModifiedFields
     }
 
     fun setNewName(newName: String) {

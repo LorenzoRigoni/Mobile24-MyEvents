@@ -95,8 +95,9 @@ fun LoginScreen(
                     if (username.isNotEmpty() && password.isNotEmpty()) {
                         userVm.checkLogin(username, password).join()
                         if (userVm.user != null) {
-                            userVm.setLoggedUser(username, password, isChecked)
+                            userVm.setLoggedUser(username, password, isChecked).join()
                             eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
+                            eventsViewModel.updateNotifications()
                             navController.navigate(MyEventsRoute.Welcome.route) {
                                 popUpTo(MyEventsRoute.Login.route) { inclusive = true }
                             }
@@ -117,44 +118,45 @@ fun LoginScreen(
         Spacer(Modifier.height(16.dp))
 
         FloatingActionButton(
-            onClick = { 
-                coroutineScope.launch {
-                    userVm.canLogWithBiometric().join()
-                        biometricAuthenticator.promptBiometricAuthentication(
-                            activity.getString(R.string.log),
-                            activity.getString(R.string.log_bio),
-                            activity,
-                            onSuccess = {
-                                if (userVm.bioUser.isNotEmpty()) {
-                                    userVm.setLoggedUser(userVm.bioUser, userVm.bioPassword, isChecked)
-                                    eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-                                    navController.navigate(MyEventsRoute.Welcome.route) {
-                                        popUpTo(MyEventsRoute.Login.route) { inclusive = true }
-                                    }
-                                } else {
-                                    Toast.makeText(
-                                        activity,
-                                        noLogBio,
-                                        Toast.LENGTH_LONG
-                                    ).show()
+            onClick = {
+                biometricAuthenticator.promptBiometricAuthentication(
+                    activity.getString(R.string.log),
+                    activity.getString(R.string.log_bio),
+                    activity,
+                    onSuccess = {
+                        coroutineScope.launch {
+                            userVm.canLogWithBiometric().join()
+                            if (userVm.bioUser.isNotEmpty()) {
+                                userVm.setLoggedUser(userVm.bioUser, userVm.bioPassword, isChecked).join()
+                                eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
+                                eventsViewModel.updateNotifications()
+                                navController.navigate(MyEventsRoute.Welcome.route) {
+                                    popUpTo(MyEventsRoute.Login.route) { inclusive = true }
                                 }
-                            },
-                            onFailed = {
+                            } else {
                                 Toast.makeText(
                                     activity,
-                                    activity.getString(R.string.bio_failed),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            },
-                            onError = { _, message ->
-                                Toast.makeText(
-                                    activity,
-                                    message,
+                                    noLogBio,
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
-                        )
-                }
+                        }
+                    },
+                    onFailed = {
+                        Toast.makeText(
+                            activity,
+                            activity.getString(R.string.bio_failed),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    },
+                    onError = { _, message ->
+                        Toast.makeText(
+                            activity,
+                            message,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                )
             },
             modifier = Modifier.align(Alignment.End)
         ) {

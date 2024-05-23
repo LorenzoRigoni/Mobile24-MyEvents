@@ -6,6 +6,7 @@ import android.location.Geocoder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.database.Event
+import com.example.myevents.data.database.Notification
 import com.example.myevents.data.repositories.MyEventsRepository
 import com.example.myevents.getLocationService
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,8 @@ import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 data class AddEventState(
@@ -75,7 +78,7 @@ class AddEventViewModel(
         state.value = state.value.copy(imageUri = imageUri)
     }
 
-    fun addEvent() {
+    fun addEvent(notificationText: String) {
         val event = Event(
             0,
             username.toString(),
@@ -88,7 +91,16 @@ class AddEventViewModel(
             state.value.imageUri)
         viewModelScope.launch {
             repository.upsertEvent(event)
+            repository.upsertNotification(
+                Notification(
+                    0,
+                    event.username,
+                    "${event.title} $notificationText",
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                )
+            )
         }
+        state.value = AddEventState("", "", "", "")
     }
 
     fun loadMap(mapView: MapView, currentLocation: GeoPoint, context: Context) {

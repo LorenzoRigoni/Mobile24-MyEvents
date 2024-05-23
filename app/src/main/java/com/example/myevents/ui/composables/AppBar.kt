@@ -57,17 +57,17 @@ fun AppBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                when (currentRoute.title) {
-                    MyEventsRoute.Welcome.route -> stringResource(R.string.welcomeScreenTitle)
-                    MyEventsRoute.Home.route -> stringResource(R.string.homeScreenTitle)
-                    MyEventsRoute.AddEvent.route -> stringResource(R.string.addEventScreenTitle)
-                    MyEventsRoute.EventDetails.route -> stringResource(R.string.eventDetailScreenTitle)
-                    MyEventsRoute.ManageEvents.route -> stringResource(R.string.manageEventsScreenTitle)
-                    MyEventsRoute.Notifications.route -> stringResource(R.string.notificationsScreenTitle)
-                    MyEventsRoute.Profile.route -> stringResource(R.string.profileScreenTitle)
-                    MyEventsRoute.Login.route -> stringResource(R.string.loginScreenTitle)
-                    MyEventsRoute.Register.route -> stringResource(R.string.registerScreenTitle)
-                    MyEventsRoute.Settings.route -> stringResource(R.string.settingsScreenTitle)
+                when (currentRoute) {
+                    MyEventsRoute.Welcome -> stringResource(R.string.welcomeScreenTitle)
+                    MyEventsRoute.Home -> stringResource(R.string.homeScreenTitle)
+                    MyEventsRoute.AddEvent -> stringResource(R.string.addEventScreenTitle)
+                    MyEventsRoute.EventDetails -> stringResource(R.string.eventDetailScreenTitle)
+                    MyEventsRoute.ManageEvents -> stringResource(R.string.manageEventsScreenTitle)
+                    MyEventsRoute.Notifications -> stringResource(R.string.notificationsScreenTitle)
+                    MyEventsRoute.Profile -> stringResource(R.string.profileScreenTitle)
+                    MyEventsRoute.Login -> stringResource(R.string.loginScreenTitle)
+                    MyEventsRoute.Register -> stringResource(R.string.registerScreenTitle)
+                    MyEventsRoute.Settings -> stringResource(R.string.settingsScreenTitle)
                     else -> stringResource(R.string.app_name)
                 },
                 fontWeight = FontWeight.Medium,
@@ -104,10 +104,10 @@ fun AppBar(
                     AddConfirmButton(navController, addEventVm::addEvent, addEventVm::checkCanAdd, ctx)
                 }
                 MyEventsRoute.EventDetails -> {
-                    AddDeleteButton(navController, eventDetailsVm::deleteSingleEvent, MyEventsRoute.Home.route)
+                    AddDeleteButton(navController, eventDetailsVm::deleteSingleEvent, MyEventsRoute.Home.route, ctx)
                 }
                 MyEventsRoute.ManageEvents -> {
-                    AddDeleteButton(navController, eventsVm::deleteEventsFromListOfIds, MyEventsRoute.ManageEvents.route)
+                    AddDeleteButton(navController, eventsVm::deleteEventsFromListOfIds, MyEventsRoute.ManageEvents.route, ctx)
                 }
                 MyEventsRoute.Notifications -> {
                     AddDropDownMenu(
@@ -185,10 +185,15 @@ private fun AddNotificationsButton (navController: NavHostController) {
     }
 }
 @Composable
-private fun AddConfirmButton (navController: NavHostController, saveAction: () -> Unit, check: () -> Boolean, context: Context) {
+private fun AddConfirmButton (
+    navController: NavHostController,
+    saveAction: (notificationText: String) -> Unit,
+    check: () -> Boolean,
+    context: Context
+) {
     IconButton(onClick = {
         if (check()) {
-            saveAction()
+            saveAction(context.getString(R.string.new_event))
             navController.navigate(MyEventsRoute.Home.route)
         } else {
             Toast.makeText(context, "You have to complete all the fields", Toast.LENGTH_SHORT).show()
@@ -198,10 +203,15 @@ private fun AddConfirmButton (navController: NavHostController, saveAction: () -
     }
 }
 @Composable
-private fun AddDeleteButton (navController: NavHostController, deleteAction: () -> Unit, returnRoute: String) {
+private fun AddDeleteButton (
+    navController: NavHostController,
+    deleteAction: (text: String) -> Unit,
+    returnRoute: String,
+    context: Context
+) {
     IconButton(onClick = {
         navController.navigate(returnRoute)
-        deleteAction()
+        deleteAction(context.getString(R.string.event_deleted))
     }) {
         Icon(Icons.Outlined.Delete, "Delete")
     }

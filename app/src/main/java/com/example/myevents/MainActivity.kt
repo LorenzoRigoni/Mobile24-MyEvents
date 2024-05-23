@@ -61,6 +61,7 @@ class MainActivity : FragmentActivity() {
 
             val eventsVm = koinViewModel<EventsViewModel>()
             val eventsState by eventsVm.state.collectAsStateWithLifecycle()
+            val notificationsState by eventsVm.notifState.collectAsStateWithLifecycle()
 
             val addEventVm = koinViewModel<AddEventViewModel>()
             val eventDetailsVm = koinViewModel<EventDetailsViewModel>()
@@ -108,6 +109,7 @@ class MainActivity : FragmentActivity() {
                             userVm,
                             eventsVm,
                             eventsState,
+                            notificationsState,
                             addEventVm,
                             eventDetailsVm,
                             settingsVm,

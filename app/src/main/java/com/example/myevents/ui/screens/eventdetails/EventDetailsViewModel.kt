@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.database.Event
+import com.example.myevents.data.database.Notification
 import com.example.myevents.data.repositories.MyEventsRepository
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
@@ -17,6 +18,8 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 data class EventEditState(val newTitle: String, val newType: String, val newDate: String)
@@ -65,11 +68,20 @@ class EventDetailsViewModel(
         singleEventToDelete = eventId
     }
 
-    fun deleteSingleEvent() {
+    fun deleteSingleEvent(notificationText: String) {
         if (singleEventToDelete == null) return
         viewModelScope.launch {
             val id = singleEventToDelete!!
+            val event = repository.getEventFromId(id)
             repository.deleteEventFromId(id)
+            repository.upsertNotification(
+                Notification(
+                    0,
+                    event!!.username,
+                    "${event.title} $notificationText",
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                )
+            )
         }
         singleEventToDelete = null
     }

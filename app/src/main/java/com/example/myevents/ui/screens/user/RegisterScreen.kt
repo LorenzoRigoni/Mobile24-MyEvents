@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,13 +39,14 @@ import com.example.myevents.R
 import com.example.myevents.data.database.User
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserActions
+import com.example.myevents.ui.UserViewModel
 import com.example.myevents.utils.rememberCameraLauncher
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    onRegisterAction: (String, String, Boolean) -> Unit,
-    onRegisterCheck: (String) -> Boolean,
+    userVm: UserViewModel,
     actions: UserActions
 ) {
     var username by remember { mutableStateOf("") }
@@ -54,6 +56,7 @@ fun RegisterScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var imageURI by remember { mutableStateOf("") }
     var isChecked by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
     val errorEmpty = stringResource(R.string.error_empty_fields)
     val errorUsername = stringResource(R.string.error_us_used)
     val ctx = LocalContext.current
@@ -162,26 +165,36 @@ fun RegisterScreen(
 
         FloatingActionButton(
             onClick = {
-                if (username.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
-                    if (!onRegisterCheck(username)) {
-                        actions.addUser(User(username = username, name = name, surname = surname, password = password, imageUri = imageURI))
-                        onRegisterAction(username, password, isChecked)
-                        navController.navigate(MyEventsRoute.Welcome.route) {
-                            popUpTo(MyEventsRoute.Register.route) { inclusive = true }
+                coroutineScope.launch {
+                    if (username.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
+                        if (!userVm.isUsernameAlreadyTaken(username)) {
+                            actions.addUser(
+                                User(
+                                    username = username,
+                                    name = name,
+                                    surname = surname,
+                                    password = password,
+                                    imageUri = imageURI
+                                )
+                            )
+                            userVm.setLoggedUser(username, password, isChecked).join()
+                            navController.navigate(MyEventsRoute.Welcome.route) {
+                                popUpTo(MyEventsRoute.Register.route) { inclusive = true }
+                            }
+                        } else {
+                            Toast.makeText(
+                                navController.context,
+                                errorUsername,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
                         Toast.makeText(
                             navController.context,
-                            errorUsername,
+                            errorEmpty,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                } else {
-                    Toast.makeText(
-                        navController.context,
-                        errorEmpty,
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             },
             modifier = Modifier.align(Alignment.End)

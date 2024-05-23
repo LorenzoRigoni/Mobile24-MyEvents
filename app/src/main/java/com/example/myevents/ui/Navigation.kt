@@ -68,6 +68,7 @@ fun MyEventsNavGraph(
     userVm: UserViewModel,
     eventsVm: EventsViewModel,
     eventsState: EventsState,
+    notificationsState: NotificationsState,
     addEventVm: AddEventViewModel,
     eventDetailsVm: EventDetailsViewModel,
     settingsVm: SettingsViewModel,
@@ -118,12 +119,12 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.Notifications) {
             composable(route) {
-                NotificationsScreen(navController)
+                NotificationsScreen(navController, eventsVm, notificationsState)
             }
         }
         with(MyEventsRoute.Profile) {
             composable(route) {
-                ProfileScreen(userVm, navController)
+                ProfileScreen(userVm, eventsVm, navController)
             }
         }
         with(MyEventsRoute.Login) {
@@ -133,7 +134,7 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.Register) {
             composable(route) {
-                RegisterScreen(navController, userVm::setLoggedUser, userVm::isUsernameAlreadyTaken, userVm.actions)
+                RegisterScreen(navController, userVm, userVm.actions)
             }
         }
     }

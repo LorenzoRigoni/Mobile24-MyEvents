@@ -57,16 +57,20 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.camera.utils.rememberPermission
 import com.example.myevents.R
+import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.UserViewModel
 import com.example.myevents.utils.rememberCameraLauncher
 
 @Composable
 fun ProfileScreen(
     userVm: UserViewModel,
+    eventsVm: EventsViewModel,
     navController: NavHostController
 ) {
     val ctx = LocalContext.current
     val per_denied = stringResource(R.string.per_denied)
+    val changedName = stringResource(R.string.changed_name)
+    val changedSurname = stringResource(R.string.changed_surname)
 
     val cameraLauncher = rememberCameraLauncher {
         imageUri -> userVm.setNewImage(imageUri.toString())
@@ -170,7 +174,13 @@ fun ProfileScreen(
                                 }
                                 TextButton(
                                     onClick = {
-                                        userVm.saveEditState()
+                                        val modifiedFields = userVm.saveEditState()
+                                        modifiedFields.forEach {
+                                            when (it.key) {
+                                                "name" -> eventsVm.generateNotification("$changedName ${it.value}")
+                                                "surname" -> eventsVm.generateNotification("$changedSurname ${it.value}")
+                                            }
+                                        }
                                         openDialog.value = false
                                     },
                                     modifier = Modifier.padding(8.dp),

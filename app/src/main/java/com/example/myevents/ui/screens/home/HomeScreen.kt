@@ -59,7 +59,7 @@ import com.example.myevents.ui.MyEventsRoute
 
 @Composable
 fun HomeScreen(
-    eventsVM: EventsViewModel,
+    eventsVm: EventsViewModel,
     state: EventsState,
     navController: NavHostController
 ) {
@@ -85,7 +85,7 @@ fun HomeScreen(
         },
     ) { contentPadding ->
         FilterChips(
-            eventsVM,
+            eventsVm,
             contentPadding
         )
         if (state.events.isNotEmpty()) {
@@ -102,7 +102,7 @@ fun HomeScreen(
                         onClick = {
                             navController.navigate(MyEventsRoute.EventDetails.buildRoute(item.eventID.toString()))
                         },
-                        eventsVM
+                        eventsVm
                     )
                 }
             }
@@ -117,7 +117,7 @@ fun HomeScreen(
 fun EventItem(
     item: Event,
     onClick: () -> Unit,
-    eventsVM: EventsViewModel
+    eventsVm: EventsViewModel
 ) {
     Card(
         onClick = onClick,
@@ -179,7 +179,7 @@ fun EventItem(
                 if (item.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
                 contentDescription = "Event star icon",
                 modifier = Modifier.clickable {
-                    eventsVM.updateIsFavourite(!item.isFavourite, item.eventID)
+                    eventsVm.updateIsFavourite(!item.isFavourite, item.eventID)
                 }
             )
         }
@@ -211,7 +211,7 @@ fun NoEventsPlaceHolder(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterChips(
-    eventsVM: EventsViewModel,
+    eventsVm: EventsViewModel,
     contentPadding: PaddingValues
 ) {
     var selectedFuture by remember { mutableStateOf(true) }
@@ -239,7 +239,7 @@ fun FilterChips(
                         selectedAll = false
                         selectedPast = false
                         selectedFavourites = false
-                        eventsVM.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
+                        eventsVm.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
                     }
                 },
                 label = {
@@ -265,7 +265,7 @@ fun FilterChips(
                         selectedFuture = false
                         selectedPast = false
                         selectedFavourites = false
-                        eventsVM.updateEvents(FilterEnum.SHOW_ALL_EVENTS)
+                        eventsVm.updateEvents(FilterEnum.SHOW_ALL_EVENTS)
                     }
                 },
                 label = {
@@ -301,7 +301,7 @@ fun FilterChips(
                         selectedFuture = false
                         selectedAll = false
                         selectedFavourites = false
-                        eventsVM.updateEvents(FilterEnum.SHOW_PAST_EVENTS)
+                        eventsVm.updateEvents(FilterEnum.SHOW_PAST_EVENTS)
                     }
                 },
                 label = {
@@ -327,7 +327,7 @@ fun FilterChips(
                         selectedFuture = false
                         selectedPast = false
                         selectedAll = false
-                        eventsVM.updateEvents(FilterEnum.SHOW_FAVOURITES_EVENTS)
+                        eventsVm.updateEvents(FilterEnum.SHOW_FAVOURITES_EVENTS)
                     }
                 },
                 label = {
