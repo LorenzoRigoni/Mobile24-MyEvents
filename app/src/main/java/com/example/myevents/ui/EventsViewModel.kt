@@ -51,6 +51,10 @@ class EventsViewModel(
         }
     }
 
+    fun getNextEvent(): Event? {
+        return state.value.events.minByOrNull { it.date }
+    }
+
     fun deleteEventsFromListOfIds() {
         if (eventsToDelete.isEmpty()) return
         viewModelScope.launch {
