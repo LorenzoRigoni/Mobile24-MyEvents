@@ -1,13 +1,5 @@
 package com.example.myevents
 
-import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.AlertDialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,82 +25,14 @@ import com.example.myevents.ui.screens.eventdetails.EventDetailsViewModel
 import com.example.myevents.ui.screens.settings.SettingsViewModel
 import com.example.myevents.ui.theme.MyEventsTheme
 import com.example.myevents.utils.LocationService
-import com.example.myevents.utils.Notification
-import com.example.myevents.utils.channelID
-import com.example.myevents.utils.messageExtra
-import com.example.myevents.utils.notificationID
-import com.example.myevents.utils.titleExtra
 import org.koin.android.ext.android.get
 import org.koin.androidx.compose.koinViewModel
-import java.util.Calendar
-import java.util.Date
 
 class MainActivity : ComponentActivity() {
     private lateinit var locationService: LocationService
 
-    private fun createNotificationChannel() {
-        val name = "Notif Channel"
-        val desc = "A Description of the Channel"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(channelID, name, importance)
-        channel.description = desc
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-    }
-
-    private fun scheduleNotification()
-    {
-        val intent = Intent(applicationContext, Notification::class.java)
-        val title = "Title"
-        val message = "Notification"
-        intent.putExtra(titleExtra, title)
-        intent.putExtra(messageExtra, message)
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            applicationContext,
-            notificationID,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val time = getTime()
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            time,
-            pendingIntent
-        )
-        showAlert(time, title, message)
-    }
-
-    private fun showAlert(time: Long, title: String, message: String)
-    {
-        val date = Date(time)
-        val dateFormat = android.text.format.DateFormat.getLongDateFormat(applicationContext)
-        val timeFormat = android.text.format.DateFormat.getTimeFormat(applicationContext)
-
-        AlertDialog.Builder(this)
-            .setTitle("Notification Scheduled")
-            .setMessage(
-                "Title: " + title +
-                        "\nMessage: " + message +
-                        "\nAt: " + dateFormat.format(date) + " " + timeFormat.format(date))
-            .setPositiveButton("Okay"){_,_ ->}
-            .show()
-    }
-
-    private fun getTime(): Long
-    {
-        val calendar = Calendar.getInstance()
-        calendar.set(2024, 4, 21, 11, 18)
-        return calendar.timeInMillis
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        createNotificationChannel()
-        scheduleNotification()
 
         locationService = get<LocationService>()
 
