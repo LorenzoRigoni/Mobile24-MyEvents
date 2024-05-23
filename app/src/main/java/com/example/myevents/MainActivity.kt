@@ -66,13 +66,15 @@ class MainActivity : FragmentActivity() {
             val addEventVm = koinViewModel<AddEventViewModel>()
             val eventDetailsVm = koinViewModel<EventDetailsViewModel>()
 
-            if (settingsVm.preferences.reminderTime.isNotEmpty() && settingsVm.preferences.language.isNotEmpty()) {
-                scheduleNotification(
-                    settingsVm.preferences.reminderTime.split(":")[0],
-                    settingsVm.preferences.reminderTime.split(":")[1],
-                    eventsVm.getNextEvent(),
-                    settingsVm.preferences.language
-                )
+            if (userVm.user != null) {
+                if (settingsVm.preferences.reminderTime.isNotEmpty() && settingsVm.preferences.language.isNotEmpty()) {
+                    scheduleNotification(
+                        settingsVm.preferences.reminderTime.split(":")[0],
+                        settingsVm.preferences.reminderTime.split(":")[1],
+                        eventsVm.getNextEvent(),
+                        settingsVm.preferences.language
+                    )
+                }
             }
 
             MyEventsTheme (
