@@ -21,6 +21,7 @@
     <string name="no_notifications">Oops! Sembra che non ci siano notifiche qua</string>
     <string name="tap_below">Crea un nuovo evento premendo il pulsante + qui sotto</string>
     <string name="log">Accedi</string>
+    <string name="fill_fields">Per favore riempi tutti i campi</string>
     <string name="browse">Sfoglia i miei eventi</string>
     <string name="remember">Ricordami</string>
     <string name="wrong_us">Errore nell\'autenticazione: L\'username e/o la password sono sbagliate</string>

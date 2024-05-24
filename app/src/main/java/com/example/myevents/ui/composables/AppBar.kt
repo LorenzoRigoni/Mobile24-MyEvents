@@ -222,7 +222,8 @@ private fun AddNotificationsButton (
         }
         if (badgeCount > 0) {
             Badge(
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier
+                    .align(Alignment.Center)
                     .padding(start = 20.dp, bottom = 20.dp),
                 content = { Text("$badgeCount") }
             )
@@ -244,7 +245,7 @@ private fun AddConfirmButton (
             incrementNotificationBadge()
             navController.navigate(MyEventsRoute.Home.route)
         } else {
-            Toast.makeText(context, "You have to complete all the fields", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.fill_fields), Toast.LENGTH_SHORT).show()
         }
     }) {
         Icon(Icons.Outlined.Check, "Cancel")

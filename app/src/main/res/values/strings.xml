@@ -20,6 +20,7 @@
     <string name="no_notifications">Oops! It seems there are no notifications here</string>
     <string name="tap_below">Create a new event by pressing the + button below</string>
     <string name="log">Login</string>
+    <string name="fill_fields">Please fill all the fields</string>
     <string name="browse">Browse my events</string>
     <string name="remember">Remember me</string>
     <string name="wrong_us">Authentication error: wrong username or password</string>
