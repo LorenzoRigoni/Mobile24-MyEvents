@@ -1,6 +1,9 @@
 package com.example.myevents.ui.screens.addEvent
 
+import android.app.TimePickerDialog
+import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,6 +52,9 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -61,7 +67,6 @@ fun AddEventScreen(
 ) {
     var title by rememberSaveable { mutableStateOf("") }
     var eventType by rememberSaveable { mutableStateOf("") }
-    var date by rememberSaveable { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
     val latitude by addEventViewModel.latitude.collectAsState()
     val longitude by addEventViewModel.longitude.collectAsState()
@@ -75,8 +80,6 @@ fun AddEventScreen(
     )
 
     val scrollState = rememberScrollState()
-
-    val openDialog = remember { mutableStateOf(false) }
 
     Scaffold { contentPadding ->
         Column(
@@ -153,48 +156,12 @@ fun AddEventScreen(
             Row (
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Button(onClick = { openDialog.value = true }) {
-                    Text(stringResource(R.string.select_date))
-                }
-                Text(stringResource(R.string.selected_date) + ": $date")
-
-                if (openDialog.value) {
-                    val datePickerState = rememberDatePickerState()
-                    val confirmEnabled = remember {
-                        derivedStateOf { datePickerState.selectedDateMillis != null }
-                    }
-                    DatePickerDialog(
-                        onDismissRequest = {
-                            openDialog.value = false
-                        },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    openDialog.value = false
-                                    date = datePickerState.selectedDateMillis?.let { millis ->
-                                        val selectedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
-                                        selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                                    } ?: ""
-                                    addEventViewModel.setDate(date)
-                                },
-                                enabled = confirmEnabled.value
-                            ) {
-                                Text("OK")
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(
-                                onClick = {
-                                    openDialog.value = false
-                                }
-                            ) {
-                                Text(stringResource(R.string.cancel))
-                            }
-                        }
-                    ) {
-                        DatePicker(state = datePickerState)
-                    }
-                }
+                DateTimePicker(
+                    onDateTimeSelected = {
+                        addEventViewModel.setDate(it.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                    },
+                    context = LocalContext.current
+                )
             }
             Spacer(Modifier.size(24.dp))
             Row(
@@ -237,6 +204,73 @@ fun AddEventScreen(
             }
             Spacer(Modifier.size(100.dp))
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DateTimePicker(
+    onDateTimeSelected: (LocalDateTime) -> Unit,
+    context: Context
+) {
+    var date by remember { mutableStateOf(LocalDate.now()) }
+    var time by remember { mutableStateOf(LocalTime.now()) }
+    var isDatePickerDialogShowing by remember { mutableStateOf(false) }
+    var isTimePickerDialogShowing by remember { mutableStateOf(false) }
+
+    Button(onClick = { isDatePickerDialogShowing = true }) {
+        Text("Select Date and Time")
+    }
+
+    if (isDatePickerDialogShowing) {
+        val datePickerState = rememberDatePickerState()
+        val confirmEnabled = remember {
+            derivedStateOf { datePickerState.selectedDateMillis != null }
+        }
+        DatePickerDialog(
+            onDismissRequest = {
+               isDatePickerDialogShowing = false
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        date = Instant.ofEpochMilli(datePickerState.selectedDateMillis!!)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                        isDatePickerDialogShowing = false
+                        isTimePickerDialogShowing = true
+                    },
+                    enabled = confirmEnabled.value
+                ) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        isDatePickerDialogShowing = false
+                    }
+                ) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    if (isTimePickerDialogShowing) {
+        TimePickerDialog(
+            context,
+            { _, selectedHour: Int, selectedMinute: Int ->
+                time = LocalTime.of(selectedHour, selectedMinute)
+                onDateTimeSelected(LocalDateTime.of(date, time))
+                isTimePickerDialogShowing = false
+            },
+            time.hour,
+            time.minute,
+            true
+        ).show()
     }
 }
 

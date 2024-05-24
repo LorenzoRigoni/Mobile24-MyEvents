@@ -241,6 +241,7 @@ private fun AddConfirmButton (
     IconButton(onClick = {
         if (check()) {
             saveAction()
+            incrementNotificationBadge()
             navController.navigate(MyEventsRoute.Home.route)
         } else {
             Toast.makeText(context, "You have to complete all the fields", Toast.LENGTH_SHORT).show()
