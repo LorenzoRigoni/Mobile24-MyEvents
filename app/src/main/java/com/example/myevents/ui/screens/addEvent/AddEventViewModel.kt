@@ -100,6 +100,10 @@ class AddEventViewModel(
                 )
             )
         }
+        clearAddEventState()
+    }
+
+    fun clearAddEventState() {
         state.value = AddEventState("", "", "", "")
     }
 

@@ -97,13 +97,12 @@ fun MyEventsNavGraph(
                 if (event != null) {
                     eventDetailsVm.setSingleEventToDelete(event.eventID)
                     EventDetailsScreen(event, eventDetailsVm)
-                } else {
-                    navController.navigate(MyEventsRoute.Home.route)
                 }
             }
         }
         with(MyEventsRoute.AddEvent) {
             composable(route) {
+                addEventVm.clearAddEventState()
                 AddEventScreen(addEventVm, eventsVm::incrementNotificationBadge, navController)
             }
         }
