@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.example.myevents.R
+import com.example.myevents.getLocationService
 import com.example.myevents.utils.LocationService
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.util.GeoPoint
@@ -276,7 +277,7 @@ fun DateTimePicker(
 
 @Composable
 fun OsmMapView(addEventViewModel: AddEventViewModel, latitude: Double, longitude: Double) {
-    val locService = LocationService(LocalContext.current)
+    val locService = getLocationService()
     var lat = if (latitude == 0.0) locService.coordinates?.latitude else latitude
     var long = if (longitude == 0.0) locService.coordinates?.longitude else longitude
     val currLocation = lat?.let { long?.let { it1 -> GeoPoint(it, it1) } }
