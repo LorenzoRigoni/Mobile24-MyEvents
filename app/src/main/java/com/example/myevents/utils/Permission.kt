@@ -1,4 +1,4 @@
-package com.example.camera.utils
+package com.example.myevents.utils
 
 import android.Manifest
 import android.content.Context
@@ -17,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.example.myevents.MainActivity
 import com.example.myevents.R
-import com.example.myevents.utils.LocationService
 
 enum class PermissionStatus {
     Unknown,

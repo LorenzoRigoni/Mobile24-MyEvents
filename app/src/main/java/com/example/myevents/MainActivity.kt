@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -21,11 +22,12 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.camera.utils.CheckLocationPermission
 import com.example.myevents.data.database.Event
 import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.MyEventsNavGraph
@@ -36,6 +38,7 @@ import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.screens.eventdetails.EventDetailsViewModel
 import com.example.myevents.ui.screens.settings.SettingsViewModel
 import com.example.myevents.ui.theme.MyEventsTheme
+import com.example.myevents.utils.CheckLocationPermission
 import com.example.myevents.utils.LocationService
 import com.example.myevents.utils.Notification
 import com.example.myevents.utils.channelID
@@ -101,6 +104,7 @@ class MainActivity : FragmentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    checkNotificationPermission(LocalContext.current)
                     CheckLocationPermission(this, locationService)
                     val navController = rememberNavController()
                     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -207,6 +211,18 @@ class MainActivity : FragmentActivity() {
     override fun onResume() {
         super.onResume()
         locationService.resumeLocationRequest()
+    }
+
+    private fun checkNotificationPermission(context: Context) {
+        val areNotificationsEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
+
+        if (!areNotificationsEnabled) {
+            val intent = Intent().apply {
+                action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+            }
+            context.startActivity(intent)
+        }
     }
 }
 

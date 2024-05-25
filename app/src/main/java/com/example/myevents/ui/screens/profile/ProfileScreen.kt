@@ -55,7 +55,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.camera.utils.rememberPermission
+import com.example.myevents.utils.rememberPermission
 import com.example.myevents.R
 import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.UserViewModel

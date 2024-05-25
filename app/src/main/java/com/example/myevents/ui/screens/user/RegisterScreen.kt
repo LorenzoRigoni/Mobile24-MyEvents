@@ -34,7 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.camera.utils.rememberPermission
+import com.example.myevents.utils.rememberPermission
 import com.example.myevents.R
 import com.example.myevents.data.database.User
 import com.example.myevents.ui.EventsViewModel
