@@ -1,5 +1,6 @@
 package com.example.myevents.ui
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.database.Event
@@ -24,6 +25,8 @@ class EventsViewModel(
     val eventsToDelete: MutableList<Int> = mutableListOf()
 
     val notificationBadges = MutableStateFlow(0)
+
+    val notificationEvent = MutableLiveData<Pair<String, String>>()
 
     init {
         updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
@@ -75,12 +78,22 @@ class EventsViewModel(
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 )
             )
-            incrementNotificationBadge()
+            incrementNotificationBadge(notificationText)
         }
     }
 
-    fun incrementNotificationBadge() {
+    private fun postNotification(notificationText: String) {
+        val split = notificationText.split(";")
+        val notificationSubject = split[0]
+        val notificationAction = split[1]
+        notificationEvent.postValue(
+            Pair(notificationSubject, notificationAction)
+        )
+    }
+
+    fun incrementNotificationBadge(notificationText: String) {
         notificationBadges.value++
+        postNotification(notificationText)
     }
 
     fun resetNotificationBadges() {
@@ -91,8 +104,9 @@ class EventsViewModel(
         return state.value.events.minByOrNull { it.date }
     }
 
-    fun deleteEventsFromListOfIds() {
-        if (eventsToDelete.isEmpty()) return
+    @Suppress("SameReturnValue")
+    fun deleteEventsFromListOfIds(): String {
+        if (eventsToDelete.isEmpty()) return ""
         viewModelScope.launch {
             val idsToDelete = eventsToDelete.toList()
             idsToDelete.forEach { id ->
@@ -106,10 +120,11 @@ class EventsViewModel(
                         LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                     )
                 )
-                incrementNotificationBadge()
+                incrementNotificationBadge("${event.title};delete")
             }
         }
         eventsToDelete.clear()
+        return ""
     }
 
     fun updateIsFavourite(isFavourite: Boolean, eventId: Int) {

@@ -103,7 +103,7 @@ fun MyEventsNavGraph(
         with(MyEventsRoute.AddEvent) {
             composable(route) {
                 addEventVm.clearAddEventState()
-                AddEventScreen(addEventVm, eventsVm::incrementNotificationBadge, navController)
+                AddEventScreen(addEventVm, navController)
             }
         }
         with(MyEventsRoute.Settings) {

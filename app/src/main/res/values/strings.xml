@@ -69,6 +69,7 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="auto">System</string>
+    <string name="new_notification">You have a new notification</string>
     <string name="language">Language</string>
     <string name="italian">Italian</string>
     <string name="english">English</string>

@@ -78,6 +78,22 @@ class MainActivity : FragmentActivity() {
                 }
             }
 
+            eventsVm.notificationEvent.observe(this) { (notificationSubject, notificationAction) ->
+                val intent = Intent(this, Notification::class.java).apply {
+                    putExtra(titleExtra, applicationContext.getString(R.string.new_notification))
+                    putExtra(
+                        messageExtra,
+                        when(notificationAction) {
+                            "changeName" -> "${applicationContext.getString(R.string.changed_name)} $notificationSubject"
+                            "changeSurname" -> "${applicationContext.getString(R.string.changed_surname)} $notificationSubject"
+                            "delete" -> "$notificationSubject ${applicationContext.getString(R.string.event_deleted)}"
+                            else -> "$notificationSubject ${applicationContext.getString(R.string.new_event)}"
+                        }
+                    )
+                }
+                sendBroadcast(intent)
+            }
+
             MyEventsTheme (
                 darkTheme = if (settingsVm.preferences.theme == "Light") false else if(settingsVm.preferences.theme == "Dark") true else isSystemInDarkTheme()
             ) {
@@ -173,11 +189,13 @@ class MainActivity : FragmentActivity() {
 
     private fun getTime(hours: String, minutes: String): Long {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR))
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH))
         calendar.set(Calendar.HOUR_OF_DAY, hours.toInt())
         calendar.set(Calendar.MINUTE, minutes.toInt())
+
+        if (Calendar.getInstance().after(calendar)) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
         return calendar.timeInMillis
     }
 

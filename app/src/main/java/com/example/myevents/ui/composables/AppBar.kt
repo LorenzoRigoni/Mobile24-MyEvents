@@ -234,15 +234,15 @@ private fun AddNotificationsButton (
 @Composable
 private fun AddConfirmButton (
     navController: NavHostController,
-    saveAction: () -> Unit,
-    incrementNotificationBadge: () -> Unit,
+    saveAction: () -> String,
+    incrementNotificationBadge: (notificationText: String) -> Unit,
     check: () -> Boolean,
     context: Context
 ) {
     IconButton(onClick = {
         if (check()) {
-            saveAction()
-            incrementNotificationBadge()
+            val notificationText = saveAction()
+            incrementNotificationBadge(notificationText)
             navController.navigate(MyEventsRoute.Home.route)
         } else {
             Toast.makeText(context, context.getString(R.string.fill_fields), Toast.LENGTH_SHORT).show()
@@ -254,14 +254,14 @@ private fun AddConfirmButton (
 @Composable
 private fun AddDeleteButton (
     navController: NavHostController,
-    deleteAction: () -> Unit,
-    incrementNotificationBadge: () -> Unit,
+    deleteAction: () -> String,
+    incrementNotificationBadge: (notificationText: String) -> Unit,
     returnRoute: String,
 ) {
     IconButton(onClick = {
-        incrementNotificationBadge()
         navController.navigate(returnRoute)
-        deleteAction()
+        val notificationText = deleteAction()
+        if (notificationText.isNotEmpty()) incrementNotificationBadge(notificationText)
     }) {
         Icon(Icons.Outlined.Delete, "Delete")
     }

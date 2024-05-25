@@ -3,7 +3,6 @@ package com.example.myevents.ui.screens.addEvent
 import android.app.TimePickerDialog
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -58,11 +57,9 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEventScreen(
     addEventViewModel: AddEventViewModel,
-    incrementNotificationBadge: () -> Unit,
     navController: NavHostController
 ) {
     var title by rememberSaveable { mutableStateOf("") }
