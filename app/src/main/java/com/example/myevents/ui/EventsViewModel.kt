@@ -104,9 +104,8 @@ class EventsViewModel(
         return state.value.events.minByOrNull { it.date }
     }
 
-    @Suppress("SameReturnValue")
-    fun deleteEventsFromListOfIds(): String {
-        if (eventsToDelete.isEmpty()) return ""
+    fun deleteEventsFromListOfIds() {
+        if (eventsToDelete.isEmpty()) return
         viewModelScope.launch {
             val idsToDelete = eventsToDelete.toList()
             idsToDelete.forEach { id ->
@@ -124,7 +123,6 @@ class EventsViewModel(
             }
         }
         eventsToDelete.clear()
-        return ""
     }
 
     fun updateIsFavourite(isFavourite: Boolean, eventId: Int) {

@@ -78,7 +78,7 @@ class AddEventViewModel(
         state.value = state.value.copy(imageUri = imageUri)
     }
 
-    fun addEvent(): String {
+    suspend fun addEvent(): String {
         var notificationText = ""
         val event = Event(
             0,
@@ -101,7 +101,7 @@ class AddEventViewModel(
                 )
             )
             notificationText = "${event.title};add"
-        }
+        }.join()
         clearAddEventState()
         return notificationText
     }

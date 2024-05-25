@@ -68,7 +68,7 @@ class EventDetailsViewModel(
         singleEventToDelete = eventId
     }
 
-    fun deleteSingleEvent(): String {
+    suspend fun deleteSingleEvent(): String {
         var notificationText = ""
         if (singleEventToDelete == null) return notificationText
         viewModelScope.launch {
@@ -84,7 +84,7 @@ class EventDetailsViewModel(
                 )
             )
             notificationText = "${event.title};delete"
-        }
+        }.join()
         singleEventToDelete = null
         return notificationText
     }
