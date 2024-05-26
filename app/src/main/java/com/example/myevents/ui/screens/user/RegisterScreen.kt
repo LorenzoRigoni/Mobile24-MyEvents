@@ -34,7 +34,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.myevents.utils.rememberPermission
 import com.example.myevents.R
 import com.example.myevents.data.database.User
 import com.example.myevents.ui.EventsViewModel
@@ -43,6 +42,7 @@ import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserActions
 import com.example.myevents.ui.UserViewModel
 import com.example.myevents.utils.rememberCameraLauncher
+import com.example.myevents.utils.rememberPermission
 import kotlinx.coroutines.launch
 
 @Composable
@@ -182,7 +182,7 @@ fun RegisterScreen(
                             )
                             userVm.setLoggedUser(username, password, isChecked).join()
                             eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-                            eventsViewModel.updateNotifications()
+                            eventsViewModel.updateNotificationsAndAllEvents()
                             navController.navigate(MyEventsRoute.Welcome.route) {
                                 popUpTo(MyEventsRoute.Register.route) { inclusive = true }
                             }

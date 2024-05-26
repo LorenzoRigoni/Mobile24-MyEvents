@@ -29,7 +29,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +44,6 @@ import com.example.myevents.ui.UserViewModel
 import com.example.myevents.ui.screens.addEvent.AddEventViewModel
 import com.example.myevents.ui.screens.eventdetails.EventDetailsViewModel
 import com.example.myevents.ui.screens.settings.SettingsViewModel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -235,19 +233,16 @@ private fun AddNotificationsButton (
 @Composable
 private fun AddConfirmButton (
     navController: NavHostController,
-    saveAction: suspend () -> String,
-    incrementNotificationBadge: (notificationText: String) -> Unit,
+    saveAction: () -> Unit,
+    incrementNotificationBadge: () -> Unit,
     check: () -> Boolean,
     context: Context
 ) {
-    val coroutine = rememberCoroutineScope()
     IconButton(onClick = {
         if (check()) {
-            coroutine.launch {
-                val notificationText = saveAction()
-                incrementNotificationBadge(notificationText)
-                navController.navigate(MyEventsRoute.Home.route)
-            }
+            saveAction()
+            incrementNotificationBadge()
+            navController.navigate(MyEventsRoute.Home.route)
         } else {
             Toast.makeText(context, context.getString(R.string.fill_fields), Toast.LENGTH_SHORT).show()
         }
@@ -262,8 +257,8 @@ private fun AddDeleteListEventsButton (
     returnRoute: String,
 ) {
     IconButton(onClick = {
-        deleteAction()
         navController.navigate(returnRoute)
+        deleteAction()
     }) {
         Icon(Icons.Outlined.Delete, "Delete")
     }
@@ -272,17 +267,14 @@ private fun AddDeleteListEventsButton (
 @Composable
 private fun AddDeleteSingleEventButton (
     navController: NavHostController,
-    deleteAction: suspend () -> String,
-    incrementNotificationBadge: (notificationText: String) -> Unit,
+    deleteAction: () -> Unit,
+    incrementNotificationBadge: () -> Unit,
     returnRoute: String,
 ) {
-    val coroutine = rememberCoroutineScope()
     IconButton(onClick = {
-        coroutine.launch {
-            val notificationText = deleteAction()
-            incrementNotificationBadge(notificationText)
-            navController.navigate(returnRoute)
-        }
+        navController.navigate(returnRoute)
+        deleteAction()
+        incrementNotificationBadge()
     }) {
         Icon(Icons.Outlined.Delete, "Delete")
     }

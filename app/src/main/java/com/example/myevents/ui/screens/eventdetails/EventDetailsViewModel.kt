@@ -68,9 +68,8 @@ class EventDetailsViewModel(
         singleEventToDelete = eventId
     }
 
-    suspend fun deleteSingleEvent(): String {
-        var notificationText = ""
-        if (singleEventToDelete == null) return notificationText
+    fun deleteSingleEvent() {
+        if (singleEventToDelete == null) return
         viewModelScope.launch {
             val id = singleEventToDelete!!
             val event = repository.getEventFromId(id)
@@ -80,13 +79,12 @@ class EventDetailsViewModel(
                     0,
                     event!!.username,
                     "${event.title};delete",
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    false
                 )
             )
-            notificationText = "${event.title};delete"
-        }.join()
+        }
         singleEventToDelete = null
-        return notificationText
     }
 
     fun setNewTitle(newTitle: String) {

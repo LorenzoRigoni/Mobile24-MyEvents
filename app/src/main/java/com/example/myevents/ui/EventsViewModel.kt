@@ -1,6 +1,5 @@
 package com.example.myevents.ui
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.database.Event
@@ -20,17 +19,15 @@ class EventsViewModel(
 ) : ViewModel() {
 
     val state = MutableStateFlow(EventsState(emptyList()))
-    val notifState = MutableStateFlow(NotificationsState(emptyList()))
 
     val eventsToDelete: MutableList<Int> = mutableListOf()
 
+    val notifState = MutableStateFlow(NotificationsState(emptyList()))
     val notificationBadges = MutableStateFlow(0)
-
-    val notificationEvent = MutableLiveData<Pair<String, String>>()
 
     init {
         updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-        updateNotifications()
+        updateNotificationsAndAllEvents()
     }
 
     fun updateEvents(filter: FilterEnum) {
@@ -60,11 +57,25 @@ class EventsViewModel(
         }
     }
 
-    fun updateNotifications() {
+    fun updateNotificationsAndAllEvents() {
         viewModelScope.launch {
             repository.allUserNotifications(repository.user.first()).collect { notifications ->
                 notifState.value = NotificationsState(notifications)
             }
+        }
+    }
+
+    fun updateIsSentNotification(notification: Notification) {
+        viewModelScope.launch {
+            repository.upsertNotification(
+                Notification(
+                    notification.notificationID,
+                    notification.username,
+                    notification.notificationText,
+                    notification.date,
+                    true
+                )
+            )
         }
     }
 
@@ -75,33 +86,20 @@ class EventsViewModel(
                     0,
                     repository.user.first(),
                     notificationText,
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    false
                 )
             )
-            incrementNotificationBadge(notificationText)
+            incrementNotificationBadge()
         }
     }
 
-    private fun postNotification(notificationText: String) {
-        val split = notificationText.split(";")
-        val notificationSubject = split[0]
-        val notificationAction = split[1]
-        notificationEvent.postValue(
-            Pair(notificationSubject, notificationAction)
-        )
-    }
-
-    fun incrementNotificationBadge(notificationText: String) {
+    fun incrementNotificationBadge() {
         notificationBadges.value++
-        postNotification(notificationText)
     }
 
     fun resetNotificationBadges() {
         notificationBadges.value = 0
-    }
-
-    fun getNextEvent(): Event? {
-        return state.value.events.minByOrNull { it.date }
     }
 
     fun deleteEventsFromListOfIds() {
@@ -116,10 +114,11 @@ class EventsViewModel(
                         0,
                         event!!.username,
                         "${event.title};delete",
-                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                        false
                     )
                 )
-                incrementNotificationBadge("${event.title};delete")
+                incrementNotificationBadge()
             }
         }
         eventsToDelete.clear()

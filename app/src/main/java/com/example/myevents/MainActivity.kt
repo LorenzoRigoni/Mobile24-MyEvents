@@ -28,7 +28,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.myevents.data.database.Event
+import com.example.myevents.ui.EventsState
 import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.MyEventsNavGraph
 import com.example.myevents.ui.MyEventsRoute
@@ -75,26 +75,33 @@ class MainActivity : FragmentActivity() {
                     scheduleNotification(
                         settingsVm.preferences.reminderTime.split(":")[0],
                         settingsVm.preferences.reminderTime.split(":")[1],
-                        eventsVm.getNextEvent(),
+                        eventsState,
                         settingsVm.preferences.language
                     )
                 }
             }
 
-            eventsVm.notificationEvent.observe(this) { (notificationSubject, notificationAction) ->
-                val intent = Intent(this, Notification::class.java).apply {
-                    putExtra(titleExtra, applicationContext.getString(R.string.new_notification))
-                    putExtra(
-                        messageExtra,
-                        when(notificationAction) {
-                            "changeName" -> "${applicationContext.getString(R.string.changed_name)} $notificationSubject"
-                            "changeSurname" -> "${applicationContext.getString(R.string.changed_surname)} $notificationSubject"
-                            "delete" -> "$notificationSubject ${applicationContext.getString(R.string.event_deleted)}"
-                            else -> "$notificationSubject ${applicationContext.getString(R.string.new_event)}"
-                        }
-                    )
+            notificationsState.notifications.forEach { notification ->
+                if (!notification.hasBeenSent) {
+                    val split = notification.notificationText.split(";")
+                    val notificationSubject = split[0]
+                    val notificationAction = split[1]
+                    val intent = Intent(this, Notification::class.java).apply {
+                        putExtra(titleExtra, applicationContext.getString(R.string.new_notification))
+                        putExtra(
+                            messageExtra,
+                            when(notificationAction) {
+                                "changeName" -> "${applicationContext.getString(R.string.changed_name)} $notificationSubject"
+                                "changeSurname" -> "${applicationContext.getString(R.string.changed_surname)} $notificationSubject"
+                                "delete" -> "$notificationSubject ${applicationContext.getString(R.string.event_deleted)}"
+                                else -> "$notificationSubject ${applicationContext.getString(R.string.new_event)}"
+                            }
+                        )
+                        putExtra("isScheduledNotification", false)
+                    }
+                    sendBroadcast(intent)
+                    eventsVm.updateIsSentNotification(notification)
                 }
-                sendBroadcast(intent)
             }
 
             MyEventsTheme (
@@ -155,12 +162,13 @@ class MainActivity : FragmentActivity() {
         notificationManager.createNotificationChannel(channel)
     }
 
-    private fun scheduleNotification(hours: String, minutes: String, nextEvent: Event?, language: String) {
+    private fun scheduleNotification(hours: String, minutes: String, events: EventsState, language: String) {
         val intent = Intent(applicationContext, Notification::class.java)
         val title = when (language) {
             "English" -> "Daily reminder !"
             else -> "Promemoria giornaliero !"
         }
+        val nextEvent = events.events.minByOrNull { it.date }
         val message = if (nextEvent != null) {
             when (language) {
                 "English" -> "Your next event is ${nextEvent.title} on ${nextEvent.date}"
@@ -174,6 +182,7 @@ class MainActivity : FragmentActivity() {
         }
         intent.putExtra(titleExtra, title)
         intent.putExtra(messageExtra, message)
+        intent.putExtra("isScheduledNotification", true)
 
         val pendingIntent = PendingIntent.getBroadcast(
             applicationContext,

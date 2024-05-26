@@ -97,7 +97,7 @@ fun LoginScreen(
                         if (userVm.user != null) {
                             userVm.setLoggedUser(username, password, isChecked).join()
                             eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-                            eventsViewModel.updateNotifications()
+                            eventsViewModel.updateNotificationsAndAllEvents()
                             navController.navigate(MyEventsRoute.Welcome.route) {
                                 popUpTo(MyEventsRoute.Login.route) { inclusive = true }
                             }
@@ -129,7 +129,7 @@ fun LoginScreen(
                             if (userVm.bioUser.isNotEmpty()) {
                                 userVm.setLoggedUser(userVm.bioUser, userVm.bioPassword, isChecked).join()
                                 eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-                                eventsViewModel.updateNotifications()
+                                eventsViewModel.updateNotificationsAndAllEvents()
                                 navController.navigate(MyEventsRoute.Welcome.route) {
                                     popUpTo(MyEventsRoute.Login.route) { inclusive = true }
                                 }

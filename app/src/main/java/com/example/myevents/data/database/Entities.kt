@@ -33,5 +33,6 @@ data class Notification(
     val notificationID: Int,
     @ColumnInfo val username: String,
     @ColumnInfo val notificationText: String,
-    @ColumnInfo val date: String
+    @ColumnInfo val date: String,
+    @ColumnInfo val hasBeenSent: Boolean
 )
