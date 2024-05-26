@@ -50,7 +50,8 @@ fun RegisterScreen(
     navController: NavHostController,
     userVm: UserViewModel,
     actions: UserActions,
-    eventsViewModel: EventsViewModel
+    eventsViewModel: EventsViewModel,
+    updateAddEventVmUsername: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -183,6 +184,7 @@ fun RegisterScreen(
                             userVm.setLoggedUser(username, password, isChecked).join()
                             eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
                             eventsViewModel.updateNotificationsAndAllEvents()
+                            updateAddEventVmUsername()
                             navController.navigate(MyEventsRoute.Welcome.route) {
                                 popUpTo(MyEventsRoute.Register.route) { inclusive = true }
                             }

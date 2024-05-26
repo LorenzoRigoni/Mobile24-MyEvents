@@ -128,12 +128,12 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.Login) {
             composable(route) {
-                LoginScreen(navController, userVm, eventsVm)
+                LoginScreen(navController, userVm, eventsVm, addEventVm::updateUsername)
             }
         }
         with(MyEventsRoute.Register) {
             composable(route) {
-                RegisterScreen(navController, userVm, userVm.actions, eventsVm)
+                RegisterScreen(navController, userVm, userVm.actions, eventsVm, addEventVm::updateUsername)
             }
         }
     }

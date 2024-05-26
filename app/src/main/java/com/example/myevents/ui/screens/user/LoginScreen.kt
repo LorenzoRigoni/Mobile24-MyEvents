@@ -43,7 +43,8 @@ import kotlinx.coroutines.launch
 fun LoginScreen(
     navController: NavHostController,
     userVm: UserViewModel,
-    eventsViewModel: EventsViewModel
+    eventsViewModel: EventsViewModel,
+    updateAddEventVmUsername: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -98,6 +99,7 @@ fun LoginScreen(
                             userVm.setLoggedUser(username, password, isChecked).join()
                             eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
                             eventsViewModel.updateNotificationsAndAllEvents()
+                            updateAddEventVmUsername()
                             navController.navigate(MyEventsRoute.Welcome.route) {
                                 popUpTo(MyEventsRoute.Login.route) { inclusive = true }
                             }
@@ -130,6 +132,7 @@ fun LoginScreen(
                                 userVm.setLoggedUser(userVm.bioUser, userVm.bioPassword, isChecked).join()
                                 eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
                                 eventsViewModel.updateNotificationsAndAllEvents()
+                                updateAddEventVmUsername()
                                 navController.navigate(MyEventsRoute.Welcome.route) {
                                     popUpTo(MyEventsRoute.Login.route) { inclusive = true }
                                 }

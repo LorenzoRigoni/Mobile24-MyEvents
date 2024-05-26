@@ -56,6 +56,12 @@ class AddEventViewModel(
         }
     }
 
+    fun updateUsername() {
+        viewModelScope.launch {
+            username = repository.user.first()
+        }
+    }
+
     fun checkCanAdd(): Boolean {
         return state.value.title.isNotEmpty()
                 && state.value.date.isNotEmpty()
