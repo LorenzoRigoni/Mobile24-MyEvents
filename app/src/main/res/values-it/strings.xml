@@ -78,7 +78,7 @@
     <string name="bio_not_av">Autenticazione biometrica non disponibile</string>
     <string name="bio_temp_not">Autenticazione biometrica temporaneamente non disponibile</string>
     <string name="bio_not_roll">Devi prima registrare una impronta digitale o un face id</string>
-    <string name="log_bio">Accedi con autenticazione biometrica</string>
+    <string name="log_bio">Accedi con impronta digitale</string>
     <string name="bio_failed">Autenticazione biometrica fallita. Si prega di ritentare</string>
     <string name="changed_name">Il nome è stato cambiato in</string>
     <string name="changed_surname">Il cognome è stato cambiato in</string>

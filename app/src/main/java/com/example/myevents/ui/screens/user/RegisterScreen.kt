@@ -4,13 +4,17 @@ import android.Manifest
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.Button
@@ -18,6 +22,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -87,6 +92,8 @@ fun RegisterScreen(
         }
     }
 
+    val scrollState = rememberScrollState()
+
     //UI
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -94,33 +101,37 @@ fun RegisterScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(scrollState)
     ) {
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
             label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
             label = { Text(stringResource(R.string.name)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         OutlinedTextField(
             value = surname,
             onValueChange = { surname = it },
             label = { Text(stringResource(R.string.surname)) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         OutlinedTextField(
             value = password,
@@ -128,10 +139,11 @@ fun RegisterScreen(
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         OutlinedTextField(
             value = confirmPassword,
@@ -139,31 +151,36 @@ fun RegisterScreen(
             label = { Text(stringResource(R.string.conf_pass)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = ::takePicture,
-            contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+        Row (
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            Icon(
-                Icons.Outlined.PhotoCamera,
-                contentDescription = "Camera icon",
-                modifier = Modifier.size(ButtonDefaults.IconSize)
+            Checkbox(
+                checked = isChecked,
+                onCheckedChange = { isChecked = it }
             )
-            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-            Text(text = stringResource(R.string.user_pic))
+            Text(
+                text = stringResource(R.string.remember),
+                modifier = Modifier.align(Alignment.CenterVertically).weight(1f)
+            )
+            Button(
+                onClick = ::takePicture,
+                contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+            ) {
+                Icon(
+                    Icons.Outlined.PhotoCamera,
+                    contentDescription = "Camera icon",
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(text = stringResource(R.string.user_pic))
+            }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = { isChecked = it }
-        )
-        Text(text = stringResource(R.string.remember), modifier = Modifier.padding(16.dp))
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -204,7 +221,10 @@ fun RegisterScreen(
                     }
                 }
             },
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp)
         ) {
             Text(text = stringResource(R.string.register))
         }
@@ -217,7 +237,11 @@ fun RegisterScreen(
                     popUpTo(MyEventsRoute.Register.route) { inclusive = true }
                 }
             },
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(32.dp)
         ) {
             Text(text = stringResource(R.string.already_have_acc))
         }

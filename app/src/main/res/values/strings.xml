@@ -77,7 +77,7 @@
     <string name="bio_not_av">Biometric authentication is not available</string>
     <string name="bio_temp_not">Biometric authentication is not temporarily available</string>
     <string name="bio_not_roll">You must add a fingerprint or a face id first</string>
-    <string name="log_bio">Login with biometric authentication</string>
+    <string name="log_bio">Login with fingerprint</string>
     <string name="bio_failed">Biometric authentication failed. Please try again</string>
     <string name="changed_name">Name has been changed into</string>
     <string name="changed_surname">Surname has been changed into</string>

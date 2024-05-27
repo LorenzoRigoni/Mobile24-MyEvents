@@ -3,16 +3,23 @@ package com.example.myevents.ui.screens.user
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -55,21 +63,30 @@ fun LoginScreen(
     val activity = LocalContext.current as FragmentActivity
     val noLogBio = stringResource(R.string.bio_not_roll)
 
+    val scrollState = rememberScrollState()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(scrollState)
     ) {
+        Image(
+            painter = painterResource(id = R.mipmap.ic_launcher_foreground),
+            contentDescription = "App Icon",
+            modifier = Modifier.size(150.dp)
+        )
+
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
             label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         OutlinedTextField(
             value = password,
@@ -77,16 +94,25 @@ fun LoginScreen(
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = { isChecked = it }
-        )
-        Text(text = stringResource(R.string.remember), modifier = Modifier.padding(16.dp))
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Checkbox(
+                checked = isChecked,
+                onCheckedChange = { isChecked = it }
+            )
+            Text(
+                text = stringResource(R.string.remember),
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -113,10 +139,14 @@ fun LoginScreen(
                     }
                 }
             },
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(32.dp)
         ) {
             Text(text = stringResource(R.string.log))
         }
+
         Spacer(Modifier.height(16.dp))
 
         FloatingActionButton(
@@ -161,7 +191,11 @@ fun LoginScreen(
                     }
                 )
             },
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(32.dp)
         ) {
             Text(text = stringResource(R.string.log_bio))
         }
@@ -174,7 +208,11 @@ fun LoginScreen(
                     popUpTo(MyEventsRoute.Login.route) { inclusive = true }
                 }
             },
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(32.dp)
         ) {
             Text(text = stringResource(R.string.no_account))
         }
