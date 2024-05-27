@@ -130,7 +130,6 @@ fun EventItem(
         Row(
             modifier = Modifier
                 .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
         ) {
             val imageUri = Uri.parse(item.imageUri)
             if (imageUri.path?.isNotEmpty() == true) {
@@ -157,7 +156,9 @@ fun EventItem(
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
-            Column {
+            Column (
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
                     item.title,
                     textAlign = TextAlign.Left
@@ -168,7 +169,9 @@ fun EventItem(
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
-            Column {
+            Column (
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+            ) {
                 Icon(
                     if (item.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
                     contentDescription = "Event star icon",

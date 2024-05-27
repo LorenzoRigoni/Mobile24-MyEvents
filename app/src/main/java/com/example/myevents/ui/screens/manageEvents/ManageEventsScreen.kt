@@ -89,16 +89,15 @@ fun ManageEventsScreen(
                 items(allEventsState.events) { item ->
                     Card(
                         modifier = Modifier
-                            .size(150.dp)
                             .fillMaxWidth(),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.secondaryContainer
                         )
                     ) {
-                        Row (
+                        Row(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(start = 16.dp),
+                                .padding(16.dp)
+                                .fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             val imageUri = Uri.parse(item.imageUri)
@@ -128,8 +127,10 @@ fun ManageEventsScreen(
                             Spacer(modifier = Modifier.size(8.dp))
                             Text(
                                 item.title,
-                                textAlign = TextAlign.Left
+                                textAlign = TextAlign.Left,
+                                modifier = Modifier.weight(1f),
                             )
+                            Spacer(modifier = Modifier.size(8.dp))
                             Switch(
                                 checked = switchStates[item.eventID] ?: false,
                                 onCheckedChange = { isChecked ->
@@ -139,7 +140,7 @@ fun ManageEventsScreen(
                                     } else {
                                         eventsVm.eventsToDelete.remove(item.eventID)
                                     }
-                                }
+                                },
                             )
                         }
                     }
