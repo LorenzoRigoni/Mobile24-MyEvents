@@ -3,11 +3,10 @@ package com.example.myevents.ui.screens.notifications
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -40,7 +39,7 @@ fun NotificationsScreen(
                 columns = GridCells.Fixed(1),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 8.dp),
+                contentPadding = PaddingValues(8.dp),
                 modifier = Modifier.padding(contentPadding)
             ) {
                 items(notificationsState.notifications) { notification ->
@@ -63,20 +62,16 @@ fun NotificationItem(
 
     Card(
         modifier = Modifier
-            .size(150.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         )
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
+                .padding(8.dp),
         ) {
-            Spacer(modifier = Modifier.size(8.dp))
             Text(
                 when(notificationAction) {
                     "changeName" -> "${stringResource(R.string.changed_name)} $notificationSubject"
@@ -86,10 +81,15 @@ fun NotificationItem(
                 },
                 textAlign = TextAlign.Left
             )
-            Spacer(modifier = Modifier.size(8.dp))
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
             Text(
                 item.date,
-                textAlign = TextAlign.Left
             )
         }
     }
