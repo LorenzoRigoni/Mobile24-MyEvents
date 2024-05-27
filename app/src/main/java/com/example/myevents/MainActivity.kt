@@ -65,6 +65,8 @@ class MainActivity : FragmentActivity() {
 
             val eventsVm = koinViewModel<EventsViewModel>()
             val eventsState by eventsVm.state.collectAsStateWithLifecycle()
+            val allEventsState by eventsVm.allEventsState.collectAsStateWithLifecycle()
+            val futureEventsState by eventsVm.futureEventsState.collectAsStateWithLifecycle()
             val notificationsState by eventsVm.notifState.collectAsStateWithLifecycle()
 
             val addEventVm = koinViewModel<AddEventViewModel>()
@@ -75,7 +77,7 @@ class MainActivity : FragmentActivity() {
                     scheduleNotification(
                         settingsVm.preferences.reminderTime.split(":")[0],
                         settingsVm.preferences.reminderTime.split(":")[1],
-                        eventsState,
+                        futureEventsState,
                         settingsVm.preferences.language
                     )
                 }
@@ -140,6 +142,7 @@ class MainActivity : FragmentActivity() {
                             userVm,
                             eventsVm,
                             eventsState,
+                            allEventsState,
                             notificationsState,
                             addEventVm,
                             eventDetailsVm,

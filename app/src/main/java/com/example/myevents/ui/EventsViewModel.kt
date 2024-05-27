@@ -18,6 +18,8 @@ class EventsViewModel(
     private val repository: MyEventsRepository
 ) : ViewModel() {
 
+    val allEventsState = MutableStateFlow(EventsState(emptyList()))
+    val futureEventsState = MutableStateFlow(EventsState(emptyList()))
     val state = MutableStateFlow(EventsState(emptyList()))
 
     val eventsToDelete: MutableList<Int> = mutableListOf()
@@ -25,9 +27,13 @@ class EventsViewModel(
     val notifState = MutableStateFlow(NotificationsState(emptyList()))
     val notificationBadges = MutableStateFlow(0)
 
+    val filter = MutableStateFlow(FilterEnum.SHOW_FUTURE_EVENTS)
+
     init {
-        updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-        updateNotificationsAndAllEvents()
+        updateEvents(filter.value)
+        updateNotifications()
+        updateAllEvents()
+        updateFutureEvents()
     }
 
     fun updateEvents(filter: FilterEnum) {
@@ -57,10 +63,26 @@ class EventsViewModel(
         }
     }
 
-    fun updateNotificationsAndAllEvents() {
+    fun updateNotifications() {
         viewModelScope.launch {
             repository.allUserNotifications(repository.user.first()).collect { notifications ->
                 notifState.value = NotificationsState(notifications)
+            }
+        }
+    }
+
+    fun updateAllEvents() {
+        viewModelScope.launch {
+            repository.allEventsOfUser(repository.user.first()).collect { events ->
+                allEventsState.value = EventsState(events)
+            }
+        }
+    }
+
+    fun updateFutureEvents() {
+        viewModelScope.launch {
+            repository.eventsOfUserFromToday(repository.user.first()).collect { events ->
+                futureEventsState.value = EventsState(events)
             }
         }
     }

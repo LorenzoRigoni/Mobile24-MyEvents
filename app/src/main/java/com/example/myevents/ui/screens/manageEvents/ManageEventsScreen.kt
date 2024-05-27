@@ -47,16 +47,16 @@ import com.example.myevents.ui.EventsViewModel
 @Composable
 fun ManageEventsScreen(
     eventsVm: EventsViewModel,
-    state: EventsState,
+    allEventsState: EventsState,
     navController: NavHostController
 ) {
     val switchStates = remember { mutableStateMapOf<Int, Boolean>().apply {
-        putAll(state.events.map { it.eventID }.associateWith { false })
+        putAll(allEventsState.events.map { it.eventID }.associateWith { false })
     }}
 
     Scaffold (
         floatingActionButton = {
-            if (state.events.isNotEmpty()) {
+            if (allEventsState.events.isNotEmpty()) {
                 FloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primary,
                     onClick = {
@@ -78,7 +78,7 @@ fun ManageEventsScreen(
             }
         },
     ) { contentPadding ->
-        if (state.events.isNotEmpty()) {
+        if (allEventsState.events.isNotEmpty()) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(1),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -86,7 +86,7 @@ fun ManageEventsScreen(
                 contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 8.dp),
                 modifier = Modifier.padding(contentPadding)
             ) {
-                items(state.events) { item ->
+                items(allEventsState.events) { item ->
                     Card(
                         modifier = Modifier
                             .size(150.dp)

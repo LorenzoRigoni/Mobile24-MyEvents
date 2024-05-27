@@ -200,7 +200,9 @@ fun RegisterScreen(
                             )
                             userVm.setLoggedUser(username, password, isChecked).join()
                             eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-                            eventsViewModel.updateNotificationsAndAllEvents()
+                            eventsViewModel.updateNotifications()
+                            eventsViewModel.updateAllEvents()
+                            eventsViewModel.updateFutureEvents()
                             updateAddEventVmUsername()
                             navController.navigate(MyEventsRoute.Welcome.route) {
                                 popUpTo(MyEventsRoute.Register.route) { inclusive = true }

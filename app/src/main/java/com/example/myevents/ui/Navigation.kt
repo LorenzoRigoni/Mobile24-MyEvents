@@ -68,6 +68,7 @@ fun MyEventsNavGraph(
     userVm: UserViewModel,
     eventsVm: EventsViewModel,
     eventsState: EventsState,
+    allEventsState: EventsState,
     notificationsState: NotificationsState,
     addEventVm: AddEventViewModel,
     eventDetailsVm: EventDetailsViewModel,
@@ -91,7 +92,7 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.EventDetails) {
             composable(route, arguments) { backStackEntry ->
-                val event = eventsState.events.find {
+                val event = allEventsState.events.find {
                     it.eventID == backStackEntry.arguments?.getString("eventId")?.toInt()
                 }
                 if (event != null) {
@@ -113,7 +114,7 @@ fun MyEventsNavGraph(
         }
         with(MyEventsRoute.ManageEvents) {
             composable(route) {
-                ManageEventsScreen(eventsVm, eventsState, navController)
+                ManageEventsScreen(eventsVm, allEventsState, navController)
             }
         }
         with(MyEventsRoute.Notifications) {

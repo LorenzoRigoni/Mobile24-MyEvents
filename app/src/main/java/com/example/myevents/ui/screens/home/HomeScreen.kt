@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -84,30 +83,31 @@ fun HomeScreen(
             }
         },
     ) { contentPadding ->
-        FilterChips(
-            eventsVm,
-            contentPadding
-        )
-        if (state.events.isNotEmpty()) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(1),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 8.dp),
-                modifier = Modifier.padding(contentPadding)
-            ) {
-                items(state.events) { item ->
-                    EventItem(
-                        item,
-                        onClick = {
-                            navController.navigate(MyEventsRoute.EventDetails.buildRoute(item.eventID.toString()))
-                        },
-                        eventsVm
-                    )
+        Column {
+            FilterChips(
+                eventsVm,
+            )
+            if (state.events.isNotEmpty()) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(1),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 8.dp),
+                    modifier = Modifier.padding(contentPadding)
+                ) {
+                    items(state.events) { item ->
+                        EventItem(
+                            item,
+                            onClick = {
+                                navController.navigate(MyEventsRoute.EventDetails.buildRoute(item.eventID.toString()))
+                            },
+                            eventsVm
+                        )
+                    }
                 }
+            } else {
+                NoEventsPlaceHolder()
             }
-        } else {
-            NoEventsPlaceHolder(Modifier.padding(contentPadding))
         }
     }
 }
@@ -122,18 +122,15 @@ fun EventItem(
     Card(
         onClick = onClick,
         modifier = Modifier
-            .size(150.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         )
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             val imageUri = Uri.parse(item.imageUri)
             if (imageUri.path?.isNotEmpty() == true) {
@@ -160,34 +157,35 @@ fun EventItem(
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))
-            Text(
-                item.title,
-                textAlign = TextAlign.Left
-            )
+            Column {
+                Text(
+                    item.title,
+                    textAlign = TextAlign.Left
+                )
+                Text(
+                    item.eventType,
+                    textAlign = TextAlign.Left
+                )
+            }
             Spacer(modifier = Modifier.size(8.dp))
-            Text(
-                item.eventType,
-                textAlign = TextAlign.Left
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            Text(
-                item.date,
-                textAlign = TextAlign.Left
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            Icon(
-                if (item.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
-                contentDescription = "Event star icon",
-                modifier = Modifier.clickable {
-                    eventsVm.updateIsFavourite(!item.isFavourite, item.eventID)
-                }
-            )
+            Column {
+                Icon(
+                    if (item.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
+                    contentDescription = "Event star icon",
+                    modifier = Modifier.clickable {
+                        eventsVm.updateIsFavourite(!item.isFavourite, item.eventID)
+                    }.align(Alignment.End)
+                )
+                Text(
+                    item.date,
+                )
+            }
         }
     }
 }
 
 @Composable
-fun NoEventsPlaceHolder(modifier: Modifier = Modifier) {
+fun NoEventsPlaceHolder() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -212,23 +210,18 @@ fun NoEventsPlaceHolder(modifier: Modifier = Modifier) {
 @Composable
 fun FilterChips(
     eventsVm: EventsViewModel,
-    contentPadding: PaddingValues
 ) {
-    var selectedFuture by remember { mutableStateOf(true) }
-    var selectedAll by remember { mutableStateOf(false) }
-    var selectedPast by remember { mutableStateOf(false) }
-    var selectedFavourites by remember { mutableStateOf(false) }
+    var selectedFuture by remember { mutableStateOf(eventsVm.filter.value == FilterEnum.SHOW_FUTURE_EVENTS)}
+    var selectedAll by remember { mutableStateOf(eventsVm.filter.value == FilterEnum.SHOW_ALL_EVENTS) }
+    var selectedPast by remember { mutableStateOf(eventsVm.filter.value == FilterEnum.SHOW_PAST_EVENTS) }
+    var selectedFavourites by remember { mutableStateOf(eventsVm.filter.value == FilterEnum.SHOW_FAVOURITES_EVENTS) }
     Column (
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .padding(contentPadding)
-            .fillMaxSize()
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
-                .padding(8.dp)
                 .fillMaxWidth()
         ) {
             FilterChip(
@@ -239,6 +232,7 @@ fun FilterChips(
                         selectedAll = false
                         selectedPast = false
                         selectedFavourites = false
+                        eventsVm.filter.value = FilterEnum.SHOW_FUTURE_EVENTS
                         eventsVm.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
                     }
                 },
@@ -265,6 +259,7 @@ fun FilterChips(
                         selectedFuture = false
                         selectedPast = false
                         selectedFavourites = false
+                        eventsVm.filter.value = FilterEnum.SHOW_ALL_EVENTS
                         eventsVm.updateEvents(FilterEnum.SHOW_ALL_EVENTS)
                     }
                 },
@@ -283,16 +278,6 @@ fun FilterChips(
                     null
                 }
             )
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        ) {
             FilterChip(
                 selected = selectedPast,
                 onClick = {
@@ -301,6 +286,7 @@ fun FilterChips(
                         selectedFuture = false
                         selectedAll = false
                         selectedFavourites = false
+                        eventsVm.filter.value = FilterEnum.SHOW_PAST_EVENTS
                         eventsVm.updateEvents(FilterEnum.SHOW_PAST_EVENTS)
                     }
                 },
@@ -327,6 +313,7 @@ fun FilterChips(
                         selectedFuture = false
                         selectedPast = false
                         selectedAll = false
+                        eventsVm.filter.value = FilterEnum.SHOW_FAVOURITES_EVENTS
                         eventsVm.updateEvents(FilterEnum.SHOW_FAVOURITES_EVENTS)
                     }
                 },

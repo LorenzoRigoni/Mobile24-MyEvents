@@ -50,10 +50,10 @@
     <string name="loc_perm_req">Location permission is required.</string>
     <string name="go_set">Go to Settings</string>
     <string name="no_internet">No Internet connection</string>
-    <string name="future_events">Future events</string>
-    <string name="all_events">All events</string>
-    <string name="past_events">Past events</string>
-    <string name="favourites_events">Favorite events</string>
+    <string name="future_events">Future</string>
+    <string name="all_events">All</string>
+    <string name="past_events">Past</string>
+    <string name="favourites_events">Favorites</string>
     <string name="title_event">Event title</string>
     <string name="type_event">Event type</string>
     <string name="date_event">Event date</string>
