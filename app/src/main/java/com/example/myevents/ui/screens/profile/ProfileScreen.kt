@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -145,15 +146,13 @@ fun ProfileScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.verticalScroll(scrollState)
                         ) {
-                            Spacer(Modifier.size(8.dp))
+                            Spacer(Modifier.size(16.dp))
 
                             DrawUserImage(userVm, screenWidth, screenHeight, true, ::takePicture)
 
                             Spacer(Modifier.size(8.dp))
 
                             DrawUserModifiableInfos(userVm, screenWidth, screenHeight, colors = CardDefaults.cardColors())
-
-                            Spacer(Modifier.size(8.dp))
 
                             Row(
                                 modifier = Modifier
@@ -168,7 +167,7 @@ fun ProfileScreen(
                                     },
                                     modifier = Modifier.padding(8.dp),
                                 ) {
-                                    Text("Cancel")
+                                    Text(stringResource(R.string.cancel))
                                 }
                                 TextButton(
                                     onClick = {
@@ -183,7 +182,7 @@ fun ProfileScreen(
                                     },
                                     modifier = Modifier.padding(8.dp),
                                 ) {
-                                    Text("Save")
+                                    Text(stringResource(R.string.save))
                                 }
                             }
                         }
@@ -299,27 +298,14 @@ fun DrawUserModifiableInfos(userVm: UserViewModel, screenWidth: Dp, screenHeight
 
         Card (
             colors = colors,
+            modifier = Modifier
+                .padding(16.dp)
         ) {
             Column(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
                     .width(if (screenWidth > screenHeight) screenHeight / 2 else screenWidth / 2)
             ) {
-                Text(
-                    text = "Username",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    userVm.state.user,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    style = MaterialTheme.typography.headlineLarge
-                )
-                Divider(
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(vertical = 25.dp)
-                )
                 OutlinedTextField(
                     value = editableName,
                     onValueChange = {
@@ -330,11 +316,10 @@ fun DrawUserModifiableInfos(userVm: UserViewModel, screenWidth: Dp, screenHeight
                     textStyle = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.fillMaxWidth()
                 )
-                Divider(
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    thickness = 1.dp,
-                    modifier = Modifier.padding(vertical = 25.dp)
-                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+
                 OutlinedTextField(
                     value = editableSurname,
                     onValueChange = {
