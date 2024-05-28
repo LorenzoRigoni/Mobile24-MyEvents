@@ -139,7 +139,7 @@ fun EventItem(
                         .crossfade(true)
                         .build(),
                     stringResource(R.string.event_pic),
-                    contentScale = ContentScale.Fit,
+                    contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .size(72.dp)
                 )

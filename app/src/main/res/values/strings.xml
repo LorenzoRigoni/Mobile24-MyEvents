@@ -57,7 +57,7 @@
     <string name="title_event">Event title</string>
     <string name="type_event">Event type</string>
     <string name="date_event">Event date</string>
-    <string name="select_date">Select date</string>
+    <string name="select_date">Select date and time</string>
     <string name="selected_date">Selected date</string>
     <string name="cancel">Cancel</string>
     <string name="choose_image">Choose from gallery</string>
@@ -86,4 +86,5 @@
     <string name="gps_disabled">GPS is disabled</string>
     <string name="per_perm_denied">Permission permanently denied</string>
     <string name="unknown_perm">Unknown permission status</string>
+    <string name="show_map">Show map</string>
 </resources>
