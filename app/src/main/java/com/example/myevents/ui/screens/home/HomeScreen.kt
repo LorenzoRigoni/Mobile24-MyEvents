@@ -55,6 +55,7 @@ import com.example.myevents.ui.EventsState
 import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.FilterEnum
 import com.example.myevents.ui.MyEventsRoute
+import com.example.myevents.utils.dateTimeFormatterFromDBstring
 
 @Composable
 fun HomeScreen(
@@ -175,12 +176,14 @@ fun EventItem(
                 Icon(
                     if (item.isFavourite) Icons.Default.Star else Icons.Default.StarBorder,
                     contentDescription = "Event star icon",
-                    modifier = Modifier.clickable {
-                        eventsVm.updateIsFavourite(!item.isFavourite, item.eventID)
-                    }.align(Alignment.End)
+                    modifier = Modifier
+                        .clickable {
+                            eventsVm.updateIsFavourite(!item.isFavourite, item.eventID)
+                        }
+                        .align(Alignment.End)
                 )
                 Text(
-                    item.date,
+                    dateTimeFormatterFromDBstring(item.date),
                 )
             }
         }
@@ -218,123 +221,129 @@ fun FilterChips(
     var selectedAll by remember { mutableStateOf(eventsVm.filter.value == FilterEnum.SHOW_ALL_EVENTS) }
     var selectedPast by remember { mutableStateOf(eventsVm.filter.value == FilterEnum.SHOW_PAST_EVENTS) }
     var selectedFavourites by remember { mutableStateOf(eventsVm.filter.value == FilterEnum.SHOW_FAVOURITES_EVENTS) }
-    Column (
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
+
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            FilterChip(
-                selected = selectedFuture,
-                onClick = {
-                    if (!selectedFuture) {
-                        selectedFuture = true
-                        selectedAll = false
-                        selectedPast = false
-                        selectedFavourites = false
-                        eventsVm.filter.value = FilterEnum.SHOW_FUTURE_EVENTS
-                        eventsVm.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
-                    }
-                },
-                label = {
-                    Text(stringResource(R.string.future_events))
-                },
-                leadingIcon = if (selectedFuture) {
-                    {
-                        Icon(
-                            imageVector = Icons.Filled.Done,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize)
-                        )
-                    }
-                } else {
-                    null
+        FilterChip(
+            selected = selectedFuture,
+            onClick = {
+                if (!selectedFuture) {
+                    selectedFuture = true
+                    selectedAll = false
+                    selectedPast = false
+                    selectedFavourites = false
+                    eventsVm.filter.value = FilterEnum.SHOW_FUTURE_EVENTS
+                    eventsVm.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
                 }
-            )
-            FilterChip(
-                selected = selectedAll,
-                onClick = {
-                    if (!selectedAll) {
-                        selectedAll = true
-                        selectedFuture = false
-                        selectedPast = false
-                        selectedFavourites = false
-                        eventsVm.filter.value = FilterEnum.SHOW_ALL_EVENTS
-                        eventsVm.updateEvents(FilterEnum.SHOW_ALL_EVENTS)
-                    }
-                },
-                label = {
-                    Text(stringResource(R.string.all_events))
-                },
-                leadingIcon = if (selectedAll) {
-                    {
-                        Icon(
-                            imageVector = Icons.Filled.Done,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize)
-                        )
-                    }
-                } else {
-                    null
+            },
+            label = {
+                Text(stringResource(R.string.future_events))
+            },
+            leadingIcon = if (selectedFuture) {
+                {
+                    Icon(
+                        imageVector = Icons.Filled.Done,
+                        contentDescription = "Done icon",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
                 }
-            )
-            FilterChip(
-                selected = selectedPast,
-                onClick = {
-                    if (!selectedPast) {
-                        selectedPast = true
-                        selectedFuture = false
-                        selectedAll = false
-                        selectedFavourites = false
-                        eventsVm.filter.value = FilterEnum.SHOW_PAST_EVENTS
-                        eventsVm.updateEvents(FilterEnum.SHOW_PAST_EVENTS)
-                    }
-                },
-                label = {
-                    Text(stringResource(R.string.past_events))
-                },
-                leadingIcon = if (selectedPast) {
-                    {
-                        Icon(
-                            imageVector = Icons.Filled.Done,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize)
-                        )
-                    }
-                } else {
-                    null
+            } else {
+                null
+            }
+        )
+
+        Spacer(modifier = Modifier.size(4.dp))
+
+        FilterChip(
+            selected = selectedAll,
+            onClick = {
+                if (!selectedAll) {
+                    selectedAll = true
+                    selectedFuture = false
+                    selectedPast = false
+                    selectedFavourites = false
+                    eventsVm.filter.value = FilterEnum.SHOW_ALL_EVENTS
+                    eventsVm.updateEvents(FilterEnum.SHOW_ALL_EVENTS)
                 }
-            )
-            FilterChip(
-                selected = selectedFavourites,
-                onClick = {
-                    if (!selectedFavourites) {
-                        selectedFavourites = true
-                        selectedFuture = false
-                        selectedPast = false
-                        selectedAll = false
-                        eventsVm.filter.value = FilterEnum.SHOW_FAVOURITES_EVENTS
-                        eventsVm.updateEvents(FilterEnum.SHOW_FAVOURITES_EVENTS)
-                    }
-                },
-                label = {
-                    Text(stringResource(R.string.favourites_events))
-                },
-                leadingIcon = if (selectedFavourites) {
-                    {
-                        Icon(
-                            imageVector = Icons.Filled.Done,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize)
-                        )
-                    }
-                } else {
-                    null
+            },
+            label = {
+                Text(stringResource(R.string.all_events))
+            },
+            leadingIcon = if (selectedAll) {
+                {
+                    Icon(
+                        imageVector = Icons.Filled.Done,
+                        contentDescription = "Done icon",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
                 }
-            )
-        }
+            } else {
+                null
+            }
+        )
+
+        Spacer(modifier = Modifier.size(4.dp))
+
+        FilterChip(
+            selected = selectedPast,
+            onClick = {
+                if (!selectedPast) {
+                    selectedPast = true
+                    selectedFuture = false
+                    selectedAll = false
+                    selectedFavourites = false
+                    eventsVm.filter.value = FilterEnum.SHOW_PAST_EVENTS
+                    eventsVm.updateEvents(FilterEnum.SHOW_PAST_EVENTS)
+                }
+            },
+            label = {
+                Text(stringResource(R.string.past_events))
+            },
+            leadingIcon = if (selectedPast) {
+                {
+                    Icon(
+                        imageVector = Icons.Filled.Done,
+                        contentDescription = "Done icon",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                }
+            } else {
+                null
+            }
+        )
+
+        Spacer(modifier = Modifier.size(4.dp))
+
+        FilterChip(
+            selected = selectedFavourites,
+            onClick = {
+                if (!selectedFavourites) {
+                    selectedFavourites = true
+                    selectedFuture = false
+                    selectedPast = false
+                    selectedAll = false
+                    eventsVm.filter.value = FilterEnum.SHOW_FAVOURITES_EVENTS
+                    eventsVm.updateEvents(FilterEnum.SHOW_FAVOURITES_EVENTS)
+                }
+            },
+            label = {
+                Text(stringResource(R.string.favourites_events))
+            },
+            leadingIcon = if (selectedFavourites) {
+                {
+                    Icon(
+                        imageVector = Icons.Filled.Done,
+                        contentDescription = "Done icon",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                }
+            } else {
+                null
+            }
+        )
     }
 }

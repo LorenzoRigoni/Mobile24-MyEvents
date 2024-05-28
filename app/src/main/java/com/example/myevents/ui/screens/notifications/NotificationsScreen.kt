@@ -26,6 +26,7 @@ import com.example.myevents.R
 import com.example.myevents.data.database.Notification
 import com.example.myevents.ui.EventsViewModel
 import com.example.myevents.ui.NotificationsState
+import com.example.myevents.utils.dateTimeFormatterFromDBstring
 
 @Composable
 fun NotificationsScreen(
@@ -89,7 +90,7 @@ fun NotificationItem(
             horizontalArrangement = Arrangement.End
         ) {
             Text(
-                item.date,
+                dateTimeFormatterFromDBstring(item.date),
             )
         }
     }

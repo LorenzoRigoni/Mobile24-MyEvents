@@ -108,7 +108,7 @@ class EventsViewModel(
                     0,
                     repository.user.first(),
                     notificationText,
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
                     false
                 )
             )
@@ -136,7 +136,7 @@ class EventsViewModel(
                         0,
                         event!!.username,
                         "${event.title};delete",
-                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
                         false
                     )
                 )

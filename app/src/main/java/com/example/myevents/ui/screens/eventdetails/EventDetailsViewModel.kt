@@ -79,7 +79,7 @@ class EventDetailsViewModel(
                     0,
                     event!!.username,
                     "${event.title};delete",
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
                     false
                 )
             )
