@@ -123,7 +123,7 @@ fun LoginScreen(
                         userVm.checkLogin(username, password).join()
                         if (userVm.user != null) {
                             userVm.setLoggedUser(username, password, isChecked).join()
-                            eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
+                            eventsViewModel.filter.value = FilterEnum.SHOW_FUTURE_EVENTS
                             eventsViewModel.updateNotifications()
                             eventsViewModel.updateAllEvents()
                             eventsViewModel.updateFutureEvents()
@@ -162,7 +162,7 @@ fun LoginScreen(
                             userVm.canLogWithBiometric().join()
                             if (userVm.bioUser.isNotEmpty()) {
                                 userVm.setLoggedUser(userVm.bioUser, userVm.bioPassword, isChecked).join()
-                                eventsViewModel.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
+                                eventsViewModel.filter.value = FilterEnum.SHOW_FUTURE_EVENTS
                                 eventsViewModel.updateNotifications()
                                 eventsViewModel.updateAllEvents()
                                 eventsViewModel.updateFutureEvents()

@@ -237,7 +237,6 @@ fun FilterChips(
                     selectedPast = false
                     selectedFavourites = false
                     eventsVm.filter.value = FilterEnum.SHOW_FUTURE_EVENTS
-                    eventsVm.updateEvents(FilterEnum.SHOW_FUTURE_EVENTS)
                 }
             },
             label = {
@@ -267,7 +266,6 @@ fun FilterChips(
                     selectedPast = false
                     selectedFavourites = false
                     eventsVm.filter.value = FilterEnum.SHOW_ALL_EVENTS
-                    eventsVm.updateEvents(FilterEnum.SHOW_ALL_EVENTS)
                 }
             },
             label = {
@@ -297,7 +295,6 @@ fun FilterChips(
                     selectedAll = false
                     selectedFavourites = false
                     eventsVm.filter.value = FilterEnum.SHOW_PAST_EVENTS
-                    eventsVm.updateEvents(FilterEnum.SHOW_PAST_EVENTS)
                 }
             },
             label = {
@@ -327,7 +324,6 @@ fun FilterChips(
                     selectedPast = false
                     selectedAll = false
                     eventsVm.filter.value = FilterEnum.SHOW_FAVOURITES_EVENTS
-                    eventsVm.updateEvents(FilterEnum.SHOW_FAVOURITES_EVENTS)
                 }
             },
             label = {

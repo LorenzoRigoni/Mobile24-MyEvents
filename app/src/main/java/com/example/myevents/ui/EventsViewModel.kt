@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.database.Event
 import com.example.myevents.data.database.Notification
 import com.example.myevents.data.repositories.MyEventsRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -14,6 +16,7 @@ import java.time.format.DateTimeFormatter
 data class EventsState(val events: List<Event>)
 data class NotificationsState(val notifications: List<Notification>)
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class EventsViewModel(
     private val repository: MyEventsRepository
 ) : ViewModel() {
@@ -30,37 +33,21 @@ class EventsViewModel(
     val filter = MutableStateFlow(FilterEnum.SHOW_FUTURE_EVENTS)
 
     init {
-        updateEvents(filter.value)
+        viewModelScope.launch {
+            filter.flatMapLatest { filterValue ->
+                when (filterValue) {
+                    FilterEnum.SHOW_ALL_EVENTS -> repository.allEventsOfUser(repository.user.first())
+                    FilterEnum.SHOW_FUTURE_EVENTS -> repository.eventsOfUserFromToday(repository.user.first())
+                    FilterEnum.SHOW_PAST_EVENTS -> repository.pastEventsOfUser(repository.user.first())
+                    FilterEnum.SHOW_FAVOURITES_EVENTS -> repository.favouritesEventsOfUser(repository.user.first())
+                }
+            }.collect { events ->
+                state.value = EventsState(events)
+            }
+        }
         updateNotifications()
         updateAllEvents()
         updateFutureEvents()
-    }
-
-    fun updateEvents(filter: FilterEnum) {
-        viewModelScope.launch {
-            when (filter) {
-                FilterEnum.SHOW_FUTURE_EVENTS -> {
-                    repository.eventsOfUserFromToday(repository.user.first()).collect { events ->
-                        state.value = EventsState(events)
-                    }
-                }
-                FilterEnum.SHOW_ALL_EVENTS -> {
-                    repository.allEventsOfUser(repository.user.first()).collect {events ->
-                        state.value = EventsState(events)
-                    }
-                }
-                FilterEnum.SHOW_PAST_EVENTS -> {
-                    repository.pastEventsOfUser(repository.user.first()).collect {events ->
-                        state.value = EventsState(events)
-                    }
-                }
-                FilterEnum.SHOW_FAVOURITES_EVENTS -> {
-                    repository.favouritesEventsOfUser(repository.user.first()).collect {events ->
-                        state.value = EventsState(events)
-                    }
-                }
-            }
-        }
     }
 
     fun updateNotifications() {

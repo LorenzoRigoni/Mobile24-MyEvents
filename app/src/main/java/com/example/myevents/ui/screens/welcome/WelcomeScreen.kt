@@ -36,6 +36,8 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.myevents.R
+import com.example.myevents.ui.EventsViewModel
+import com.example.myevents.ui.FilterEnum
 import com.example.myevents.ui.MyEventsRoute
 import com.example.myevents.ui.UserState
 
@@ -43,7 +45,8 @@ import com.example.myevents.ui.UserState
 fun WelcomeScreen(
     state: UserState,
     navController: NavHostController,
-    getImage: (String) -> String?
+    getImage: (String) -> String?,
+    eventsVm: EventsViewModel
 ) {
     val scrollState = rememberScrollState()
 
@@ -93,6 +96,7 @@ fun WelcomeScreen(
             Spacer(modifier = Modifier.height(16.dp))
             FloatingActionButton(
                 onClick = {
+                    eventsVm.filter.value = FilterEnum.SHOW_FUTURE_EVENTS
                     navController.navigate(MyEventsRoute.Home.route) {
                         popUpTo(MyEventsRoute.Welcome.route) { inclusive = true }
                     }
