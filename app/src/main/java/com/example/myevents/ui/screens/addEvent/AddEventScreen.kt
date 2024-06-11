@@ -84,11 +84,13 @@ fun AddEventScreen(
     val latitude by addEventViewModel.latitude.collectAsState()
     val longitude by addEventViewModel.longitude.collectAsState()
 
+    val ctx = LocalContext.current
+
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {uri ->
             selectedImageUri = uri
-            addEventViewModel.setImageUri(selectedImageUri.toString())
+            addEventViewModel.setImageUri(ctx, selectedImageUri!!)
         }
     )
 

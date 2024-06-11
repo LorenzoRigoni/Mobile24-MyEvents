@@ -1,28 +1,36 @@
 package com.example.myevents.ui.screens.addEvent
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
+import android.net.Uri
+import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myevents.data.database.Event
 import com.example.myevents.data.database.Notification
 import com.example.myevents.data.repositories.MyEventsRepository
 import com.example.myevents.getLocationService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.UUID
 
 data class AddEventState(
     val eventType: String,
@@ -80,8 +88,26 @@ class AddEventViewModel(
         state.value = state.value.copy(date = date)
     }
 
-    fun setImageUri(imageUri: String) {
-        state.value = state.value.copy(imageUri = imageUri)
+
+    suspend fun saveImage(context: Context, imageUri: Uri, filename: String): String {
+        val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+        val fileName = "${UUID.randomUUID()}.jpg"
+        val file = File(context.filesDir, fileName)
+        val outputStream = withContext(Dispatchers.IO) {
+            FileOutputStream(file)
+        }
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        withContext(Dispatchers.IO) {
+            outputStream.close()
+        }
+        return file.absolutePath
+    }
+
+    fun setImageUri(context: Context, imageUri: Uri) {
+        viewModelScope.launch {
+            val imagePath = saveImage(context, imageUri, "myImage.jpg")
+            state.value = state.value.copy(imageUri = imagePath)
+        }
     }
 
     fun addEvent() {
